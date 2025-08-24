@@ -25,12 +25,14 @@ import {
   Award,
   Zap,
   LineChart,
+  Calendar,
+  Crown,
 } from "lucide-react"
 
 export default function AxendRevOpsLanding() {
   const [isFormMinimized, setIsFormMinimized] = useState(false)
   const [hoveredService, setHoveredService] = useState<number | null>(null)
-  const [selectedLevel, setSelectedLevel] = useState("professional")
+  const [selectedLevel, setSelectedLevel] = useState("profissional")
   const [showEvaluationSection, setShowEvaluationSection] = useState(false)
   const [showNeedsSection, setShowNeedsSection] = useState(false)
   const [auditRecommendation, setAuditRecommendation] = useState<any>(null)
@@ -47,6 +49,10 @@ export default function AxendRevOpsLanding() {
   const [voiceEnabled, setVoiceEnabled] = useState(false)
   const [isPlaying3D, setIsPlaying3D] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  const [selectedPillars, setSelectedPillars] = useState<string[]>([])
+  const [selectedBuildingLevel, setSelectedBuildingLevel] = useState("profissional")
+  const [showPackageDiscount, setShowPackageDiscount] = useState(false)
 
   const [auditForm, setAuditForm] = useState({
     name: "",
@@ -67,6 +73,7 @@ export default function AxendRevOpsLanding() {
   const [submitSuccess, setSubmitSuccess] = useState(false)
   const [submitError, setSubmitError] = useState("")
   const [showCalendar, setShowCalendar] = useState(false)
+  const [showCalendarPopup, setShowCalendarPopup] = useState(false)
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -191,7 +198,7 @@ export default function AxendRevOpsLanding() {
   }
 
   const serviceLevels = {
-    essential: {
+    essencial: {
       name: "Essencial",
       subtitle: "Para empresas iniciando a jornada RevOps - O Sábio orienta os primeiros passos",
       duration: "60 dias",
@@ -199,6 +206,8 @@ export default function AxendRevOpsLanding() {
       packagePrice: "R$ 35.000",
       packageDiscount: "22%",
       popular: false,
+      buildingHeight: 1,
+      buildingStyle: "basic",
       services: {
         crm: { price: "R$ 8.000", features: ["Setup básico CRM", "Treinamento equipe", "Automações essenciais"] },
         bi: { price: "R$ 10.000", features: ["Dashboard executivo", "Relatórios básicos", "Métricas fundamentais"] },
@@ -206,7 +215,7 @@ export default function AxendRevOpsLanding() {
         processos: { price: "R$ 15.000", features: ["Mapeamento processos", "Playbooks vendas", "Rituais básicos"] },
       },
     },
-    professional: {
+    profissional: {
       name: "Profissional",
       subtitle: "Para empresas em crescimento acelerado - O Criador constrói sistemas robustos",
       duration: "90 dias",
@@ -214,6 +223,8 @@ export default function AxendRevOpsLanding() {
       packagePrice: "R$ 65.000",
       packageDiscount: "23%",
       popular: true,
+      buildingHeight: 2,
+      buildingStyle: "modern",
       services: {
         crm: { price: "R$ 15.000", features: ["CRM avançado", "Integrações múltiplas", "Automações complexas"] },
         bi: { price: "R$ 18.000", features: ["BI completo", "Análises preditivas", "Dashboards personalizados"] },
@@ -224,7 +235,7 @@ export default function AxendRevOpsLanding() {
         },
       },
     },
-    advanced: {
+    avancado: {
       name: "Avançado",
       subtitle: "Para empresas que querem dominar o mercado - O Herói conquista a liderança",
       duration: "120 dias",
@@ -232,6 +243,8 @@ export default function AxendRevOpsLanding() {
       packagePrice: "R$ 115.000",
       packageDiscount: "23%",
       popular: false,
+      buildingHeight: 3,
+      buildingStyle: "luxury",
       services: {
         crm: { price: "R$ 25.000", features: ["CRM enterprise", "Customizações avançadas", "Integrações ilimitadas"] },
         bi: { price: "R$ 35.000", features: ["BI enterprise", "Machine Learning", "Análises prescritivas"] },
@@ -250,28 +263,69 @@ export default function AxendRevOpsLanding() {
       name: "Processos & Rituais",
       icon: Cog,
       description: "Estruturação completa da operação comercial",
+      color: "#995925",
     },
     {
       id: "crm",
       name: "CRM Vivo",
       icon: Users,
       description: "CRM de alta performance com 100% de adoção",
+      color: "#EB6A00",
     },
     {
       id: "bi",
       name: "Business Intelligence",
       icon: BarChart3,
       description: "Visibilidade total com dashboards em tempo real",
+      color: "#6B4A2E",
     },
     {
       id: "ia",
       name: "Agentes de IA",
       icon: Brain,
       description: "IA aplicada para automação e insights preditivos",
+      color: "#413328",
     },
   ]
 
-  // ... existing functions ...
+  const togglePillar = (pillarId: string) => {
+    setSelectedPillars((prev) => (prev.includes(pillarId) ? prev.filter((id) => id !== pillarId) : [...prev, pillarId]))
+  }
+
+  const calculateTotalPrice = () => {
+    const level = serviceLevels[selectedBuildingLevel as keyof typeof serviceLevels]
+    if (!level) return "R$ 0"
+
+    if (selectedPillars.length === 4) {
+      return level.packagePrice || "R$ 0"
+    }
+
+    let total = 0
+    selectedPillars.forEach((pillarId) => {
+      const price = level.services?.[pillarId]?.price || "R$ 0"
+      total += Number.parseInt(price.replace(/[^\d]/g, ""))
+    })
+
+    return `R$ ${total.toLocaleString()}`
+  }
+
+  const getDiscountAmount = () => {
+    if (selectedPillars.length === 4) {
+      const level = serviceLevels[selectedBuildingLevel as keyof typeof serviceLevels]
+      if (!level || !level.originalPrice || !level.packagePrice) return "R$ 0"
+
+      const originalTotal = Number.parseInt(level.originalPrice.replace(/[^\d]/g, ""))
+      const packageTotal = Number.parseInt(level.packagePrice.replace(/[^\d]/g, ""))
+      return `R$ ${(originalTotal - packageTotal).toLocaleString()}`
+    }
+    return "R$ 0"
+  }
+
+  useEffect(() => {
+    setShowPackageDiscount(selectedPillars.length === 4)
+  }, [selectedPillars])
+
+  // ... existing useEffect hooks ...
 
   const scrollToAuditForm = () => {
     document.getElementById("audit-form-section")?.scrollIntoView({ behavior: "smooth" })
@@ -306,7 +360,7 @@ export default function AxendRevOpsLanding() {
 
       setSubmitSuccess(true)
       setIsFormMinimized(true)
-      setShowCalendar(true)
+      setShowCalendarPopup(true)
 
       // Reset form after success
       setTimeout(() => {
@@ -326,8 +380,8 @@ export default function AxendRevOpsLanding() {
         })
         setSubmitSuccess(false)
         setIsFormMinimized(false)
-        setShowCalendar(false)
-      }, 5000)
+        setShowCalendarPopup(false)
+      }, 10000)
     } catch (error) {
       setSubmitError("Erro ao enviar formulário. Tente novamente.")
     } finally {
@@ -346,10 +400,10 @@ export default function AxendRevOpsLanding() {
     const lowScores = Object.entries(scores).filter(([_, score]) => score <= 3)
     const companyLevel =
       auditForm.companySize === "pequena"
-        ? "essential"
+        ? "essencial"
         : auditForm.companySize === "media"
-          ? "professional"
-          : "advanced"
+          ? "profissional"
+          : "avancado"
 
     const recommendation = {
       level: companyLevel,
@@ -359,12 +413,20 @@ export default function AxendRevOpsLanding() {
       description: "",
     }
 
+    const currentLevel = serviceLevels[companyLevel as keyof typeof serviceLevels]
+    if (!currentLevel) {
+      recommendation.estimatedInvestment = "Consulte"
+      recommendation.description = "Entre em contato para uma proposta personalizada."
+      setAuditRecommendation(recommendation)
+      return
+    }
+
     if (recommendation.isPackage) {
-      recommendation.estimatedInvestment = serviceLevels[companyLevel].packagePrice
-      recommendation.description = `Recomendamos o Pacote Completo ${serviceLevels[companyLevel].name} pois identificamos oportunidades de melhoria em múltiplos pilares.`
+      recommendation.estimatedInvestment = currentLevel.packagePrice || "Consulte"
+      recommendation.description = `Recomendamos o Pacote Completo ${currentLevel.name} pois identificamos oportunidades de melhoria em múltiplos pilares.`
     } else if (lowScores.length > 0) {
       const pillarName = lowScores[0][0]
-      recommendation.estimatedInvestment = serviceLevels[companyLevel].services[pillarName]?.price || "Consulte"
+      recommendation.estimatedInvestment = currentLevel.services?.[pillarName]?.price || "Consulte"
       recommendation.description = `Recomendamos focar no pilar ${pillarName.toUpperCase()} para resolver seus principais gargalos.`
     }
 
@@ -381,6 +443,36 @@ export default function AxendRevOpsLanding() {
       generateRecommendation()
     }
   }, [auditForm.aiUsage, auditForm.biQuality, auditForm.crmAdoption, auditForm.processMaturity])
+
+  const calculateSelectedTotal = () => {
+    const currentLevel = serviceLevels[selectedLevel as keyof typeof serviceLevels]
+    if (!currentLevel || !currentLevel.services) return "R$ 0"
+
+    let total = 0
+    selectedPillars.forEach((pillarId) => {
+      const service = currentLevel.services[pillarId]
+      if (service) {
+        total += Number.parseInt(service.price.replace(/[^0-9]/g, ""))
+      }
+    })
+    return `R$ ${total.toLocaleString()}`
+  }
+
+  const scrollToForm = () => {
+    document.getElementById("audit-form-section")?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  const calculateTotal = (level) => {
+    if (!level || !level.services) return "R$ 0"
+
+    let total = 0
+    selectedPillars.forEach((pillarId) => {
+      const price = level.services[pillarId]?.price || "R$ 0"
+      total += Number.parseInt(price.replace(/[^\d]/g, ""))
+    })
+
+    return `R$ ${total.toLocaleString()}`
+  }
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -812,35 +904,9 @@ export default function AxendRevOpsLanding() {
                         <CheckCircle className="h-8 w-8 text-green-600 mx-auto mb-2" />
                         <h3 className="text-lg font-semibold text-green-800 mb-2">Auditoria Enviada com Sucesso!</h3>
                         <p className="text-green-700 mb-4">{auditRecommendation}</p>
-
-                        {showCalendar && (
-                          <div className="mt-6 p-4 bg-white rounded-lg border border-primary/20">
-                            <h4 className="text-lg font-semibold text-[#413328] mb-3">
-                              Agende sua Consultoria Personalizada
-                            </h4>
-                            <p className="text-[#6B4A2E] mb-4">
-                              Vamos discutir sua auditoria e apresentar a proposta ideal para sua empresa.
-                            </p>
-                            <div id="google-calendar-button"></div>
-                            <script
-                              dangerouslySetInnerHTML={{
-                                __html: `
-                                  (function() {
-                                    var target = document.getElementById('google-calendar-button');
-                                    if (target && window.calendar) {
-                                      window.calendar.schedulingButton.load({
-                                        url: 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ3Fk0BzTNSCZpGqUowjjdo2CMsulrtpV7kVc4r7UhX2gHC7t_Dxa7RMoNaYRd5GGPdRXQj9slOy?gv=true',
-                                        color: '#EB6A00',
-                                        label: 'Agendar Consultoria',
-                                        target: target,
-                                      });
-                                    }
-                                  })();
-                                `,
-                              }}
-                            />
-                          </div>
-                        )}
+                        <p className="text-green-600 font-medium">
+                          Um popup será aberto para você agendar sua consultoria personalizada!
+                        </p>
                       </div>
                     )}
 
@@ -889,6 +955,193 @@ export default function AxendRevOpsLanding() {
         </div>
       </section>
 
+      <section className="py-20 bg-gradient-to-br from-[#E6E4E3]/20 to-[#995925]/10 relative overflow-hidden">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-[#413328]">Os 4 Pilares do RevOps</h2>
+              <p className="text-xl text-[#6B4A2E] mb-8">
+                Cada pilar pode ser contratado individualmente com 3 níveis de serviço
+              </p>
+              <div className="flex justify-center gap-4 mb-8">
+                {Object.entries(serviceLevels).map(([key, level]) => (
+                  <button
+                    key={key}
+                    onClick={() => setSelectedLevel(key)}
+                    className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
+                      selectedLevel === key
+                        ? "bg-[#EB6A00] text-white shadow-lg"
+                        : "bg-white text-[#6B4A2E] border-2 border-[#E6E4E3] hover:border-[#EB6A00]"
+                    }`}
+                  >
+                    {level.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Individual Pillars Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+              {fourPillars.map((pillar) => {
+                const currentLevel = serviceLevels[selectedLevel as keyof typeof serviceLevels]
+                const currentService = currentLevel?.services?.[pillar.id]
+                const isSelected = selectedPillars.includes(pillar.id)
+
+                if (!currentService) return null
+
+                return (
+                  <div
+                    key={pillar.id}
+                    className={`group cursor-pointer transition-all duration-300 ${
+                      isSelected ? "scale-105" : "hover:scale-102"
+                    }`}
+                    onClick={() => togglePillar(pillar.id)}
+                  >
+                    <Card
+                      className={`h-full border-2 transition-all duration-300 ${
+                        isSelected
+                          ? "border-[#EB6A00] bg-gradient-to-br from-white to-[#EB6A00]/5 shadow-xl"
+                          : "border-[#E6E4E3] bg-white hover:border-[#995925] hover:shadow-lg"
+                      }`}
+                    >
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <div
+                            className={`w-12 h-12 rounded-lg flex items-center justify-center transition-all duration-300`}
+                            style={{
+                              backgroundColor: isSelected ? pillar.color : `${pillar.color}20`,
+                              color: isSelected ? "white" : pillar.color,
+                            }}
+                          >
+                            <pillar.icon className="h-6 w-6" />
+                          </div>
+                          {isSelected && <CheckCircle className="h-6 w-6 text-[#EB6A00]" />}
+                        </div>
+
+                        <h3 className="text-lg font-bold mb-2 text-[#413328]">{pillar.name}</h3>
+                        <p className="text-sm text-[#6B4A2E] mb-4">{pillar.description}</p>
+
+                        <div className="border-t border-[#E6E4E3] pt-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <span className="text-sm font-medium text-[#995925]">Nível {currentLevel?.name || ""}</span>
+                            <span className="text-lg font-bold text-[#EB6A00]">{currentService.price}</span>
+                          </div>
+
+                          <ul className="space-y-1">
+                            {currentService.features.map((feature, idx) => (
+                              <li key={idx} className="text-xs text-[#6B4A2E] flex items-center gap-2">
+                                <div className="w-1 h-1 bg-[#EB6A00] rounded-full" />
+                                {feature}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        <Button
+                          className={`w-full mt-4 transition-all duration-300 ${
+                            isSelected
+                              ? "bg-[#EB6A00] hover:bg-[#995925] text-white"
+                              : "bg-white border-2 border-[#EB6A00] text-[#EB6A00] hover:bg-[#EB6A00] hover:text-white"
+                          }`}
+                        >
+                          {isSelected ? "Selecionado" : "Selecionar Pilar"}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Package Deal Section */}
+            <div className="bg-gradient-to-r from-[#413328] to-[#6B4A2E] rounded-2xl p-8 text-white relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#EB6A00]/20 to-transparent" />
+              <div className="relative z-10">
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-center gap-2 bg-[#EB6A00] px-4 py-2 rounded-full mb-4">
+                    <Crown className="h-5 w-5" />
+                    <span className="font-bold">OFERTA ESPECIAL</span>
+                  </div>
+                  <h3 className="text-3xl font-bold mb-4">Pacote Completo - 4 Pilares</h3>
+                  <p className="text-lg opacity-90 mb-6">Contrate todos os 4 pilares e receba desconto especial</p>
+                </div>
+
+                <div className="grid md:grid-cols-3 gap-6 items-center">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold line-through opacity-60 mb-2">
+                      {serviceLevels[selectedLevel as keyof typeof serviceLevels]?.originalPrice || "R$ 0"}
+                    </div>
+                    <div className="text-sm opacity-80">Preço Individual</div>
+                  </div>
+
+                  <div className="text-center">
+                    <ArrowRight className="h-8 w-8 mx-auto mb-2 text-[#EB6A00]" />
+                    <div className="bg-[#EB6A00] px-4 py-2 rounded-lg inline-block">
+                      <span className="text-sm font-bold">
+                        -{serviceLevels[selectedLevel as keyof typeof serviceLevels]?.packageDiscount || "0%"} DESCONTO
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-[#EB6A00] mb-2">
+                      {serviceLevels[selectedLevel as keyof typeof serviceLevels]?.packagePrice || "R$ 0"}
+                    </div>
+                    <div className="text-sm opacity-80">Pacote Completo</div>
+                  </div>
+                </div>
+
+                <div className="text-center mt-8">
+                  <Button
+                    size="lg"
+                    className="bg-[#EB6A00] hover:bg-[#995925] text-white px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300"
+                    onClick={() => scrollToForm()}
+                  >
+                    <Crown className="h-5 w-5 mr-2" />
+                    Solicitar Pacote Completo
+                  </Button>
+                  <p className="text-sm opacity-80 mt-2">
+                    Economia de {serviceLevels[selectedLevel as keyof typeof serviceLevels]?.packageDiscount || "0%"} •
+                    Implementação em {serviceLevels[selectedLevel as keyof typeof serviceLevels]?.duration || "90 dias"}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Selected Pillars Summary */}
+            {selectedPillars.length > 0 && selectedPillars.length < 4 && (
+              <div className="mt-8 bg-white rounded-xl border-2 border-[#E6E4E3] p-6">
+                <h4 className="text-lg font-bold text-[#413328] mb-4">
+                  Pilares Selecionados ({selectedPillars.length}/4)
+                </h4>
+                <div className="grid md:grid-cols-2 gap-4 mb-6">
+                  {selectedPillars.map((pillarId) => {
+                    const pillar = fourPillars.find((p) => p.id === pillarId)
+                    const currentLevel = serviceLevels[selectedLevel as keyof typeof serviceLevels]
+                    const service = currentLevel?.services?.[pillarId]
+
+                    if (!service || !pillar) return null
+
+                    return (
+                      <div key={pillarId} className="flex items-center justify-between p-3 bg-[#E6E4E3]/30 rounded-lg">
+                        <span className="font-medium text-[#413328]">{pillar.name}</span>
+                        <span className="font-bold text-[#EB6A00]">{service.price}</span>
+                      </div>
+                    )
+                  })}
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-lg font-bold text-[#413328]">Total: {calculateSelectedTotal()}</span>
+                  <Button className="bg-[#EB6A00] hover:bg-[#995925] text-white" onClick={() => scrollToForm()}>
+                    Solicitar Pilares Selecionados
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
       <section
         className="py-20 bg-gradient-to-br from-[#E6E4E3]/30 to-background relative overflow-hidden"
         data-animate
@@ -903,7 +1156,7 @@ export default function AxendRevOpsLanding() {
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center mb-16">
-            <Badge className="bg-primary/10 text-primary border-primary/20 mb-6 animate-bounce">
+            <Badge className="bg-primary/10 text-primary border-primary/20 mb-6 animate-pulse">
               📊 Dados de Mercado Validados
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#413328]">
@@ -1364,170 +1617,142 @@ export default function AxendRevOpsLanding() {
                 price: "R$ 7.500",
                 period: "/pilar",
                 packagePrice: "R$ 22.500",
-                packageDiscount: "25% OFF",
+
                 features: [
                   "Tudo do Profissional +",
-                  "IA preditiva personalizada",
+                  "IA para otimização contínua",
                   "Consultoria estratégica",
-                  "Implementação white-glove",
-                  "Suporte por 90 dias",
+                  "Suporte prioritário",
                 ],
-                color: "border-[#413328]/30",
-                bgColor: "bg-[#413328]/5",
-                textColor: "text-[#413328]",
-                buttonColor: "from-[#413328] to-[#6B4A2E]",
+                color: "border-[#EB6A00]/30",
+                bgColor: "bg-[#EB6A00]/5",
+                textColor: "text-[#EB6A00]",
+                buttonColor: "from-[#EB6A00] to-[#995925]",
               },
-            ].map((tier, index) => (
+            ].map((level, index) => (
               <Card
                 key={index}
-                className={`relative overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
-                  tier.popular
-                    ? "border-2 border-primary shadow-xl bg-white"
-                    : `border-2 ${tier.color} ${tier.bgColor} hover:bg-white/50`
+                className={`group hover:shadow-2xl transition-all duration-500 cursor-pointer border-2 hover:scale-105 bg-white/90 backdrop-blur-sm relative overflow-hidden ${level.color} ${
+                  level.popular ? "scale-105 shadow-xl border-primary/50" : ""
                 }`}
+                onMouseEnter={() => setHoveredService(index)}
+                onMouseLeave={() => setHoveredService(null)}
               >
-                {tier.popular && (
-                  <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-primary to-[#995925] text-white text-center py-2 text-sm font-semibold">
-                    🏆 MAIS POPULAR
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                <CardHeader className="pb-4 relative z-10">
+                  <div
+                    className={`w-12 h-12 ${level.bgColor} rounded-lg flex items-center justify-center mx-auto mb-4 transition-all duration-300 ${
+                      hoveredService === index ? "scale-110 animate-pulse" : ""
+                    }`}
+                  >
+                    <Zap
+                      className={`h-6 w-6 ${level.textColor} transition-all duration-300 ${
+                        hoveredService === index ? "scale-110 animate-bounce" : ""
+                      }`}
+                    />
                   </div>
-                )}
-
-                <CardHeader className={`pb-4 ${tier.popular ? "pt-12" : "pt-6"}`}>
-                  <div className="text-center">
-                    <CardTitle className={`text-2xl font-bold mb-2 ${tier.textColor}`}>{tier.level}</CardTitle>
-                    <CardDescription className="text-[#6B4A2E] mb-4">{tier.subtitle}</CardDescription>
-                    <p className="text-sm text-[#6B4A2E] mb-6">{tier.description}</p>
-
-                    <div className="space-y-4">
-                      <div>
-                        <div className="flex items-center justify-center gap-2 mb-2">
-                          <span className={`text-3xl font-bold ${tier.textColor}`}>{tier.price}</span>
-                          <span className="text-[#6B4A2E]">{tier.period}</span>
-                        </div>
-                        <Button
-                          onClick={() => {
-                            setAuditForm({ ...auditForm, productInterest: `${tier.level.toLowerCase()}-individual` })
-                            scrollToAuditForm()
-                          }}
-                          variant="outline"
-                          className={`w-full mb-3 border-2 ${tier.color} ${tier.textColor} hover:bg-white/80`}
-                        >
-                          Contratar Pilar Individual
-                        </Button>
-                      </div>
-
-                      <div className="border-t border-[#995925]/20 pt-4">
-                        <div className="flex items-center justify-center gap-2 mb-2">
-                          <span className={`text-2xl font-bold ${tier.textColor}`}>{tier.packagePrice}</span>
-                          <Badge className="bg-green-100 text-green-800 text-xs">{tier.packageDiscount}</Badge>
-                        </div>
-                        <p className="text-xs text-[#6B4A2E] mb-3">Pacote completo (4 pilares)</p>
-                        <Button
-                          onClick={() => {
-                            setAuditForm({ ...auditForm, productInterest: `pacote-${tier.level.toLowerCase()}` })
-                            scrollToAuditForm()
-                          }}
-                          className={`w-full bg-gradient-to-r ${tier.buttonColor} text-white hover:opacity-90 transition-all duration-300 hover:scale-105`}
-                        >
-                          Solicitar Pacote Completo
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
+                  <CardTitle
+                    className={`text-xl mb-2 transition-colors duration-300 ${level.textColor} ${
+                      hoveredService === index ? "animate-pulse" : ""
+                    }`}
+                  >
+                    {level.level}
+                  </CardTitle>
+                  <CardDescription className="text-base text-[#6B4A2E]">{level.subtitle}</CardDescription>
                 </CardHeader>
-
-                <CardContent>
+                <CardContent className="relative z-10">
                   <div className="space-y-3">
-                    {tier.features.map((feature, featureIndex) => (
-                      <div key={featureIndex} className="flex items-start gap-2">
-                        <CheckCircle className={`h-4 w-4 mt-0.5 flex-shrink-0 ${tier.textColor}`} />
-                        <span className="text-sm text-[#6B4A2E]">{feature}</span>
+                    {level.features.map((feature, featureIndex) => (
+                      <div
+                        key={featureIndex}
+                        className="flex items-start gap-2 group-hover:translate-x-1 transition-transform duration-300"
+                        style={{ transitionDelay: `${featureIndex * 0.1}s` }}
+                      >
+                        <CheckCircle className="h-4 w-4 mt-0.5 flex-shrink-0 text-primary group-hover:animate-pulse" />
+                        <span className="text-sm text-[#413328]">{feature}</span>
                       </div>
                     ))}
                   </div>
                 </CardContent>
+                <div className="p-4">
+                  <Button
+                    className={`w-full ${level.buttonColor} hover:from-primary/90 hover:to-[#995925]/90 text-white font-semibold py-3 transition-all duration-300 hover:scale-105 hover:shadow-lg`}
+                    onClick={scrollToAuditForm}
+                  >
+                    Começar Agora
+                  </Button>
+                </div>
               </Card>
             ))}
-          </div>
-
-          <div className="mt-16 text-center">
-            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-primary/10 to-[#995925]/5 border border-primary/20 rounded-xl px-8 py-4">
-              <Sparkles className="h-6 w-6 text-primary animate-spin" />
-              <div className="text-left">
-                <p className="font-bold text-primary">Não sabe qual escolher?</p>
-                <p className="text-sm text-[#6B4A2E]">
-                  Nossa auditoria gratuita identifica o nível ideal para sua empresa
-                </p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* ... existing sections with enhanced interactivity ... */}
-
-      <footer className="bg-gradient-to-br from-[#413328] via-[#413328] to-[#6B4A2E] text-white py-16">
+      <section className="py-20 bg-gradient-to-br from-background to-[#E6E4E3]/20 relative" data-animate>
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-3 gap-8 mb-12">
-              <div className="space-y-4">
-                <h3 className="text-xl font-bold text-primary">Grupo Axend</h3>
-                <p className="text-white/80 text-sm">
-                  Especialistas em Revenue Operations com IA para empresas B2B que faturam R$100k+/mês.
-                </p>
-                <div className="space-y-2 text-sm">
-                  <p className="text-white/70">CNPJ: 48.929.432/0001-08</p>
-                  <p className="text-white/70">contato@grupoaxend.com</p>
-                  <p className="text-white/70">WhatsApp: +55 (33) 984605718</p>
-                </div>
-              </div>
+          <div className="max-w-4xl mx-auto text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#413328]">
+              Pronto para <span className="text-primary">decolar</span> sua receita?
+            </h2>
+            <p className="text-xl text-[#6B4A2E]">
+              Agende agora sua auditoria gratuita e descubra o poder do RevOps + IA
+            </p>
+          </div>
 
-              <div className="space-y-4">
-                <h4 className="font-semibold text-primary">Soluções</h4>
-                <div className="space-y-2 text-sm text-white/80">
-                  <p>• CRM Vivo & Adoção</p>
-                  <p>• Business Intelligence</p>
-                  <p>• Agentes de IA</p>
-                  <p>• Processos & Rituais</p>
-                </div>
-              </div>
+          <div className="flex justify-center">
+            <Button
+              className="bg-gradient-to-r from-primary to-[#995925] hover:from-primary/90 hover:to-[#995925]/90 text-white font-semibold py-4 px-8 transition-all duration-300 hover:scale-105 hover:shadow-lg"
+              onClick={scrollToAuditForm}
+            >
+              Agendar Auditoria Gratuita
+              <ArrowRight className="h-5 w-5 ml-2" />
+            </Button>
+          </div>
+        </div>
+      </section>
 
-              <div className="space-y-4">
-                <h4 className="font-semibold text-primary">Conecte-se</h4>
-                <div className="flex gap-3">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300 hover:scale-110 bg-transparent"
-                    onClick={() => window.open("https://linkedin.com/in/andre-franciny", "_blank")}
-                  >
-                    <svg className="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                    </svg>
-                    LinkedIn
-                  </Button>
+      <footer className="py-12 bg-background border-t">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-sm text-[#6B4A2E]">
+            © {new Date().getFullYear()} Axend RevOps. Todos os direitos reservados.
+          </p>
+        </div>
+      </footer>
 
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300 hover:scale-110 bg-transparent"
-                    onClick={() => window.open("https://instagram.com/andre.franciny", "_blank")}
-                  >
-                    <svg className="h-4 w-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                    </svg>
-                    Instagram
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            <div className="border-t border-white/20 pt-6 text-center">
-              <p className="text-sm text-white/60">© 2024 Grupo Axend. Todos os direitos reservados.</p>
+      {showCalendarPopup && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md">
+            <h2 className="text-xl font-semibold text-[#413328] mb-4">Agende sua Consultoria Personalizada</h2>
+            <p className="text-sm text-[#6B4A2E] mb-6">
+              Escolha o melhor horário para discutir sua auditoria e receber uma proposta sob medida.
+            </p>
+            <div className="flex justify-center">
+              <Button
+                className="bg-gradient-to-r from-primary to-[#995925] hover:from-primary/90 hover:to-[#995925]/90 text-white font-semibold py-3 px-6 transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                onClick={() => {
+                  setShowCalendar(true)
+                  setShowCalendarPopup(false)
+                }}
+              >
+                Agendar Agora
+                <Calendar className="h-4 w-4 ml-2" />
+              </Button>
             </div>
           </div>
         </div>
-      </footer>
+      )}
+
+      {showCalendar && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+          <iframe
+            src="https://calendar.google.com/calendar/embed?src=c_a99ef1c5ef9c99f79c318b1a9f1a9989198e9a9999c99f99a99e999999999999%40group.calendar.google.com&ctz=America%2FSao_Paulo"
+            style={{ border: "0", width: "800px", height: "600px" }}
+            frameBorder="0"
+            scrolling="no"
+          ></iframe>
+        </div>
+      )}
     </div>
   )
 }
