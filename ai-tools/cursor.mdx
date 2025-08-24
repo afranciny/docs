@@ -15,13 +15,13 @@ Use Cursor to help write and maintain your documentation. This guide shows how t
 
 Create project rules that all team members can use. In your documentation repository root:
 
-```bash
+\`\`\`bash
 mkdir -p .cursor
-```
+\`\`\`
 
 Create `.cursor/rules.md`:
 
-````markdown
+\`\`\``markdown
 # Mintlify technical writing rule
 
 You are an AI writing assistant specialized in creating exceptional technical documentation using Mintlify components and following industry-leading technical writing practices.
@@ -97,7 +97,7 @@ Positive confirmations, successful completions, or achievement indicators
 
 Example of a single code block:
 
-```javascript config.js
+\`\`\`javascript config.js
 const apiConfig = {
   baseURL: 'https://api.example.com',
   timeout: 5000,
@@ -105,29 +105,29 @@ const apiConfig = {
     'Authorization': `Bearer ${process.env.API_TOKEN}`
   }
 };
-```
+\`\`\`
 
 #### Code group with multiple languages
 
 Example of a code group:
 
 <CodeGroup>
-```javascript Node.js
+\`\`\`javascript Node.js
 const response = await fetch('/api/endpoint', {
   headers: { Authorization: `Bearer ${apiKey}` }
 });
-```
+\`\`\`
 
-```python Python
+\`\`\`python Python
 import requests
 response = requests.get('/api/endpoint', 
   headers={'Authorization': f'Bearer {api_key}'})
-```
+\`\`\`
 
-```curl cURL
+\`\`\`curl cURL
 curl -X GET '/api/endpoint' \
   -H 'Authorization: Bearer YOUR_API_KEY'
-```
+\`\`\`
 </CodeGroup>
 
 #### Request/response examples
@@ -135,22 +135,22 @@ curl -X GET '/api/endpoint' \
 Example of request/response documentation:
 
 <RequestExample>
-```bash cURL
+\`\`\`bash cURL
 curl -X POST 'https://api.example.com/users' \
   -H 'Content-Type: application/json' \
   -d '{"name": "John Doe", "email": "john@example.com"}'
-```
+\`\`\`
 </RequestExample>
 
 <ResponseExample>
-```json Success
+\`\`\`json Success
 {
   "id": "user_123",
   "name": "John Doe", 
   "email": "john@example.com",
   "created_at": "2024-01-15T10:30:00Z"
 }
-```
+\`\`\`
 </ResponseExample>
 
 ### Structural components
@@ -171,9 +171,9 @@ Example of step-by-step instructions:
 <Step title="Configure environment">
   Create a `.env` file with your API credentials.
   
-  ```bash
+  \`\`\`bash
   API_KEY=your_api_key_here
-  ```
+  \`\`\`
   
   <Warning>
   Never commit API keys to version control.
@@ -187,24 +187,24 @@ Example of tabbed content:
 
 <Tabs>
 <Tab title="macOS">
-  ```bash
+  \`\`\`bash
   brew install node
   npm install -g package-name
-  ```
+  \`\`\`
 </Tab>
 
 <Tab title="Windows">
-  ```powershell
+  \`\`\`powershell
   choco install nodejs
   npm install -g package-name
-  ```
+  \`\`\`
 </Tab>
 
 <Tab title="Linux">
-  ```bash
+  \`\`\`bash
   sudo apt install nodejs npm
   npm install -g package-name
-  ```
+  \`\`\`
 </Tab>
 </Tabs>
 
@@ -220,12 +220,12 @@ Example of accordion groups:
 </Accordion>
 
 <Accordion title="Advanced configuration">
-  ```javascript
+  \`\`\`javascript
   const config = {
     performance: { cache: true, timeout: 30000 },
     security: { encryption: 'AES-256' }
   };
-  ```
+  \`\`\`
 </Accordion>
 </AccordionGroup>
 
@@ -370,12 +370,12 @@ Use updates for changelogs:
 
 Every documentation page must begin with YAML frontmatter:
 
-```yaml
+\`\`\`yaml
 ---
 title: "Clear, specific, keyword-rich title"
 description: "Concise description explaining page purpose and value"
 ---
-```
+\`\`\`
 
 ## Content quality standards
 
@@ -417,4 +417,4 @@ description: "Concise description explaining page purpose and value"
 - Use **RequestExample/ResponseExample** specifically for API endpoint documentation
 - Use **ParamField** for API parameters, **ResponseField** for API responses
 - Use **Expandable** for nested object properties or hierarchical information
-````
+\`\`\``
