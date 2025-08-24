@@ -23,6 +23,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={`${montserrat.variable} antialiased`}>
+      <head>
+        <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript" />
+      </head>
       <body>{children}</body>
     </html>
   )
