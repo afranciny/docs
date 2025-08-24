@@ -19,12 +19,9 @@ import {
   Brain,
   ChevronDown,
   Bot,
-  MessageCircle,
   Cpu,
   Rocket,
   Activity,
-  Play,
-  Pause,
   Award,
   Zap,
   LineChart,
@@ -69,6 +66,7 @@ export default function AxendRevOpsLanding() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
   const [submitError, setSubmitError] = useState("")
+  const [showCalendar, setShowCalendar] = useState(false)
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -308,6 +306,7 @@ export default function AxendRevOpsLanding() {
 
       setSubmitSuccess(true)
       setIsFormMinimized(true)
+      setShowCalendar(true)
 
       // Reset form after success
       setTimeout(() => {
@@ -327,6 +326,7 @@ export default function AxendRevOpsLanding() {
         })
         setSubmitSuccess(false)
         setIsFormMinimized(false)
+        setShowCalendar(false)
       }, 5000)
     } catch (error) {
       setSubmitError("Erro ao enviar formulário. Tente novamente.")
@@ -427,13 +427,7 @@ export default function AxendRevOpsLanding() {
         </div>
       )}
 
-      <div className="fixed right-4 bottom-20 flex flex-col gap-3 z-40">
-        
-
-        
-
-        
-      </div>
+      <div className="fixed right-4 bottom-20 flex flex-col gap-3 z-40"></div>
 
       <div className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b">
         <div className="container mx-auto px-4 py-2">
@@ -814,8 +808,39 @@ export default function AxendRevOpsLanding() {
                     )}
 
                     {submitSuccess && (
-                      <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-green-700 text-sm animate-in slide-in-from-top-2">
-                        ✅ Auditoria enviada com sucesso! Entraremos em contato em até 24h.
+                      <div className="text-center p-6 bg-green-50 border border-green-200 rounded-lg">
+                        <CheckCircle className="h-8 w-8 text-green-600 mx-auto mb-2" />
+                        <h3 className="text-lg font-semibold text-green-800 mb-2">Auditoria Enviada com Sucesso!</h3>
+                        <p className="text-green-700 mb-4">{auditRecommendation}</p>
+
+                        {showCalendar && (
+                          <div className="mt-6 p-4 bg-white rounded-lg border border-primary/20">
+                            <h4 className="text-lg font-semibold text-[#413328] mb-3">
+                              Agende sua Consultoria Personalizada
+                            </h4>
+                            <p className="text-[#6B4A2E] mb-4">
+                              Vamos discutir sua auditoria e apresentar a proposta ideal para sua empresa.
+                            </p>
+                            <div id="google-calendar-button"></div>
+                            <script
+                              dangerouslySetInnerHTML={{
+                                __html: `
+                                  (function() {
+                                    var target = document.getElementById('google-calendar-button');
+                                    if (target && window.calendar) {
+                                      window.calendar.schedulingButton.load({
+                                        url: 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ3Fk0BzTNSCZpGqUowjjdo2CMsulrtpV7kVc4r7UhX2gHC7t_Dxa7RMoNaYRd5GGPdRXQj9slOy?gv=true',
+                                        color: '#EB6A00',
+                                        label: 'Agendar Consultoria',
+                                        target: target,
+                                      });
+                                    }
+                                  })();
+                                `,
+                              }}
+                            />
+                          </div>
+                        )}
                       </div>
                     )}
 
@@ -1075,15 +1100,36 @@ export default function AxendRevOpsLanding() {
               <strong className="text-white animate-pulse">desenhada sob medida</strong> para seu estágio, mercado e
               complexidade.
             </p>
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-8 hover:bg-white/15 transition-all duration-300 border border-white/20">
-              <h3 className="text-xl font-bold mb-4 text-white flex items-center justify-center gap-2">
-                <Brain className="h-6 w-6 animate-pulse" />
-                Os 4 Pilares do RevOps que Implementamos
-                <Sparkles className="h-5 w-5 animate-spin" />
+            <div className="bg-white/15 backdrop-blur-sm rounded-xl p-8 mb-8 hover:bg-white/20 transition-all duration-300 border border-white/30 shadow-2xl">
+              <h3 className="text-2xl font-bold mb-6 text-white flex items-center justify-center gap-3">
+                <Brain className="h-8 w-8 animate-pulse text-white" />
+                Os 4 Pilares Fundamentais do RevOps
+                <Sparkles className="h-6 w-6 animate-spin text-white" />
               </h3>
-              <p className="text-white/80">
-                Nossa metodologia se baseia em 4 pilares fundamentais que trabalham em sinergia para transformar sua
-                operação de receita em uma máquina previsível e escalável.
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div className="bg-white/10 rounded-lg p-4 border border-white/20">
+                  <Cog className="h-8 w-8 text-white mx-auto mb-2" />
+                  <h4 className="font-bold text-white text-sm">Processos</h4>
+                </div>
+                <div className="bg-white/10 rounded-lg p-4 border border-white/20">
+                  <Users className="h-8 w-8 text-white mx-auto mb-2" />
+                  <h4 className="font-bold text-white text-sm">CRM</h4>
+                </div>
+                <div className="bg-white/10 rounded-lg p-4 border border-white/20">
+                  <BarChart3 className="h-8 w-8 text-white mx-auto mb-2" />
+                  <h4 className="font-bold text-white text-sm">BI</h4>
+                </div>
+                <div className="bg-white/10 rounded-lg p-4 border border-white/20">
+                  <Brain className="h-8 w-8 text-white mx-auto mb-2" />
+                  <h4 className="font-bold text-white text-sm">IA</h4>
+                </div>
+              </div>
+              <p className="text-white/90 text-lg leading-relaxed">
+                Nossa metodologia integra <strong className="text-white">Processos & Rituais</strong>,{" "}
+                <strong className="text-white">CRM Vivo</strong>,
+                <strong className="text-white"> Business Intelligence</strong> e{" "}
+                <strong className="text-white">Agentes de IA</strong>
+                em uma solução completa que transforma sua operação de receita em uma máquina previsível e escalável.
               </p>
             </div>
           </div>
@@ -1255,98 +1301,149 @@ export default function AxendRevOpsLanding() {
         </div>
       </section>
 
-      <section
-        className="py-20 bg-gradient-to-br from-[#E6E4E3]/30 to-background relative overflow-hidden"
-        data-animate
-      >
+      <section className="py-20 bg-gradient-to-br from-background to-[#E6E4E3]/20 relative" data-animate>
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#413328]">O que esperar nos primeiros 90 dias</h2>
-            <div className="flex items-center justify-center gap-2 mb-8">
-              <Badge className="bg-primary/10 text-primary border-primary/20 animate-pulse">
-                ✅ Resultados Mensuráveis e Garantidos
-              </Badge>
-            </div>
+            <Badge className="bg-primary/10 text-primary border-primary/20 mb-6 animate-pulse">
+              🎯 Soluções Personalizadas por Nível
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#413328]">
+              Escolha o Nível Ideal para sua <span className="text-primary">Transformação RevOps</span>
+            </h2>
             <p className="text-xl text-[#6B4A2E]">
-              Transformação completa da sua operação de receita com métricas que você pode acompanhar em tempo real
+              Cada pilar disponível em 3 níveis de complexidade, ou adquira o pacote completo com desconto
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {[
               {
-                metric: "Forecast confiável",
-                desc: "que você pode apostar",
-                icon: TrendingUp,
-                color: "text-[#EB6A00]",
-                bgColor: "bg-[#EB6A00]/5",
-                borderColor: "border-[#EB6A00]/20",
-              },
-              {
-                metric: "Resposta imediata",
-                desc: "aos leads qualificados",
-                icon: Zap,
-                color: "text-[#995925]",
+                level: "Essencial",
+                subtitle: "Para pequenas empresas",
+                description: "Fundação sólida para começar sua jornada RevOps",
+                price: "R$ 2.500",
+                period: "/pilar",
+                packagePrice: "R$ 7.500",
+                packageDiscount: "25% OFF",
+                features: [
+                  "Configuração básica do pilar",
+                  "Treinamento da equipe",
+                  "Documentação completa",
+                  "Suporte por 30 dias",
+                ],
+                color: "border-[#995925]/30",
                 bgColor: "bg-[#995925]/5",
-                borderColor: "border-[#995925]/20",
+                textColor: "text-[#995925]",
+                buttonColor: "from-[#995925] to-[#6B4A2E]",
               },
               {
-                metric: "Conversão otimizada",
-                desc: "em cada etapa do funil",
-                icon: Target,
-                color: "text-[#6B4A2E]",
-                bgColor: "bg-[#6B4A2E]/5",
-                borderColor: "border-[#6B4A2E]/20",
-              },
-              {
-                metric: "Adoção completa",
-                desc: "do CRM e BI pela equipe",
-                icon: CheckCircle,
-                color: "text-primary",
+                level: "Profissional",
+                subtitle: "Para médias empresas",
+                description: "Implementação completa com automações avançadas",
+                price: "R$ 4.500",
+                period: "/pilar",
+                packagePrice: "R$ 13.500",
+                packageDiscount: "25% OFF",
+                features: [
+                  "Tudo do Essencial +",
+                  "Automações inteligentes",
+                  "Integrações personalizadas",
+                  "Dashboards avançados",
+                  "Suporte por 60 dias",
+                ],
+                color: "border-primary/30",
                 bgColor: "bg-primary/5",
-                borderColor: "border-primary/20",
+                textColor: "text-primary",
+                buttonColor: "from-primary to-[#995925]",
+                popular: true,
               },
               {
-                metric: "Vendas aceleradas",
-                desc: "com ciclo mais curto",
-                icon: Clock,
-                color: "text-[#EB6A00]",
-                bgColor: "bg-[#EB6A00]/5",
-                borderColor: "border-[#EB6A00]/20",
+                level: "Avançado",
+                subtitle: "Para grandes empresas",
+                description: "Solução enterprise com IA e máxima personalização",
+                price: "R$ 7.500",
+                period: "/pilar",
+                packagePrice: "R$ 22.500",
+                packageDiscount: "25% OFF",
+                features: [
+                  "Tudo do Profissional +",
+                  "IA preditiva personalizada",
+                  "Consultoria estratégica",
+                  "Implementação white-glove",
+                  "Suporte por 90 dias",
+                ],
+                color: "border-[#413328]/30",
+                bgColor: "bg-[#413328]/5",
+                textColor: "text-[#413328]",
+                buttonColor: "from-[#413328] to-[#6B4A2E]",
               },
-              {
-                metric: "Operação fluida",
-                desc: "sem gargalos críticos",
-                icon: Cog,
-                color: "text-indigo-600",
-                bgColor: "bg-indigo-50",
-                borderColor: "border-indigo-200",
-              },
-            ].map((result, index) => (
+            ].map((tier, index) => (
               <Card
                 key={index}
-                className={`group hover:shadow-xl transition-all duration-500 cursor-pointer border-2 ${result.borderColor} ${result.bgColor} hover:scale-105 relative overflow-hidden`}
+                className={`relative overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
+                  tier.popular
+                    ? "border-2 border-primary shadow-xl bg-white"
+                    : `border-2 ${tier.color} ${tier.bgColor} hover:bg-white/50`
+                }`}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                <CardContent className="text-center p-6 relative z-10">
-                  <div
-                    className={`w-16 h-16 ${result.bgColor} rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 border-2 ${result.borderColor}`}
-                  >
-                    <result.icon className={`h-8 w-8 ${result.color} group-hover:animate-pulse`} />
+                {tier.popular && (
+                  <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-primary to-[#995925] text-white text-center py-2 text-sm font-semibold">
+                    🏆 MAIS POPULAR
                   </div>
-                  <h3 className={`font-bold text-lg mb-2 ${result.color} group-hover:animate-pulse`}>
-                    {result.metric}
-                  </h3>
-                  <p className="text-sm text-[#6B4A2E] group-hover:text-[#413328] transition-colors duration-300">
-                    {result.desc}
-                  </p>
+                )}
 
-                  <div className="mt-4 h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full bg-gradient-to-r ${result.color.replace("text-", "from-")} to-transparent transition-all duration-2000 group-hover:w-full`}
-                      style={{ width: `${(roiAnimation + index * 15) % 100}%` }}
-                    />
+                <CardHeader className={`pb-4 ${tier.popular ? "pt-12" : "pt-6"}`}>
+                  <div className="text-center">
+                    <CardTitle className={`text-2xl font-bold mb-2 ${tier.textColor}`}>{tier.level}</CardTitle>
+                    <CardDescription className="text-[#6B4A2E] mb-4">{tier.subtitle}</CardDescription>
+                    <p className="text-sm text-[#6B4A2E] mb-6">{tier.description}</p>
+
+                    <div className="space-y-4">
+                      <div>
+                        <div className="flex items-center justify-center gap-2 mb-2">
+                          <span className={`text-3xl font-bold ${tier.textColor}`}>{tier.price}</span>
+                          <span className="text-[#6B4A2E]">{tier.period}</span>
+                        </div>
+                        <Button
+                          onClick={() => {
+                            setAuditForm({ ...auditForm, productInterest: `${tier.level.toLowerCase()}-individual` })
+                            scrollToAuditForm()
+                          }}
+                          variant="outline"
+                          className={`w-full mb-3 border-2 ${tier.color} ${tier.textColor} hover:bg-white/80`}
+                        >
+                          Contratar Pilar Individual
+                        </Button>
+                      </div>
+
+                      <div className="border-t border-[#995925]/20 pt-4">
+                        <div className="flex items-center justify-center gap-2 mb-2">
+                          <span className={`text-2xl font-bold ${tier.textColor}`}>{tier.packagePrice}</span>
+                          <Badge className="bg-green-100 text-green-800 text-xs">{tier.packageDiscount}</Badge>
+                        </div>
+                        <p className="text-xs text-[#6B4A2E] mb-3">Pacote completo (4 pilares)</p>
+                        <Button
+                          onClick={() => {
+                            setAuditForm({ ...auditForm, productInterest: `pacote-${tier.level.toLowerCase()}` })
+                            scrollToAuditForm()
+                          }}
+                          className={`w-full bg-gradient-to-r ${tier.buttonColor} text-white hover:opacity-90 transition-all duration-300 hover:scale-105`}
+                        >
+                          Solicitar Pacote Completo
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
+
+                <CardContent>
+                  <div className="space-y-3">
+                    {tier.features.map((feature, featureIndex) => (
+                      <div key={featureIndex} className="flex items-start gap-2">
+                        <CheckCircle className={`h-4 w-4 mt-0.5 flex-shrink-0 ${tier.textColor}`} />
+                        <span className="text-sm text-[#6B4A2E]">{feature}</span>
+                      </div>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
@@ -1354,95 +1451,15 @@ export default function AxendRevOpsLanding() {
           </div>
 
           <div className="mt-16 text-center">
-            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-xl px-8 py-6">
-              <Award className="h-8 w-8 text-green-600 animate-bounce" />
+            <div className="inline-flex items-center gap-3 bg-gradient-to-r from-primary/10 to-[#995925]/5 border border-primary/20 rounded-xl px-8 py-4">
+              <Sparkles className="h-6 w-6 text-primary animate-spin" />
               <div className="text-left">
-                <p className="font-bold text-green-700 text-lg">Garantia de Resultados</p>
+                <p className="font-bold text-primary">Não sabe qual escolher?</p>
                 <p className="text-sm text-[#6B4A2E]">
-                  Se não identificarmos pelo menos 3 oportunidades de melhoria significativas, devolvemos 100% do
-                  investimento
+                  Nossa auditoria gratuita identifica o nível ideal para sua empresa
                 </p>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section
-        className="py-20 bg-gradient-to-br from-background to-[#E6E4E3]/30 relative overflow-hidden"
-        data-animate
-      >
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0 bg-[url('/placeholder.svg?height=600&width=1200')] bg-cover bg-center" />
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#413328]">
-              Pronto para parar de <span className="text-destructive animate-pulse">queimar dinheiro</span>?
-            </h2>
-            <p className="text-xl text-[#6B4A2E] mb-8 max-w-3xl mx-auto">
-              Cada semana sem disciplina operacional aumenta o custo de oportunidade. Vamos mapear seus gargalos
-              específicos e definir as 3 alavancas de maior impacto para sua operação.
-            </p>
-
-            <Card className="glass-strong max-w-lg mx-auto shadow-2xl border-primary/20 hover:shadow-3xl transition-all duration-300 relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent" />
-
-              <CardContent className="p-8 relative z-10">
-                <div className="text-center mb-4">
-                  <Badge
-                    variant="destructive"
-                    className="animate-pulse bg-amber-600 hover:bg-amber-700 transition-colors duration-300"
-                  >
-                    ⏰ Próximas vagas: Apenas 2 restantes esta semana
-                  </Badge>
-                </div>
-
-                <div className="mb-6 p-4 bg-gradient-to-r from-primary/10 to-[#995925]/5 rounded-lg border border-primary/20">
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <Brain className="h-5 w-5 text-primary animate-pulse" />
-                    <span className="font-semibold text-primary">Diagnóstico com IA Incluso</span>
-                  </div>
-                  <p className="text-sm text-[#6B4A2E]">
-                    Nossa IA analisará seus dados em tempo real durante a chamada
-                  </p>
-                </div>
-
-                <Button
-                  size="lg"
-                  className="w-full text-lg font-semibold mb-4 group bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-                  onClick={scrollToAuditForm}
-                >
-                  <Rocket className="mr-2 h-5 w-5 group-hover:animate-bounce" />
-                  Agendar Diagnóstico de 90 Minutos
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-
-                <div className="grid grid-cols-2 gap-4 text-sm text-[#6B4A2E] mb-4">
-                  <div className="flex items-center gap-1">
-                    <CheckCircle className="h-4 w-4 text-primary" />
-                    Sem compromisso
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <CheckCircle className="h-4 w-4 text-primary" />
-                    Análise específica
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <CheckCircle className="h-4 w-4 text-primary" />
-                    IA em tempo real
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <CheckCircle className="h-4 w-4 text-primary" />
-                    Plano personalizado
-                  </div>
-                </div>
-
-                <p className="text-xs text-center text-[#6B4A2E]">
-                  Diagnóstico personalizado para sua realidade específica com recomendações acionáveis
-                </p>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </section>
