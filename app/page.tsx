@@ -364,6 +364,9 @@ export default function AxendRevOpsLanding() {
               <Link href="/solucoes" className="text-[#413328] hover:text-[#EB6A00] transition-colors">
                 Soluções
               </Link>
+              <Link href="/auth/login" className="text-[#413328] hover:text-[#EB6A00] transition-colors">
+                Login
+              </Link>
               <Button asChild className="bg-[#EB6A00] hover:bg-[#995925]">
                 <Link href="#auditoria">Auditoria Gratuita</Link>
               </Button>
