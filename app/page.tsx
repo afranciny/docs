@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -56,22 +56,7 @@ export default function AxendRevOpsLanding() {
     additionalDetails: "",
   })
 
-  const [isTyping, setIsTyping] = useState(false)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [visibleElements, setVisibleElements] = useState<Set<string>>(new Set())
-  const [roiAnimation, setRoiAnimation] = useState(0)
-  const [interactiveDemo, setInteractiveDemo] = useState(false)
-  const [voiceEnabled, setVoiceEnabled] = useState(false)
-  const [isPlaying3D, setIsPlaying3D] = useState(false)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-
-  const [showPackageDiscount, setShowPackageDiscount] = useState(false)
   const [hoveredService, setHoveredService] = useState<number | null>(null)
-
-  const [showChatbot, setShowChatbot] = useState(false)
-  const [chatMessages, setChatMessages] = useState<Array<{ role: "user" | "bot"; message: string }>>([])
-  const [currentMessage, setCurrentMessage] = useState("")
-  const [showCalendar, setShowCalendar] = useState(false)
 
   const serviceLevels = {
     essencial: {
@@ -191,221 +176,6 @@ export default function AxendRevOpsLanding() {
     setSelectedPillars((prev) => (prev.includes(pillarId) ? prev.filter((id) => id !== pillarId) : [...prev, pillarId]))
   }
 
-  const calculateTotalPrice = () => {
-    const level = serviceLevels[selectedBuildingLevel as keyof typeof serviceLevels]
-    if (!level) return "R$ 0"
-
-    if (selectedPillars.length === 4) {
-      return level.packagePrice || "R$ 0"
-    }
-
-    let total = 0
-    selectedPillars.forEach((pillarId) => {
-      const price = level.services?.[pillarId]?.price || "R$ 0"
-      total += Number.parseInt(price.replace(/[^\d]/g, ""))
-    })
-
-    return `R$ ${total.toLocaleString()}`
-  }
-
-  const getDiscountAmount = () => {
-    if (selectedPillars.length === 4) {
-      const level = serviceLevels[selectedBuildingLevel as keyof typeof serviceLevels]
-      if (!level || !level.originalPrice || !level.packagePrice) return "R$ 0"
-
-      const originalTotal = Number.parseInt(level.originalPrice.replace(/[^\d]/g, ""))
-      const packageTotal = Number.parseInt(level.packagePrice.replace(/[^\d]/g, ""))
-      return `R$ ${(originalTotal - packageTotal).toLocaleString()}`
-    }
-    return "R$ 0"
-  }
-
-  useEffect(() => {
-    setShowPackageDiscount(selectedPillars.length === 4)
-  }, [selectedPillars])
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-    }
-
-    const handleScroll = () => {
-      setScrollY(window.scrollY)
-
-      // Intersection observer for animations
-      const elements = document.querySelectorAll("[data-animate]")
-      elements.forEach((el) => {
-        const rect = el.getBoundingClientRect()
-        if (rect.top < window.innerHeight && rect.bottom > 0) {
-          setVisibleElements((prev) => new Set([...prev, el.id || Math.random().toString()]))
-        }
-      })
-    }
-
-    window.addEventListener("mousemove", handleMouseMove)
-    window.addEventListener("scroll", handleScroll)
-
-    // ROI counter animation
-    const interval = setInterval(() => {
-      setRoiAnimation((prev) => (prev + 1) % 100)
-    }, 50)
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove)
-      window.removeEventListener("scroll", handleScroll)
-      clearInterval(interval)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!canvasRef.current) return
-
-    const canvas = canvasRef.current
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
-
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
-
-    const particles: Array<{ x: number; y: number; vx: number; vy: number; size: number; color: string }> = []
-
-    for (let i = 0; i < 50; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 2,
-        vy: (Math.random() - 0.5) * 2,
-        size: Math.random() * 3 + 1,
-        color: ["#EB6A00", "#995925", "#6B4A2E"][Math.floor(Math.random() * 3)],
-      })
-    }
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-      particles.forEach((particle) => {
-        particle.x += particle.vx
-        particle.y += particle.vy
-
-        if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1
-        if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1
-
-        ctx.beginPath()
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
-        ctx.fillStyle = particle.color + "20"
-        ctx.fill()
-      })
-
-      if (isPlaying3D) {
-        requestAnimationFrame(animate)
-      }
-    }
-
-    if (isPlaying3D) {
-      animate()
-    }
-  }, [isPlaying3D])
-
-  const handleChatSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!currentMessage.trim()) return
-
-    const userMessage = currentMessage
-    setCurrentMessage("")
-    setChatMessages((prev) => [...prev, { role: "user", message: userMessage }])
-    setIsTyping(true)
-
-    // Simulate AI response
-    setTimeout(() => {
-      const responses = [
-        "Entendo sua necessidade! Com base no que você disse, recomendo começar com nosso pilar de IA para automatizar seus processos de vendas.",
-        "Excelente pergunta! Nossa metodologia RevOps pode aumentar sua previsibilidade em até 85%. Que tal agendar uma auditoria gratuita?",
-        "Isso é muito comum em empresas em crescimento. Nosso CRM vivo resolve exatamente esse problema. Posso te mostrar como?",
-        "Perfeito! Vou conectar você com nosso especialista. Enquanto isso, que tal preencher nossa auditoria rápida para personalizar a proposta?",
-      ]
-
-      const randomResponse = responses[Math.floor(Math.random() * responses.length)]
-      setChatMessages((prev) => [...prev, { role: "bot", message: randomResponse }])
-      setIsTyping(false)
-    }, 1500)
-  }
-
-  const handleVoiceToggle = () => {
-    if ("speechSynthesis" in window) {
-      if (voiceEnabled) {
-        window.speechSynthesis.cancel()
-        setVoiceEnabled(false)
-      } else {
-        const utterance = new SpeechSynthesisUtterance(
-          "Olá! Sou a IA da Axend. Como posso ajudar você a transformar sua operação de receita?",
-        )
-        utterance.lang = "pt-BR"
-        window.speechSynthesis.speak(utterance)
-        setVoiceEnabled(true)
-      }
-    }
-  }
-
-  const serviceLevelsData = {
-    essencial: {
-      name: "Essencial",
-      subtitle: "Para empresas iniciando a jornada RevOps - O Sábio orienta os primeiros passos",
-      duration: "60 dias",
-      originalPrice: "R$ 8.000",
-      packagePrice: "R$ 6.000",
-      packageDiscount: "25%",
-      popular: false,
-      buildingHeight: 1,
-      buildingStyle: "basic",
-      services: {
-        crm: { price: "R$ 2.000", features: ["Setup básico CRM", "Treinamento equipe", "Automações essenciais"] },
-        bi: { price: "R$ 2.000", features: ["Dashboard executivo", "Relatórios básicos", "Métricas fundamentais"] },
-        ia: { price: "R$ 2.500", features: ["Chatbot qualificação", "Automação follow-up", "Scoring básico"] },
-        processos: { price: "R$ 1.500", features: ["Mapeamento processos", "Playbooks vendas", "Rituais básicos"] },
-      },
-    },
-    profissional: {
-      name: "Profissional",
-      subtitle: "Para empresas em crescimento acelerado - O Criador constrói sistemas robustos",
-      duration: "90 dias",
-      originalPrice: "R$ 15.000",
-      packagePrice: "R$ 12.000",
-      packageDiscount: "20%",
-      popular: true,
-      buildingHeight: 2,
-      buildingStyle: "modern",
-      services: {
-        crm: { price: "R$ 4.000", features: ["CRM avançado", "Integrações múltiplas", "Automações complexas"] },
-        bi: { price: "R$ 4.000", features: ["BI completo", "Análises preditivas", "Dashboards personalizados"] },
-        ia: { price: "R$ 4.000", features: ["IA conversacional", "Previsões vendas", "Insights automáticos"] },
-        processos: {
-          price: "R$ 3.000",
-          features: ["Processos otimizados", "Rituais avançados", "Metodologia própria"],
-        },
-      },
-    },
-    avancado: {
-      name: "Avançado",
-      subtitle: "Para empresas que querem dominar o mercado - O Herói conquista a liderança",
-      duration: "120 dias",
-      originalPrice: "R$ 25.000",
-      packagePrice: "R$ 20.000",
-      packageDiscount: "20%",
-      popular: false,
-      buildingHeight: 3,
-      buildingStyle: "luxury",
-      services: {
-        crm: { price: "R$ 7.000", features: ["CRM enterprise", "Customizações avançadas", "Integrações ilimitadas"] },
-        bi: { price: "R$ 6.500", features: ["BI enterprise", "Machine Learning", "Análises prescritivas"] },
-        ia: { price: "R$ 6.500", features: ["IA proprietária", "Agentes autônomos", "Otimização contínua"] },
-        processos: {
-          price: "R$ 5.000",
-          features: ["Transformação completa", "Inovação processos", "Liderança mercado"],
-        },
-      },
-    },
-  }
-
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY)
     window.addEventListener("scroll", handleScroll)
@@ -475,122 +245,10 @@ export default function AxendRevOpsLanding() {
     document.getElementById("audit-form-section")?.scrollIntoView({ behavior: "smooth" })
   }
 
-  const scrollToAuditFormOld = () => {
-    document.getElementById("audit-form-section")?.scrollIntoView({ behavior: "smooth" })
-  }
-
   const scrollToAuditFormWithProduct = (product: string) => {
     setAuditForm((prev) => ({ ...prev, productInterest: product }))
     scrollToAuditForm()
   }
-
-  const handleAuditSubmitOld = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setSubmitError("")
-
-    try {
-      const response = await fetch("/api/leads", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...auditForm,
-          recommendation: auditRecommendation,
-          timestamp: new Date().toISOString(),
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error("Erro ao enviar formulário")
-      }
-
-      setSubmitSuccess(true)
-      setIsFormMinimized(true)
-      setShowCalendarPopup(true)
-
-      // Reset form after success
-      setTimeout(() => {
-        setAuditForm({
-          name: "",
-          email: "",
-          phone: "",
-          cnpj: "",
-          website: "",
-          productInterest: "",
-          additionalDetails: "",
-          companySize: "",
-          aiUsage: 0,
-          biQuality: 0,
-          crmAdoption: 0,
-          processMaturity: 0,
-        })
-        setSubmitSuccess(false)
-        setIsFormMinimized(false)
-        setShowCalendarPopup(false)
-      }, 10000)
-    } catch (error) {
-      setSubmitError("Erro ao enviar formulário. Tente novamente.")
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
-  const generateRecommendation = () => {
-    const scores = {
-      ai: auditForm.aiUsage,
-      bi: auditForm.biQuality,
-      crm: auditForm.crmAdoption,
-      processos: auditForm.processMaturity,
-    }
-
-    const lowScores = Object.entries(scores).filter(([_, score]) => score <= 3)
-    const companyLevel =
-      auditForm.companySize === "pequena"
-        ? "essencial"
-        : auditForm.companySize === "media"
-          ? "profissional"
-          : "avancado"
-
-    const recommendation = {
-      level: companyLevel,
-      pillars: lowScores.map(([pillar]) => pillar),
-      isPackage: lowScores.length >= 3,
-      estimatedInvestment: "",
-      description: "",
-    }
-
-    const currentLevel = serviceLevels[companyLevel as keyof typeof serviceLevels]
-    if (!currentLevel) {
-      recommendation.estimatedInvestment = "Consulte"
-      recommendation.description = "Entre em contato para uma proposta personalizada."
-      setAuditRecommendation(recommendation)
-      return
-    }
-
-    if (recommendation.isPackage) {
-      recommendation.estimatedInvestment = currentLevel.packagePrice || "Consulte"
-      recommendation.description = `Recomendamos o Pacote Completo ${currentLevel.name} pois identificamos oportunidades de melhoria em múltiplos pilares.`
-    } else if (lowScores.length > 0) {
-      const pillarName = lowScores[0][0]
-      recommendation.estimatedInvestment = currentLevel.services?.[pillarName]?.price || "Consulte"
-      recommendation.description = `Recomendamos focar no pilar ${pillarName.toUpperCase()} para resolver seus principais gargalos.`
-    }
-
-    setAuditRecommendation(recommendation)
-  }
-
-  useEffect(() => {
-    if (
-      auditForm.aiUsage > 0 &&
-      auditForm.biQuality > 0 &&
-      auditForm.crmAdoption > 0 &&
-      auditForm.processMaturity > 0
-    ) {
-      generateRecommendation()
-    }
-  }, [auditForm.aiUsage, auditForm.biQuality, auditForm.crmAdoption, auditForm.processMaturity])
 
   const calculateSelectedTotal = () => {
     const currentLevel = serviceLevels[selectedLevel as keyof typeof serviceLevels]
@@ -608,18 +266,6 @@ export default function AxendRevOpsLanding() {
 
   const scrollToForm = () => {
     document.getElementById("audit-form-section")?.scrollIntoView({ behavior: "smooth" })
-  }
-
-  const calculateTotal = (level) => {
-    if (!level || !level.services) return "R$ 0"
-
-    let total = 0
-    selectedPillars.forEach((pillarId) => {
-      const price = level.services[pillarId]?.price || "R$ 0"
-      total += Number.parseInt(price.replace(/[^\d]/g, ""))
-    })
-
-    return `R$ ${total.toLocaleString()}`
   }
 
   const handleProductSelection = (product: string) => {
@@ -993,9 +639,8 @@ export default function AxendRevOpsLanding() {
                 Os 4 Pilares do RevOps
               </h2>
               <p className="text-lg sm:text-xl text-[#6B4A2E] mb-6 sm:mb-8 px-4">
-                Cada pilar pode ser contratado individualmente de acordo com a sua necessidade   
+                Cada pilar pode ser contratado individualmente de acordo com a sua necessidade
               </p>
-              
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
@@ -1030,7 +675,7 @@ export default function AxendRevOpsLanding() {
                       <p className="text-xs sm:text-sm text-[#6B4A2E] mb-3 sm:mb-4 leading-relaxed">
                         {currentService.description}
                       </p>
-                      
+
                       <div className="text-xs sm:text-sm text-[#995925] font-medium">{currentService.timeline}</div>
                     </CardContent>
                   </Card>
@@ -1051,8 +696,6 @@ export default function AxendRevOpsLanding() {
                   <p className="text-lg opacity-90 mb-6">Contrate todos os 4 pilares e receba desconto especial</p>
                 </div>
 
-                
-
                 <div className="text-center mt-8">
                   <Button
                     size="lg"
@@ -1062,7 +705,6 @@ export default function AxendRevOpsLanding() {
                     <Crown className="h-5 w-5 mr-2" />
                     Solicitar Pacote Completo
                   </Button>
-                  
                 </div>
               </div>
             </div>
@@ -1530,6 +1172,12 @@ export default function AxendRevOpsLanding() {
                 packagePrice: "R$ 6.000",
                 packageDiscount: "25% OFF",
                 originalPackagePrice: "R$ 8.000",
+                pillars: {
+                  crm: "R$ 1.750",
+                  bi: "R$ 1.750",
+                  processos: "R$ 1.750",
+                  ia: "R$ 1.750",
+                },
                 features: [
                   "Setup básico de CRM",
                   "Dashboards essenciais",
@@ -1550,6 +1198,12 @@ export default function AxendRevOpsLanding() {
                 packagePrice: "R$ 12.000",
                 packageDiscount: "20% OFF",
                 originalPackagePrice: "R$ 15.000",
+                pillars: {
+                  crm: "R$ 3.750",
+                  bi: "R$ 3.750",
+                  processos: "R$ 3.750",
+                  ia: "R$ 3.750",
+                },
                 features: [
                   "CRM avançado + automações",
                   "BI completo + alertas",
@@ -1571,6 +1225,12 @@ export default function AxendRevOpsLanding() {
                 packagePrice: "R$ 20.000",
                 packageDiscount: "20% OFF",
                 originalPackagePrice: "R$ 25.000",
+                pillars: {
+                  crm: "R$ 6.250",
+                  bi: "R$ 6.250",
+                  processos: "R$ 6.250",
+                  ia: "R$ 6.250",
+                },
                 features: [
                   "CRM enterprise + IA",
                   "BI preditivo + ML",
@@ -1602,19 +1262,53 @@ export default function AxendRevOpsLanding() {
                     <p className="text-xs sm:text-sm text-[#995925] leading-relaxed px-2">{tier.description}</p>
                   </div>
 
-                  <div className="text-center mb-4 sm:mb-6">
-                    <div className="text-2xl sm:text-3xl font-bold text-primary mb-1">{tier.price}</div>
-                    <div className="text-sm text-[#6B4A2E]">{tier.period}</div>
+                  <div className="mb-4 sm:mb-6">
+                    <h4 className="text-sm font-semibold text-[#413328] mb-3 text-center">4 Pilares Individuais:</h4>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="flex justify-between items-center bg-white/50 rounded p-2">
+                        <span className="text-[#6B4A2E]">🔧 CRM</span>
+                        <span className="font-semibold text-primary">{tier.pillars.crm}</span>
+                      </div>
+                      <div className="flex justify-between items-center bg-white/50 rounded p-2">
+                        <span className="text-[#6B4A2E]">📊 BI</span>
+                        <span className="font-semibold text-primary">{tier.pillars.bi}</span>
+                      </div>
+                      <div className="flex justify-between items-center bg-white/50 rounded p-2">
+                        <span className="text-[#6B4A2E]">⚙️ Processos</span>
+                        <span className="font-semibold text-primary">{tier.pillars.processos}</span>
+                      </div>
+                      <div className="flex justify-between items-center bg-white/50 rounded p-2">
+                        <span className="text-[#6B4A2E]">🤖 IA</span>
+                        <span className="font-semibold text-primary">{tier.pillars.ia}</span>
+                      </div>
+                    </div>
+                    <div className="text-center mt-2 pt-2 border-t border-[#E6E4E3]">
+                      <span className="text-xs text-[#995925]">Total individual: </span>
+                      <span className="text-sm font-semibold text-[#6B4A2E] line-through">
+                        {tier.originalPackagePrice}
+                      </span>
+                    </div>
                   </div>
 
-                  <div className="bg-primary/10 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6 border border-primary/20">
+                  <div className="bg-gradient-to-r from-primary/10 to-[#995925]/10 rounded-lg p-4 mb-4 sm:mb-6 border-2 border-primary/30">
                     <div className="text-center">
-                      <div className="text-xs sm:text-sm text-[#995925] mb-1">Pacote Completo (4 pilares)</div>
-                      <div className="flex items-center justify-center gap-2 mb-2">
-                        <span className="text-lg sm:text-xl font-bold text-primary">{tier.packagePrice}</span>
-                        <Badge className="bg-primary text-white text-xs">{tier.packageDiscount}</Badge>
+                      <div className="text-xs sm:text-sm text-[#995925] mb-2 font-semibold">
+                        🎁 PACOTE COMPLETO (4 pilares)
                       </div>
-                      <div className="text-xs text-[#6B4A2E] line-through">{tier.originalPackagePrice}</div>
+                      <div className="flex items-center justify-center gap-3 mb-2">
+                        <span className="text-2xl sm:text-3xl font-bold text-primary">{tier.packagePrice}</span>
+                        <Badge className="bg-primary text-white text-xs sm:text-sm px-2 py-1 animate-pulse">
+                          {tier.packageDiscount}
+                        </Badge>
+                      </div>
+                      <div className="text-xs text-[#6B4A2E]">
+                        <span className="line-through opacity-60">{tier.originalPackagePrice}</span>
+                        <span className="ml-2 text-green-600 font-semibold">
+                          Economia: R${" "}
+                          {Number.parseInt(tier.originalPackagePrice.replace("R$ ", "").replace(".", "")) -
+                            Number.parseInt(tier.packagePrice.replace("R$ ", "").replace(".", ""))}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
@@ -1636,10 +1330,10 @@ export default function AxendRevOpsLanding() {
                     </Button>
                     <Button
                       variant="outline"
-                      className="w-full border-primary text-primary hover:bg-primary hover:text-white font-semibold py-2 sm:py-3 text-sm sm:text-base bg-transparent"
-                      onClick={() => handleProductSelection(`pilar-${tier.level.toLowerCase()}`)}
+                      className="w-full border-primary text-primary hover:bg-primary/10 py-2 sm:py-3 text-sm sm:text-base bg-transparent"
+                      onClick={() => handleProductSelection(`pilar-individual-${tier.level.toLowerCase()}`)}
                     >
-                      Contratar Pilares Individuais
+                      Contratar Pilar Individual
                     </Button>
                   </div>
                 </CardContent>
