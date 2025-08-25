@@ -18,41 +18,28 @@ import {
   Cog,
   Brain,
   ChevronDown,
-  Bot,
-  Cpu,
   Rocket,
-  Activity,
-  Award,
   Zap,
   LineChart,
   Calendar,
   Crown,
+  DollarSign,
+  X,
 } from "lucide-react"
 
 export default function AxendRevOpsLanding() {
-  const [isFormMinimized, setIsFormMinimized] = useState(false)
-  const [hoveredService, setHoveredService] = useState<number | null>(null)
-  const [selectedLevel, setSelectedLevel] = useState("profissional")
+  const [scrollY, setScrollY] = useState(0)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [submitError, setSubmitError] = useState("")
   const [showEvaluationSection, setShowEvaluationSection] = useState(false)
   const [showNeedsSection, setShowNeedsSection] = useState(false)
-  const [auditRecommendation, setAuditRecommendation] = useState<any>(null)
-  const [roiCalculatorRevenue, setRoiCalculatorRevenue] = useState("")
-  const [showChatbot, setShowChatbot] = useState(false)
-  const [chatMessages, setChatMessages] = useState<Array<{ role: "user" | "bot"; message: string }>>([])
-  const [currentMessage, setCurrentMessage] = useState("")
-  const [isTyping, setIsTyping] = useState(false)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [scrollY, setScrollY] = useState(0)
-  const [visibleElements, setVisibleElements] = useState<Set<string>>(new Set())
-  const [roiAnimation, setRoiAnimation] = useState(0)
-  const [interactiveDemo, setInteractiveDemo] = useState(false)
-  const [voiceEnabled, setVoiceEnabled] = useState(false)
-  const [isPlaying3D, setIsPlaying3D] = useState(false)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-
+  const [isFormMinimized, setIsFormMinimized] = useState(false)
+  const [auditRecommendation, setAuditRecommendation] = useState("")
+  const [showCalendarPopup, setShowCalendarPopup] = useState(false)
   const [selectedPillars, setSelectedPillars] = useState<string[]>([])
-  const [selectedBuildingLevel, setSelectedBuildingLevel] = useState("profissional")
-  const [showPackageDiscount, setShowPackageDiscount] = useState(false)
+  const [selectedBuildingLevel, setSelectedBuildingLevel] = useState<keyof typeof serviceLevels>("essencial")
+  const [selectedLevel, setSelectedLevel] = useState<keyof typeof serviceLevels>("essencial")
 
   const [auditForm, setAuditForm] = useState({
     name: "",
@@ -61,19 +48,181 @@ export default function AxendRevOpsLanding() {
     cnpj: "",
     website: "",
     productInterest: "",
-    additionalDetails: "",
     companySize: "",
     aiUsage: 0,
     biQuality: 0,
     crmAdoption: 0,
     processMaturity: 0,
+    additionalDetails: "",
   })
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitSuccess, setSubmitSuccess] = useState(false)
-  const [submitError, setSubmitError] = useState("")
+  const [isTyping, setIsTyping] = useState(false)
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [visibleElements, setVisibleElements] = useState<Set<string>>(new Set())
+  const [roiAnimation, setRoiAnimation] = useState(0)
+  const [interactiveDemo, setInteractiveDemo] = useState(false)
+  const [voiceEnabled, setVoiceEnabled] = useState(false)
+  const [isPlaying3D, setIsPlaying3D] = useState(false)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  const [showPackageDiscount, setShowPackageDiscount] = useState(false)
+  const [hoveredService, setHoveredService] = useState<number | null>(null)
+
+  const [showChatbot, setShowChatbot] = useState(false)
+  const [chatMessages, setChatMessages] = useState<Array<{ role: "user" | "bot"; message: string }>>([])
+  const [currentMessage, setCurrentMessage] = useState("")
   const [showCalendar, setShowCalendar] = useState(false)
-  const [showCalendarPopup, setShowCalendarPopup] = useState(false)
+
+  const serviceLevels = {
+    essencial: {
+      name: "Essencial",
+      description: "Para empresas iniciando a jornada RevOps",
+      originalPrice: 8000,
+      packagePrice: 6000,
+      services: {
+        processos: {
+          name: "Processos Essencial",
+          price: 1500,
+          features: ["Mapeamento básico", "SOP inicial", "Treinamento equipe"],
+        },
+        crm: {
+          name: "CRM Essencial",
+          price: 2000,
+          features: ["Configuração HubSpot/Pipedrive", "Automações básicas", "Dashboards iniciais"],
+        },
+        bi: {
+          name: "BI Essencial",
+          price: 2000,
+          features: ["Relatórios básicos", "KPIs principais", "Dashboard executivo"],
+        },
+        ia: {
+          name: "IA Essencial",
+          price: 2500,
+          features: ["Chatbot básico", "Automação emails", "Lead scoring simples"],
+        },
+      },
+    },
+    profissional: {
+      name: "Profissional",
+      description: "Para empresas em crescimento acelerado",
+      originalPrice: 15000,
+      packagePrice: 12000,
+      services: {
+        processos: {
+          name: "Processos Profissional",
+          price: 3000,
+          features: ["Processos avançados", "Automação workflows", "Métricas detalhadas"],
+        },
+        crm: {
+          name: "CRM Profissional",
+          price: 4000,
+          features: ["CRM customizado", "Integrações avançadas", "Automação completa"],
+        },
+        bi: {
+          name: "BI Profissional",
+          price: 4000,
+          features: ["Analytics avançado", "Previsões IA", "Dashboards interativos"],
+        },
+        ia: {
+          name: "IA Profissional",
+          price: 4000,
+          features: ["IA conversacional", "Análise preditiva", "Automação inteligente"],
+        },
+      },
+    },
+    avancado: {
+      name: "Avançado",
+      description: "Para empresas que buscam excelência operacional",
+      originalPrice: 25000,
+      packagePrice: 20000,
+      services: {
+        processos: {
+          name: "Processos Avançado",
+          price: 5000,
+          features: ["Otimização contínua", "IA nos processos", "Benchmarking"],
+        },
+        crm: {
+          name: "CRM Avançado",
+          price: 7000,
+          features: ["Plataforma enterprise", "IA integrada", "Customizações ilimitadas"],
+        },
+        bi: { name: "BI Avançado", price: 6500, features: ["Data Science", "ML avançado", "Insights preditivos"] },
+        ia: {
+          name: "IA Avançado",
+          price: 6500,
+          features: ["IA generativa", "Automação total", "Insights estratégicos"],
+        },
+      },
+    },
+  }
+
+  const fourPillars = [
+    {
+      id: "processos",
+      name: "Processos & Rituais",
+      icon: Cog,
+      description: "Estruturação completa da operação comercial",
+      color: "#995925",
+    },
+    {
+      id: "crm",
+      name: "CRM Vivo",
+      icon: Users,
+      description: "CRM de alta performance com 100% de adoção",
+      color: "#EB6A00",
+    },
+    {
+      id: "bi",
+      name: "Business Intelligence",
+      icon: BarChart3,
+      description: "Visibilidade total com dashboards em tempo real",
+      color: "#6B4A2E",
+    },
+    {
+      id: "ia",
+      name: "Agentes de IA",
+      icon: Brain,
+      description: "IA aplicada para automação e insights preditivos",
+      color: "#413328",
+    },
+  ]
+
+  const togglePillar = (pillarId: string) => {
+    setSelectedPillars((prev) => (prev.includes(pillarId) ? prev.filter((id) => id !== pillarId) : [...prev, pillarId]))
+  }
+
+  const calculateTotalPrice = () => {
+    const level = serviceLevels[selectedBuildingLevel as keyof typeof serviceLevels]
+    if (!level) return "R$ 0"
+
+    if (selectedPillars.length === 4) {
+      return level.packagePrice || "R$ 0"
+    }
+
+    let total = 0
+    selectedPillars.forEach((pillarId) => {
+      const price = level.services?.[pillarId]?.price || "R$ 0"
+      total += Number.parseInt(price.replace(/[^\d]/g, ""))
+    })
+
+    return `R$ ${total.toLocaleString()}`
+  }
+
+  const getDiscountAmount = () => {
+    if (selectedPillars.length === 4) {
+      const level = serviceLevels[selectedBuildingLevel as keyof typeof serviceLevels]
+      if (!level || !level.originalPrice || !level.packagePrice) return "R$ 0"
+
+      const originalTotal = Number.parseInt(level.originalPrice.replace(/[^\d]/g, ""))
+      const packageTotal = Number.parseInt(level.packagePrice.replace(/[^\d]/g, ""))
+      return `R$ ${(originalTotal - packageTotal).toLocaleString()}`
+    }
+    return "R$ 0"
+  }
+
+  useEffect(() => {
+    setShowPackageDiscount(selectedPillars.length === 4)
+  }, [selectedPillars])
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -197,40 +346,40 @@ export default function AxendRevOpsLanding() {
     }
   }
 
-  const serviceLevels = {
+  const serviceLevelsData = {
     essencial: {
       name: "Essencial",
       subtitle: "Para empresas iniciando a jornada RevOps - O Sábio orienta os primeiros passos",
       duration: "60 dias",
-      originalPrice: "R$ 45.000",
-      packagePrice: "R$ 35.000",
-      packageDiscount: "22%",
+      originalPrice: "R$ 8.000",
+      packagePrice: "R$ 6.000",
+      packageDiscount: "25%",
       popular: false,
       buildingHeight: 1,
       buildingStyle: "basic",
       services: {
-        crm: { price: "R$ 8.000", features: ["Setup básico CRM", "Treinamento equipe", "Automações essenciais"] },
-        bi: { price: "R$ 10.000", features: ["Dashboard executivo", "Relatórios básicos", "Métricas fundamentais"] },
-        ia: { price: "R$ 12.000", features: ["Chatbot qualificação", "Automação follow-up", "Scoring básico"] },
-        processos: { price: "R$ 15.000", features: ["Mapeamento processos", "Playbooks vendas", "Rituais básicos"] },
+        crm: { price: "R$ 2.000", features: ["Setup básico CRM", "Treinamento equipe", "Automações essenciais"] },
+        bi: { price: "R$ 2.000", features: ["Dashboard executivo", "Relatórios básicos", "Métricas fundamentais"] },
+        ia: { price: "R$ 2.500", features: ["Chatbot qualificação", "Automação follow-up", "Scoring básico"] },
+        processos: { price: "R$ 1.500", features: ["Mapeamento processos", "Playbooks vendas", "Rituais básicos"] },
       },
     },
     profissional: {
       name: "Profissional",
       subtitle: "Para empresas em crescimento acelerado - O Criador constrói sistemas robustos",
       duration: "90 dias",
-      originalPrice: "R$ 85.000",
-      packagePrice: "R$ 65.000",
-      packageDiscount: "23%",
+      originalPrice: "R$ 15.000",
+      packagePrice: "R$ 12.000",
+      packageDiscount: "20%",
       popular: true,
       buildingHeight: 2,
       buildingStyle: "modern",
       services: {
-        crm: { price: "R$ 15.000", features: ["CRM avançado", "Integrações múltiplas", "Automações complexas"] },
-        bi: { price: "R$ 18.000", features: ["BI completo", "Análises preditivas", "Dashboards personalizados"] },
-        ia: { price: "R$ 22.000", features: ["IA conversacional", "Previsões vendas", "Insights automáticos"] },
+        crm: { price: "R$ 4.000", features: ["CRM avançado", "Integrações múltiplas", "Automações complexas"] },
+        bi: { price: "R$ 4.000", features: ["BI completo", "Análises preditivas", "Dashboards personalizados"] },
+        ia: { price: "R$ 4.000", features: ["IA conversacional", "Previsões vendas", "Insights automáticos"] },
         processos: {
-          price: "R$ 30.000",
+          price: "R$ 3.000",
           features: ["Processos otimizados", "Rituais avançados", "Metodologia própria"],
         },
       },
@@ -239,95 +388,94 @@ export default function AxendRevOpsLanding() {
       name: "Avançado",
       subtitle: "Para empresas que querem dominar o mercado - O Herói conquista a liderança",
       duration: "120 dias",
-      originalPrice: "R$ 150.000",
-      packagePrice: "R$ 115.000",
-      packageDiscount: "23%",
+      originalPrice: "R$ 25.000",
+      packagePrice: "R$ 20.000",
+      packageDiscount: "20%",
       popular: false,
       buildingHeight: 3,
       buildingStyle: "luxury",
       services: {
-        crm: { price: "R$ 25.000", features: ["CRM enterprise", "Customizações avançadas", "Integrações ilimitadas"] },
-        bi: { price: "R$ 35.000", features: ["BI enterprise", "Machine Learning", "Análises prescritivas"] },
-        ia: { price: "R$ 40.000", features: ["IA proprietária", "Agentes autônomos", "Otimização contínua"] },
+        crm: { price: "R$ 7.000", features: ["CRM enterprise", "Customizações avançadas", "Integrações ilimitadas"] },
+        bi: { price: "R$ 6.500", features: ["BI enterprise", "Machine Learning", "Análises prescritivas"] },
+        ia: { price: "R$ 6.500", features: ["IA proprietária", "Agentes autônomos", "Otimização contínua"] },
         processos: {
-          price: "R$ 50.000",
+          price: "R$ 5.000",
           features: ["Transformação completa", "Inovação processos", "Liderança mercado"],
         },
       },
     },
   }
 
-  const fourPillars = [
-    {
-      id: "processos",
-      name: "Processos & Rituais",
-      icon: Cog,
-      description: "Estruturação completa da operação comercial",
-      color: "#995925",
-    },
-    {
-      id: "crm",
-      name: "CRM Vivo",
-      icon: Users,
-      description: "CRM de alta performance com 100% de adoção",
-      color: "#EB6A00",
-    },
-    {
-      id: "bi",
-      name: "Business Intelligence",
-      icon: BarChart3,
-      description: "Visibilidade total com dashboards em tempo real",
-      color: "#6B4A2E",
-    },
-    {
-      id: "ia",
-      name: "Agentes de IA",
-      icon: Brain,
-      description: "IA aplicada para automação e insights preditivos",
-      color: "#413328",
-    },
-  ]
-
-  const togglePillar = (pillarId: string) => {
-    setSelectedPillars((prev) => (prev.includes(pillarId) ? prev.filter((id) => id !== pillarId) : [...prev, pillarId]))
-  }
-
-  const calculateTotalPrice = () => {
-    const level = serviceLevels[selectedBuildingLevel as keyof typeof serviceLevels]
-    if (!level) return "R$ 0"
-
-    if (selectedPillars.length === 4) {
-      return level.packagePrice || "R$ 0"
-    }
-
-    let total = 0
-    selectedPillars.forEach((pillarId) => {
-      const price = level.services?.[pillarId]?.price || "R$ 0"
-      total += Number.parseInt(price.replace(/[^\d]/g, ""))
-    })
-
-    return `R$ ${total.toLocaleString()}`
-  }
-
-  const getDiscountAmount = () => {
-    if (selectedPillars.length === 4) {
-      const level = serviceLevels[selectedBuildingLevel as keyof typeof serviceLevels]
-      if (!level || !level.originalPrice || !level.packagePrice) return "R$ 0"
-
-      const originalTotal = Number.parseInt(level.originalPrice.replace(/[^\d]/g, ""))
-      const packageTotal = Number.parseInt(level.packagePrice.replace(/[^\d]/g, ""))
-      return `R$ ${(originalTotal - packageTotal).toLocaleString()}`
-    }
-    return "R$ 0"
-  }
-
   useEffect(() => {
-    setShowPackageDiscount(selectedPillars.length === 4)
-  }, [selectedPillars])
+    const handleScroll = () => setScrollY(window.scrollY)
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
-  // ... existing useEffect hooks ...
+  const handleAuditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setSubmitError("")
+
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(auditForm),
+      })
+
+      if (!response.ok) throw new Error("Erro ao enviar auditoria")
+
+      const lowScores = [
+        auditForm.aiUsage <= 3 ? "IA" : null,
+        auditForm.biQuality <= 3 ? "BI" : null,
+        auditForm.crmAdoption <= 3 ? "CRM" : null,
+        auditForm.processMaturity <= 3 ? "Processos" : null,
+      ].filter(Boolean)
+
+      const companyLevelMap = {
+        pequena: "essencial",
+        media: "profissional",
+        grande: "avancado",
+      }
+
+      const recommendedLevel = companyLevelMap[auditForm.companySize as keyof typeof companyLevelMap] || "essencial"
+
+      let recommendation = ""
+      let estimatedInvestment = ""
+
+      if (lowScores.length >= 3) {
+        recommendation = `Recomendamos o Pacote Completo ${serviceLevels[recommendedLevel as keyof typeof serviceLevels].name} para transformação integral do seu RevOps`
+        estimatedInvestment = `R$ ${serviceLevels[recommendedLevel as keyof typeof serviceLevels].packagePrice.toLocaleString()}`
+      } else if (lowScores.length > 0) {
+        recommendation = `Recomendamos focar nos pilares: ${lowScores.join(", ")} no nível ${serviceLevels[recommendedLevel as keyof typeof serviceLevels].name}`
+        const totalPrice = lowScores.reduce((sum, pilar) => {
+          const services = serviceLevels[recommendedLevel as keyof typeof serviceLevels].services
+          return sum + (services[pilar.toLowerCase() as keyof typeof services]?.price || 0)
+        }, 0)
+        estimatedInvestment = `R$ ${totalPrice.toLocaleString()}`
+      } else {
+        recommendation = `Sua operação está bem estruturada! Recomendamos otimizações pontuais no nível ${serviceLevels[recommendedLevel as keyof typeof serviceLevels].name}`
+        estimatedInvestment = `R$ ${serviceLevels[recommendedLevel as keyof typeof serviceLevels].originalPrice.toLocaleString()}`
+      }
+
+      setAuditRecommendation({ description: recommendation, estimatedInvestment })
+      setSubmitSuccess(true)
+      setShowCalendarPopup(true)
+
+      setTimeout(() => setShowCalendarPopup(false), 10000)
+    } catch (error) {
+      setSubmitError("Erro ao processar auditoria. Tente novamente.")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   const scrollToAuditForm = () => {
+    document.getElementById("audit-form-section")?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  const scrollToAuditFormOld = () => {
     document.getElementById("audit-form-section")?.scrollIntoView({ behavior: "smooth" })
   }
 
@@ -336,7 +484,7 @@ export default function AxendRevOpsLanding() {
     scrollToAuditForm()
   }
 
-  const handleAuditSubmit = async (e: React.FormEvent) => {
+  const handleAuditSubmitOld = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
     setSubmitError("")
@@ -450,7 +598,7 @@ export default function AxendRevOpsLanding() {
 
     let total = 0
     selectedPillars.forEach((pillarId) => {
-      const service = currentLevel.services[pillarId]
+      const service = currentLevel?.services?.[pillarId]
       if (service) {
         total += Number.parseInt(service.price.replace(/[^0-9]/g, ""))
       }
@@ -474,197 +622,112 @@ export default function AxendRevOpsLanding() {
     return `R$ ${total.toLocaleString()}`
   }
 
+  const handleProductSelection = (product: string) => {
+    setAuditForm((prev) => ({ ...prev, productInterest: product }))
+    scrollToAuditForm()
+  }
+
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
-      <canvas
-        ref={canvasRef}
-        className="fixed inset-0 pointer-events-none z-0"
-        style={{ opacity: isPlaying3D ? 0.1 : 0 }}
-      />
-
-      <div
-        className="fixed w-4 h-4 bg-primary/30 rounded-full pointer-events-none z-50 transition-all duration-100"
-        style={{
-          left: mousePosition.x - 8,
-          top: mousePosition.y - 8,
-          transform: `scale(${hoveredService !== null ? 2 : 1})`,
-        }}
-      />
-
-      {showChatbot && (
-        <div className="fixed bottom-4 right-4 w-80 h-96 bg-white rounded-lg shadow-2xl border border-primary/20 z-50 flex flex-col">
-          <div className="bg-primary text-white p-4 rounded-t-lg flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Bot className="h-5 w-5" />
-              <span className="font-semibold">IA Axend</span>
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-            </div>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => setShowChatbot(false)}
-              className="text-white hover:bg-white/20 p-1"
-            >
-              ×
-            </Button>
-          </div>
-
-          <div className="flex-1">
-            <iframe
-              src="https://n8n.srv909037.hstgr.cloud/webhook/0989d935-1b01-4629-b779-61bacf3c1eea/chat"
-              className="w-full h-full border-0"
-              title="Chatbot Axend"
-            />
-          </div>
-        </div>
-      )}
-
-      <div className="fixed right-4 bottom-20 flex flex-col gap-3 z-40"></div>
-
-      <div className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b">
-        <div className="container mx-auto px-4 py-2">
-          <div className="flex items-center justify-between text-xs sm:text-sm">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-primary animate-pulse" />
-              <span className="font-medium hidden sm:inline">
-                Market Timing Crítico: Gartner prevê 75% adotarão RevOps até 2025
-              </span>
-              <span className="font-medium sm:hidden">75% adotarão RevOps até 2025</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-              <span className="hidden sm:inline">Apenas 48% têm RevOps hoje - seja early adopter</span>
-              <span className="sm:hidden">Seja early adopter</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <section
-        className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-[#E6E4E3]/20 to-background pt-16"
-        id="audit-form-section"
-        data-animate
-      >
+    <div className="min-h-screen bg-gradient-to-br from-background via-[#E6E4E3]/10 to-background text-foreground overflow-x-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-[#E6E4E3]/20 to-background pt-16">
         <div className="absolute inset-0 bg-[url('/placeholder.svg?height=1080&width=1920')] opacity-5"></div>
 
         <div
-          className="absolute top-20 left-4 lg:left-10 w-16 lg:w-20 h-16 lg:h-20 bg-primary/10 rounded-full animate-float backdrop-blur-sm border border-primary/20"
+          className="absolute top-20 left-2 sm:left-4 lg:left-10 w-12 sm:w-16 lg:w-20 h-12 sm:h-16 lg:h-20 bg-primary/10 rounded-full animate-float backdrop-blur-sm border border-primary/20"
           style={{ transform: `translateZ(${Math.sin(scrollY * 0.01) * 20}px)` }}
         />
         <div
-          className="absolute top-40 right-4 lg:right-20 w-12 lg:w-16 h-12 lg:h-16 bg-[#995925]/10 rounded-full animate-float-delayed backdrop-blur-sm border border-[#995925]/20"
+          className="absolute top-32 sm:top-40 right-2 sm:right-4 lg:right-20 w-10 sm:w-12 lg:w-16 h-10 sm:h-12 lg:h-16 bg-[#995925]/10 rounded-full animate-float-delayed backdrop-blur-sm border border-[#995925]/20"
           style={{ transform: `translateZ(${Math.cos(scrollY * 0.01) * 15}px)` }}
         />
         <div
-          className="absolute bottom-20 left-4 lg:left-20 w-10 lg:w-12 h-10 lg:h-12 bg-[#6B4A2E]/10 rounded-full animate-float backdrop-blur-sm border border-[#6B4A2E]/20"
+          className="absolute bottom-20 left-2 sm:left-4 lg:left-20 w-8 sm:w-10 lg:w-12 h-8 sm:h-10 lg:h-12 bg-[#6B4A2E]/10 rounded-full animate-float backdrop-blur-sm border border-[#6B4A2E]/20"
           style={{ transform: `translateZ(${Math.sin(scrollY * 0.015) * 10}px)` }}
         />
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-7xl mx-auto">
-            <div className="space-y-6 lg:space-y-8 text-center lg:text-left">
-              <Badge className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-colors text-xs sm:text-sm animate-pulse">
-                ✅ Baseado em estudos Gartner, Forrester e Revenue Operations Alliance
-              </Badge>
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
+          <div className="text-center space-y-6 sm:space-y-8 lg:space-y-12 max-w-5xl mx-auto">
+            <Badge className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 transition-colors text-xs sm:text-sm animate-pulse mx-auto w-fit">
+              ✅ Baseado em estudos Gartner, Forrester e Revenue Operations Alliance
+            </Badge>
 
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
-                <span className="text-primary bg-gradient-to-r from-primary to-[#995925] bg-clip-text text-transparent animate-gradient">
-                  Previsibilidade não é sorte.
-                </span>{" "}
-                <span className="text-[#413328]">É sistema!</span>
-              </h1>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold leading-tight">
+              <span className="text-primary bg-gradient-to-r from-primary to-[#995925] bg-clip-text text-transparent animate-gradient">
+                Previsibilidade não é sorte.
+              </span>{" "}
+              <span className="text-[#413328]">É sistema!</span>
+            </h1>
 
-              <div className="space-y-3 lg:space-y-4 text-sm sm:text-base text-[#6B4A2E]">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-4">
-                  <div className="flex items-center justify-center lg:justify-start gap-2 group hover:scale-105 transition-transform cursor-pointer">
-                    <TrendingUp className="h-4 w-4 text-primary flex-shrink-0 group-hover:animate-bounce" />
-                    <span>
-                      ROI médio de <span className="font-bold text-primary">{Math.floor(700 + roiAnimation)}%</span> em
-                      12 meses
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-center lg:justify-start gap-2 group hover:scale-105 transition-transform cursor-pointer">
-                    <Clock className="h-4 w-4 text-primary flex-shrink-0 group-hover:animate-spin" />
-                    <span>
-                      <span className="font-bold text-primary">36%</span> mais receita previsível
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-center lg:justify-start gap-2 group hover:scale-105 transition-transform cursor-pointer">
-                    <Users className="h-4 w-4 text-primary flex-shrink-0 group-hover:animate-pulse" />
-                    <span>
-                      <span className="font-bold text-primary">67%</span> menos tempo em planilhas
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-center lg:justify-start gap-2 group hover:scale-105 transition-transform cursor-pointer">
-                    <Target className="h-4 w-4 text-primary flex-shrink-0 group-hover:animate-ping" />
-                    <span>
-                      <span className="font-bold text-primary">85%</span> melhoria na acurácia
-                    </span>
+            <p className="text-lg sm:text-xl lg:text-2xl text-[#6B4A2E] max-w-3xl mx-auto leading-relaxed">
+              Transforme sua operação de vendas com metodologia RevOps comprovada por{" "}
+              <span className="font-bold text-primary">771% de ROI</span>
+            </p>
+
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 max-w-4xl mx-auto">
+              {[
+                { icon: TrendingUp, label: "771% ROI médio", sublabel: "(Forrester)", color: "text-primary" },
+                { icon: Clock, label: "36% mais receita", sublabel: "em 90 dias", color: "text-[#995925]" },
+                { icon: Target, label: "19% ciclo mais rápido", sublabel: "de vendas", color: "text-[#6B4A2E]" },
+                { icon: Zap, label: "Implementação", sublabel: "90 dias", color: "text-primary" },
+              ].map(({ icon: Icon, label, sublabel, color }, index) => (
+                <div
+                  key={index}
+                  className="group hover:scale-105 transition-transform cursor-pointer p-3 sm:p-4 rounded-lg hover:bg-white/50 backdrop-blur-sm"
+                >
+                  <Icon className={`h-6 w-6 sm:h-8 sm:w-8 ${color} mx-auto mb-2 group-hover:animate-bounce`} />
+                  <div className="text-center">
+                    <div className="font-bold text-sm sm:text-base text-[#413328]">{label}</div>
+                    <div className="text-xs sm:text-sm text-[#6B4A2E]">{sublabel}</div>
                   </div>
                 </div>
-              </div>
-
-              <div className="bg-gradient-to-r from-primary/10 to-[#995925]/5 border border-primary/20 rounded-xl p-4 lg:p-6 backdrop-blur-sm hover:shadow-lg transition-all duration-300 group">
-                <div className="flex items-center gap-3 mb-3">
-                  <Brain className="h-5 w-5 text-primary flex-shrink-0 group-hover:animate-pulse" />
-                  <span className="font-semibold text-primary text-sm lg:text-base">IA + RevOps: O Futuro é Agora</span>
-                  <Sparkles className="h-4 w-4 text-primary animate-spin" />
-                </div>
-                <p className="text-sm lg:text-base text-[#6B4A2E]">
-                  <span className="text-primary font-semibold">Soluções com IA para empresas B2B R$100k+/mês</span> -
-                  Especialistas certificados em cada pilar tecnológico
-                </p>
-
-                {interactiveDemo && (
-                  <div className="mt-4 p-3 bg-white/50 rounded-lg border border-primary/30">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Activity className="h-4 w-4 text-primary animate-pulse" />
-                      <span className="text-sm font-semibold text-primary">Demo Interativo Ativo</span>
-                    </div>
-                    <div className="grid grid-cols-4 gap-2">
-                      {[1, 2, 3, 4].map((i) => (
-                        <div key={i} className="h-2 bg-primary/20 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-primary transition-all duration-1000"
-                            style={{ width: `${(roiAnimation + i * 25) % 100}%` }}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+              ))}
             </div>
 
-            <Card
-              className={`glass-strong shadow-2xl border-primary/20 hover:shadow-3xl transition-all duration-500 relative overflow-hidden ${
-                isFormMinimized ? "scale-90 opacity-75" : "scale-100 opacity-100"
-              }`}
-            >
-              <div className="absolute inset-0 opacity-5">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-[#995925]/20 animate-pulse" />
-              </div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button
+                onClick={scrollToAuditForm}
+                size="lg"
+                className="bg-gradient-to-r from-primary to-[#995925] hover:from-primary/90 hover:to-[#995925]/90 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl w-full sm:w-auto"
+              >
+                <Rocket className="h-5 w-5 mr-2" />
+                Receber Auditoria Gratuita
+                <ArrowRight className="h-5 w-5 ml-2" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
 
-              <CardHeader className="pb-4 relative z-10">
+      <section
+        className="relative py-16 sm:py-20 lg:py-24 overflow-hidden bg-gradient-to-br from-[#E6E4E3]/20 to-[#995925]/10"
+        id="audit-form-section"
+        data-animate
+      >
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
+          <div className="max-w-2xl mx-auto">
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 text-[#413328]">
+                Auditoria RevOps Gratuita
+              </h2>
+              <p className="text-base sm:text-lg text-[#6B4A2E]">
+                Nossa IA analisará sua operação e criará uma proposta personalizada
+              </p>
+            </div>
+
+            <Card className="glass-strong shadow-2xl border-primary/20 hover:shadow-3xl transition-all duration-300">
+              <CardHeader className="pb-4 px-4 sm:px-6">
                 <div className="flex items-center justify-center gap-2 mb-2">
                   <Sparkles className="h-5 w-5 text-primary animate-spin" />
-                  <Badge variant="secondary" className="text-xs animate-pulse bg-primary/10 text-primary">
-                    AUDITORIA GRATUITA COM IA
-                  </Badge>
-                  <Cpu className="h-4 w-4 text-primary animate-pulse" />
+                  <h3 className="text-lg sm:text-xl font-bold text-[#413328] text-center">Diagnóstico Personalizado</h3>
+                  <Brain className="h-5 w-5 text-[#995925] animate-pulse" />
                 </div>
-                <CardTitle className="text-lg lg:text-xl text-center text-[#413328]">
-                  {isFormMinimized ? "Auditoria Concluída ✅" : "Descubra Seu Produto Ideal"}
-                </CardTitle>
-                <CardDescription className="text-center text-[#6B4A2E]">
-                  {isFormMinimized
-                    ? "Entraremos em contato em até 24h"
-                    : "Auditoria RevOps + IA personalizada em 5 minutos"}
-                </CardDescription>
+                <p className="text-center text-sm sm:text-base text-[#6B4A2E] font-medium animate-pulse">
+                  Preencha mais informações e receba uma proposta personalizada
+                </p>
               </CardHeader>
 
               {!isFormMinimized ? (
-                <CardContent className="space-y-4 relative z-10">
+                <CardContent className="space-y-4 px-4 sm:px-6 pb-6">
                   <form onSubmit={handleAuditSubmit} className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="group">
@@ -676,7 +739,7 @@ export default function AxendRevOpsLanding() {
                           required
                           value={auditForm.name}
                           onChange={(e) => setAuditForm({ ...auditForm, name: e.target.value })}
-                          className="w-full px-3 py-2 border border-[#995925]/30 rounded-md bg-white text-[#413328] focus:ring-2 focus:ring-primary focus:border-transparent transition-all hover:border-primary/50"
+                          className="w-full px-3 py-2 sm:py-3 border border-[#995925]/30 rounded-md bg-white text-[#413328] focus:ring-2 focus:ring-primary focus:border-transparent transition-all hover:border-primary/50 text-sm sm:text-base"
                           placeholder="Seu nome"
                         />
                       </div>
@@ -689,7 +752,7 @@ export default function AxendRevOpsLanding() {
                           required
                           value={auditForm.email}
                           onChange={(e) => setAuditForm({ ...auditForm, email: e.target.value })}
-                          className="w-full px-3 py-2 border border-[#995925]/30 rounded-md bg-white text-[#413328] focus:ring-2 focus:ring-primary focus:border-transparent transition-all hover:border-primary/50"
+                          className="w-full px-3 py-2 sm:py-3 border border-[#995925]/30 rounded-md bg-white text-[#413328] focus:ring-2 focus:ring-primary focus:border-transparent transition-all hover:border-primary/50 text-sm sm:text-base"
                           placeholder="seu@email.com"
                         />
                       </div>
@@ -705,7 +768,7 @@ export default function AxendRevOpsLanding() {
                           required
                           value={auditForm.phone}
                           onChange={(e) => setAuditForm({ ...auditForm, phone: e.target.value })}
-                          className="w-full px-3 py-2 border border-[#995925]/30 rounded-md bg-white text-[#413328] focus:ring-2 focus:ring-primary focus:border-transparent transition-all hover:border-primary/50"
+                          className="w-full px-3 py-2 sm:py-3 border border-[#995925]/30 rounded-md bg-white text-[#413328] focus:ring-2 focus:ring-primary focus:border-transparent transition-all hover:border-primary/50 text-sm sm:text-base"
                           placeholder="(11) 99999-9999"
                         />
                       </div>
@@ -717,7 +780,7 @@ export default function AxendRevOpsLanding() {
                           type="text"
                           value={auditForm.cnpj}
                           onChange={(e) => setAuditForm({ ...auditForm, cnpj: e.target.value })}
-                          className="w-full px-3 py-2 border border-[#995925]/30 rounded-md bg-white text-[#413328] focus:ring-2 focus:ring-primary focus:border-transparent transition-all hover:border-primary/50"
+                          className="w-full px-3 py-2 sm:py-3 border border-[#995925]/30 rounded-md bg-white text-[#413328] focus:ring-2 focus:ring-primary focus:border-transparent transition-all hover:border-primary/50 text-sm sm:text-base"
                           placeholder="00.000.000/0001-00"
                         />
                       </div>
@@ -731,45 +794,9 @@ export default function AxendRevOpsLanding() {
                         type="url"
                         value={auditForm.website}
                         onChange={(e) => setAuditForm({ ...auditForm, website: e.target.value })}
-                        className="w-full px-3 py-2 border border-[#995925]/30 rounded-md bg-white text-[#413328] focus:ring-2 focus:ring-primary focus:border-transparent transition-all hover:border-primary/50"
+                        className="w-full px-3 py-2 sm:py-3 border border-[#995925]/30 rounded-md bg-white text-[#413328] focus:ring-2 focus:ring-primary focus:border-transparent transition-all hover:border-primary/50 text-sm sm:text-base"
                         placeholder="https://suaempresa.com"
                       />
-                    </div>
-
-                    <div className="group">
-                      <label className="text-sm font-medium text-[#413328] mb-1 block group-hover:text-primary transition-colors">
-                        Produto de Interesse
-                      </label>
-                      <select
-                        value={auditForm.productInterest}
-                        onChange={(e) => setAuditForm({ ...auditForm, productInterest: e.target.value })}
-                        className="w-full px-3 py-2 border border-[#995925]/30 rounded-md bg-white text-[#413328] focus:ring-2 focus:ring-primary focus:border-transparent transition-all hover:border-primary/50"
-                      >
-                        <option value="">Selecione uma opção</option>
-                        <optgroup label="Pilares Individuais - Essencial">
-                          <option value="crm-essencial">CRM - Essencial</option>
-                          <option value="bi-essencial">BI - Essencial</option>
-                          <option value="ia-essencial">IA - Essencial</option>
-                          <option value="processos-essencial">Processos - Essencial</option>
-                        </optgroup>
-                        <optgroup label="Pilares Individuais - Profissional">
-                          <option value="crm-profissional">CRM - Profissional</option>
-                          <option value="bi-profissional">BI - Profissional</option>
-                          <option value="ia-profissional">IA - Profissional</option>
-                          <option value="processos-profissional">Processos - Profissional</option>
-                        </optgroup>
-                        <optgroup label="Pilares Individuais - Avançado">
-                          <option value="crm-avancado">CRM - Avançado</option>
-                          <option value="bi-avancado">BI - Avançado</option>
-                          <option value="ia-avancado">IA - Avançado</option>
-                          <option value="processos-avancado">Processos - Avançado</option>
-                        </optgroup>
-                        <optgroup label="Pacotes Completos">
-                          <option value="pacote-essencial">Pacote Completo - Essencial</option>
-                          <option value="pacote-profissional">Pacote Completo - Profissional</option>
-                          <option value="pacote-avancado">Pacote Completo - Avançado</option>
-                        </optgroup>
-                      </select>
                     </div>
 
                     <div className="group">
@@ -780,12 +807,12 @@ export default function AxendRevOpsLanding() {
                         required
                         value={auditForm.companySize}
                         onChange={(e) => setAuditForm({ ...auditForm, companySize: e.target.value })}
-                        className="w-full px-3 py-2 border border-[#995925]/30 rounded-md bg-white text-[#413328] focus:ring-2 focus:ring-primary focus:border-transparent transition-all hover:border-primary/50"
+                        className="w-full px-3 py-2 sm:py-3 border border-[#995925]/30 rounded-md bg-white text-[#413328] focus:ring-2 focus:ring-primary focus:border-transparent transition-all hover:border-primary/50 text-sm sm:text-base"
                       >
                         <option value="">Selecione o porte</option>
-                        <option value="pequena">Pequena Empresa (até R$500k/mês)</option>
-                        <option value="media">Média Empresa (R$500k - R$2M/mês)</option>
-                        <option value="grande">Grande Empresa (R$2M+/mês)</option>
+                        <option value="pequena">Pequena Empresa (até R$ 100k/mês)</option>
+                        <option value="media">Média Empresa (R$ 100k - R$ 500k/mês)</option>
+                        <option value="grande">Grande Empresa (R$ 500k+/mês)</option>
                       </select>
                     </div>
 
@@ -857,7 +884,7 @@ export default function AxendRevOpsLanding() {
                           <textarea
                             value={auditForm.additionalDetails}
                             onChange={(e) => setAuditForm({ ...auditForm, additionalDetails: e.target.value })}
-                            className="w-full px-3 py-2 border border-[#995925]/30 rounded-md bg-white text-[#413328] focus:ring-2 focus:ring-primary focus:border-transparent transition-all hover:border-primary/50 resize-none"
+                            className="w-full px-3 py-2 sm:py-3 border border-[#995925]/30 rounded-md bg-white text-[#413328] focus:ring-2 focus:ring-primary focus:border-transparent transition-all hover:border-primary/50 resize-none text-sm sm:text-base"
                             rows={4}
                             placeholder="Explique nas suas palavras o que vc sente falta na sua empresa ou o que a Axend pode te ajudar"
                           />
@@ -913,18 +940,18 @@ export default function AxendRevOpsLanding() {
                     <Button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-gradient-to-r from-primary to-[#995925] hover:from-primary/90 hover:to-[#995925]/90 text-white font-semibold py-3 transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                      className="w-full bg-gradient-to-r from-primary to-[#995925] hover:from-primary/90 hover:to-[#995925]/90 text-white font-semibold py-3 sm:py-4 text-base sm:text-lg transition-all duration-300 hover:scale-105 hover:shadow-lg"
                     >
                       {isSubmitting ? (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 justify-center">
                           <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                           Processando com IA...
                         </div>
                       ) : (
-                        <div className="flex items-center gap-2">
-                          <Rocket className="h-4 w-4" />
+                        <div className="flex items-center gap-2 justify-center">
+                          <Rocket className="h-4 w-4 sm:h-5 sm:w-5" />
                           Receber Auditoria Gratuita
-                          <ArrowRight className="h-4 w-4" />
+                          <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
                         </div>
                       )}
                     </Button>
@@ -937,8 +964,7 @@ export default function AxendRevOpsLanding() {
                   </div>
                   <p className="text-[#413328] font-medium mb-2">Auditoria enviada com sucesso!</p>
                   <p className="text-sm text-[#6B4A2E] mb-4">
-                    Nossa IA está processando seus dados. Entraremos em contato em até 24h com sua análise
-                    personalizada.
+                    Nossa IA está processando seus dados. Entraremos em contato em até 24h.
                   </p>
                   <Button
                     onClick={() => setIsFormMinimized(false)}
@@ -955,33 +981,24 @@ export default function AxendRevOpsLanding() {
         </div>
       </section>
 
-      <section className="py-20 bg-gradient-to-br from-[#E6E4E3]/20 to-[#995925]/10 relative overflow-hidden">
-        <div className="container mx-auto px-4">
+      {/* Pillars Section */}
+      <section
+        className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-[#E6E4E3]/20 to-[#995925]/10 relative overflow-hidden"
+        data-animate
+      >
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-[#413328]">Os 4 Pilares do RevOps</h2>
-              <p className="text-xl text-[#6B4A2E] mb-8">
-                Cada pilar pode ser contratado individualmente com 3 níveis de serviço
+            <div className="text-center mb-12 sm:mb-16">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 text-[#413328]">
+                Os 4 Pilares do RevOps
+              </h2>
+              <p className="text-lg sm:text-xl text-[#6B4A2E] mb-6 sm:mb-8 px-4">
+                Cada pilar pode ser contratado individualmente de acordo com a sua necessidade   
               </p>
-              <div className="flex justify-center gap-4 mb-8">
-                {Object.entries(serviceLevels).map(([key, level]) => (
-                  <button
-                    key={key}
-                    onClick={() => setSelectedLevel(key)}
-                    className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
-                      selectedLevel === key
-                        ? "bg-[#EB6A00] text-white shadow-lg"
-                        : "bg-white text-[#6B4A2E] border-2 border-[#E6E4E3] hover:border-[#EB6A00]"
-                    }`}
-                  >
-                    {level.name}
-                  </button>
-                ))}
-              </div>
+              
             </div>
 
-            {/* Individual Pillars Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
               {fourPillars.map((pillar) => {
                 const currentLevel = serviceLevels[selectedLevel as keyof typeof serviceLevels]
                 const currentService = currentLevel?.services?.[pillar.id]
@@ -990,65 +1007,33 @@ export default function AxendRevOpsLanding() {
                 if (!currentService) return null
 
                 return (
-                  <div
+                  <Card
                     key={pillar.id}
-                    className={`group cursor-pointer transition-all duration-300 ${
-                      isSelected ? "scale-105" : "hover:scale-102"
+                    className={`group cursor-pointer transition-all duration-300 hover:shadow-xl border-2 ${
+                      isSelected
+                        ? "border-primary bg-primary/5 shadow-lg scale-105"
+                        : "border-[#E6E4E3] hover:border-primary/50 bg-white"
                     }`}
                     onClick={() => togglePillar(pillar.id)}
                   >
-                    <Card
-                      className={`h-full border-2 transition-all duration-300 ${
-                        isSelected
-                          ? "border-[#EB6A00] bg-gradient-to-br from-white to-[#EB6A00]/5 shadow-xl"
-                          : "border-[#E6E4E3] bg-white hover:border-[#995925] hover:shadow-lg"
-                      }`}
-                    >
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between mb-4">
-                          <div
-                            className={`w-12 h-12 rounded-lg flex items-center justify-center transition-all duration-300`}
-                            style={{
-                              backgroundColor: isSelected ? pillar.color : `${pillar.color}20`,
-                              color: isSelected ? "white" : pillar.color,
-                            }}
-                          >
-                            <pillar.icon className="h-6 w-6" />
-                          </div>
-                          {isSelected && <CheckCircle className="h-6 w-6 text-[#EB6A00]" />}
-                        </div>
-
-                        <h3 className="text-lg font-bold mb-2 text-[#413328]">{pillar.name}</h3>
-                        <p className="text-sm text-[#6B4A2E] mb-4">{pillar.description}</p>
-
-                        <div className="border-t border-[#E6E4E3] pt-4">
-                          <div className="flex items-center justify-between mb-3">
-                            <span className="text-sm font-medium text-[#995925]">Nível {currentLevel?.name || ""}</span>
-                            <span className="text-lg font-bold text-[#EB6A00]">{currentService.price}</span>
-                          </div>
-
-                          <ul className="space-y-1">
-                            {currentService.features.map((feature, idx) => (
-                              <li key={idx} className="text-xs text-[#6B4A2E] flex items-center gap-2">
-                                <div className="w-1 h-1 bg-[#EB6A00] rounded-full" />
-                                {feature}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        <Button
-                          className={`w-full mt-4 transition-all duration-300 ${
-                            isSelected
-                              ? "bg-[#EB6A00] hover:bg-[#995925] text-white"
-                              : "bg-white border-2 border-[#EB6A00] text-[#EB6A00] hover:bg-[#EB6A00] hover:text-white"
-                          }`}
-                        >
-                          {isSelected ? "Selecionado" : "Selecionar Pilar"}
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </div>
+                    <CardContent className="p-4 sm:p-6 text-center">
+                      <div
+                        className={`w-12 sm:w-16 h-12 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-full flex items-center justify-center transition-all duration-300 ${
+                          isSelected
+                            ? "bg-primary text-white"
+                            : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white"
+                        }`}
+                      >
+                        <pillar.icon className="h-6 sm:h-8 w-6 sm:w-8" />
+                      </div>
+                      <h3 className="text-base sm:text-lg font-bold mb-2 text-[#413328]">{pillar.name}</h3>
+                      <p className="text-xs sm:text-sm text-[#6B4A2E] mb-3 sm:mb-4 leading-relaxed">
+                        {currentService.description}
+                      </p>
+                      
+                      <div className="text-xs sm:text-sm text-[#995925] font-medium">{currentService.timeline}</div>
+                    </CardContent>
+                  </Card>
                 )
               })}
             </div>
@@ -1066,30 +1051,7 @@ export default function AxendRevOpsLanding() {
                   <p className="text-lg opacity-90 mb-6">Contrate todos os 4 pilares e receba desconto especial</p>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-6 items-center">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold line-through opacity-60 mb-2">
-                      {serviceLevels[selectedLevel as keyof typeof serviceLevels]?.originalPrice || "R$ 0"}
-                    </div>
-                    <div className="text-sm opacity-80">Preço Individual</div>
-                  </div>
-
-                  <div className="text-center">
-                    <ArrowRight className="h-8 w-8 mx-auto mb-2 text-[#EB6A00]" />
-                    <div className="bg-[#EB6A00] px-4 py-2 rounded-lg inline-block">
-                      <span className="text-sm font-bold">
-                        -{serviceLevels[selectedLevel as keyof typeof serviceLevels]?.packageDiscount || "0%"} DESCONTO
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-[#EB6A00] mb-2">
-                      {serviceLevels[selectedLevel as keyof typeof serviceLevels]?.packagePrice || "R$ 0"}
-                    </div>
-                    <div className="text-sm opacity-80">Pacote Completo</div>
-                  </div>
-                </div>
+                
 
                 <div className="text-center mt-8">
                   <Button
@@ -1100,10 +1062,7 @@ export default function AxendRevOpsLanding() {
                     <Crown className="h-5 w-5 mr-2" />
                     Solicitar Pacote Completo
                   </Button>
-                  <p className="text-sm opacity-80 mt-2">
-                    Economia de {serviceLevels[selectedLevel as keyof typeof serviceLevels]?.packageDiscount || "0%"} •
-                    Implementação em {serviceLevels[selectedLevel as keyof typeof serviceLevels]?.duration || "90 dias"}
-                  </p>
+                  
                 </div>
               </div>
             </div>
@@ -1142,32 +1101,25 @@ export default function AxendRevOpsLanding() {
         </div>
       </section>
 
+      {/* Market Data Section */}
       <section
-        className="py-20 bg-gradient-to-br from-[#E6E4E3]/30 to-background relative overflow-hidden"
+        className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-[#E6E4E3]/20 to-[#995925]/10 relative overflow-hidden"
         data-animate
       >
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-32 h-32 bg-primary/20 rounded-full animate-pulse" />
-          <div
-            className="absolute bottom-10 right-10 w-24 h-24 bg-[#995925]/20 rounded-full animate-pulse"
-            style={{ animationDelay: "1s" }}
-          />
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center mb-16">
-            <Badge className="bg-primary/10 text-primary border-primary/20 mb-6 animate-pulse">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12 sm:mb-16 max-w-4xl mx-auto">
+            <Badge className="bg-primary/10 text-primary border-primary/20 mb-4 sm:mb-6 animate-pulse text-xs sm:text-sm">
               📊 Dados de Mercado Validados
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#413328]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-[#413328] px-4">
               Por que <span className="text-primary">agora</span> é o momento crítico?
             </h2>
-            <p className="text-xl text-[#6B4A2E]">
+            <p className="text-lg sm:text-xl text-[#6B4A2E] px-4">
               Pesquisas globais confirmam: empresas que adotam RevOps primeiro dominam seus mercados
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto">
             {[
               {
                 stat: "75%",
@@ -1180,18 +1132,18 @@ export default function AxendRevOpsLanding() {
               },
               {
                 stat: "36%",
-                label: "aumento na previsibilidade de receita",
+                label: "mais receita para empresas com RevOps maduro",
                 source: "Forrester Research",
-                icon: Target,
+                icon: DollarSign,
                 color: "text-[#995925]",
                 bgColor: "bg-[#995925]/10",
                 delay: "0.2s",
               },
               {
-                stat: "771%",
-                label: "ROI médio em implementações RevOps",
+                stat: "19%",
+                label: "redução no ciclo de vendas médio",
                 source: "DemandSage Study",
-                icon: Award,
+                icon: Clock,
                 color: "text-[#6B4A2E]",
                 bgColor: "bg-[#6B4A2E]/10",
                 delay: "0.4s",
@@ -1199,34 +1151,29 @@ export default function AxendRevOpsLanding() {
             ].map((item, index) => (
               <Card
                 key={index}
-                className="group hover:shadow-2xl transition-all duration-500 cursor-pointer border-2 hover:border-primary/30 hover:scale-105 bg-white/80 backdrop-blur-sm"
+                className="group hover:shadow-xl transition-all duration-500 cursor-pointer border-2 border-[#E6E4E3] hover:border-primary/30 bg-white hover:scale-105 relative overflow-hidden"
                 style={{ animationDelay: item.delay }}
-                data-animate
               >
-                <CardContent className="p-8 text-center">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#EB6A00]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                <CardContent className="text-center p-4 sm:p-6 relative z-10">
                   <div
-                    className={`w-16 h-16 ${item.bgColor} rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}
+                    className={`w-12 sm:w-16 h-12 sm:h-16 ${item.bgColor} rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300`}
                   >
-                    <item.icon className={`h-8 w-8 ${item.color} group-hover:animate-pulse`} />
+                    <item.icon className={`h-6 sm:h-8 w-6 sm:w-8 ${item.color}`} />
                   </div>
-                  <div className={`text-4xl font-bold ${item.color} mb-2 group-hover:animate-pulse`}>{item.stat}</div>
-                  <p className="text-[#413328] font-medium mb-3">{item.label}</p>
-                  <Badge variant="outline" className="text-xs text-[#6B4A2E] border-[#995925]/30">
+                  <div className={`text-3xl sm:text-4xl font-bold mb-2 ${item.color} group-hover:animate-pulse`}>
+                    {item.stat}
+                  </div>
+                  <p className="text-sm sm:text-base text-[#6B4A2E] mb-3 sm:mb-4 font-medium leading-relaxed px-2">
+                    {item.label}
+                  </p>
+                  <div className="text-xs sm:text-sm text-[#995925] font-semibold bg-[#995925]/10 px-2 sm:px-3 py-1 rounded-full">
                     {item.source}
-                  </Badge>
+                  </div>
                 </CardContent>
               </Card>
             ))}
-          </div>
-
-          <div className="mt-16 text-center">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg px-6 py-4">
-              <Clock className="h-5 w-5 text-amber-600 animate-pulse" />
-              <span className="text-amber-800 font-medium">
-                Apenas <span className="font-bold text-amber-900">48%</span> das empresas têm RevOps hoje -
-                <span className="text-primary font-bold"> seja early adopter!</span>
-              </span>
-            </div>
           </div>
         </div>
       </section>
@@ -1340,7 +1287,7 @@ export default function AxendRevOpsLanding() {
         data-animate
       >
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-full h-full bg-[url('/placeholder.svg?height=800&width=1200')] opacity-20" />
+          <div className="absolute top-0 left-0 w-full h-full bg-[url('/placeholder.svg?height=800&width=1200)')] opacity-20" />
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
@@ -1554,135 +1501,148 @@ export default function AxendRevOpsLanding() {
         </div>
       </section>
 
-      <section className="py-20 bg-gradient-to-br from-background to-[#E6E4E3]/20 relative" data-animate>
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center mb-16">
-            <Badge className="bg-primary/10 text-primary border-primary/20 mb-6 animate-pulse">
+      {/* Service Levels Section */}
+      <section
+        className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-background to-[#E6E4E3]/30 relative overflow-hidden"
+        data-animate
+      >
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12 sm:mb-16 max-w-4xl mx-auto">
+            <Badge className="bg-primary/10 text-primary border-primary/20 mb-4 sm:mb-6 animate-pulse text-xs sm:text-sm">
               🎯 Soluções Personalizadas por Nível
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#413328]">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-[#413328] px-4">
               Escolha o Nível Ideal para sua <span className="text-primary">Transformação RevOps</span>
             </h2>
-            <p className="text-xl text-[#6B4A2E]">
+            <p className="text-lg sm:text-xl text-[#6B4A2E] px-4">
               Cada pilar disponível em 3 níveis de complexidade, ou adquira o pacote completo com desconto
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 max-w-7xl mx-auto">
             {[
               {
                 level: "Essencial",
                 subtitle: "Para pequenas empresas",
                 description: "Fundação sólida para começar sua jornada RevOps",
-                price: "R$ 2.500",
+                price: "R$ 1.750",
                 period: "/pilar",
-                packagePrice: "R$ 7.500",
+                packagePrice: "R$ 6.000",
                 packageDiscount: "25% OFF",
+                originalPackagePrice: "R$ 8.000",
                 features: [
-                  "Configuração básica do pilar",
-                  "Treinamento da equipe",
-                  "Documentação completa",
+                  "Setup básico de CRM",
+                  "Dashboards essenciais",
+                  "Processos fundamentais",
                   "Suporte por 30 dias",
                 ],
-                color: "border-[#995925]/30",
-                bgColor: "bg-[#995925]/5",
-                textColor: "text-[#995925]",
-                buttonColor: "from-[#995925] to-[#6B4A2E]",
+                popular: false,
+                bgColor: "bg-white",
+                borderColor: "border-[#E6E4E3]",
+                textColor: "text-[#413328]",
               },
               {
                 level: "Profissional",
                 subtitle: "Para médias empresas",
-                description: "Implementação completa com automações avançadas",
-                price: "R$ 4.500",
+                description: "Solução completa para crescimento acelerado",
+                price: "R$ 3.750",
                 period: "/pilar",
-                packagePrice: "R$ 13.500",
-                packageDiscount: "25% OFF",
+                packagePrice: "R$ 12.000",
+                packageDiscount: "20% OFF",
+                originalPackagePrice: "R$ 15.000",
                 features: [
-                  "Tudo do Essencial +",
-                  "Automações inteligentes",
-                  "Integrações personalizadas",
-                  "Dashboards avançados",
+                  "CRM avançado + automações",
+                  "BI completo + alertas",
+                  "Processos otimizados",
                   "Suporte por 60 dias",
+                  "Treinamento da equipe",
                 ],
-                color: "border-primary/30",
-                bgColor: "bg-primary/5",
-                textColor: "text-primary",
-                buttonColor: "from-primary to-[#995925]",
                 popular: true,
+                bgColor: "bg-gradient-to-br from-primary/5 to-[#995925]/5",
+                borderColor: "border-primary",
+                textColor: "text-[#413328]",
               },
               {
                 level: "Avançado",
                 subtitle: "Para grandes empresas",
-                description: "Solução enterprise com IA e máxima personalização",
-                price: "R$ 7.500",
+                description: "Transformação completa com IA e automação total",
+                price: "R$ 6.250",
                 period: "/pilar",
-                packagePrice: "R$ 22.500",
-
+                packagePrice: "R$ 20.000",
+                packageDiscount: "20% OFF",
+                originalPackagePrice: "R$ 25.000",
                 features: [
-                  "Tudo do Profissional +",
-                  "IA para otimização contínua",
+                  "CRM enterprise + IA",
+                  "BI preditivo + ML",
+                  "Automação completa",
+                  "Suporte por 90 dias",
                   "Consultoria estratégica",
-                  "Suporte prioritário",
+                  "Integração com sistemas legados",
                 ],
-                color: "border-[#EB6A00]/30",
-                bgColor: "bg-[#EB6A00]/5",
-                textColor: "text-[#EB6A00]",
-                buttonColor: "from-[#EB6A00] to-[#995925]",
+                popular: false,
+                bgColor: "bg-gradient-to-br from-[#413328]/10 to-[#6B4A2E]/5",
+                borderColor: "border-[#413328]",
+                textColor: "text-[#413328]",
               },
-            ].map((level, index) => (
+            ].map((tier, index) => (
               <Card
                 key={index}
-                className={`group hover:shadow-2xl transition-all duration-500 cursor-pointer border-2 hover:scale-105 bg-white/90 backdrop-blur-sm relative overflow-hidden ${level.color} ${
-                  level.popular ? "scale-105 shadow-xl border-primary/50" : ""
-                }`}
-                onMouseEnter={() => setHoveredService(index)}
-                onMouseLeave={() => setHoveredService(null)}
+                className={`relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105 border-2 ${tier.borderColor} ${tier.bgColor} group`}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                <CardHeader className="pb-4 relative z-10">
-                  <div
-                    className={`w-12 h-12 ${level.bgColor} rounded-lg flex items-center justify-center mx-auto mb-4 transition-all duration-300 ${
-                      hoveredService === index ? "scale-110 animate-pulse" : ""
-                    }`}
-                  >
-                    <Zap
-                      className={`h-6 w-6 ${level.textColor} transition-all duration-300 ${
-                        hoveredService === index ? "scale-110 animate-bounce" : ""
-                      }`}
-                    />
+                {tier.popular && (
+                  <div className="absolute top-0 left-0 right-0 bg-primary text-white text-center py-2 text-xs sm:text-sm font-bold">
+                    MAIS POPULAR
                   </div>
-                  <CardTitle
-                    className={`text-xl mb-2 transition-colors duration-300 ${level.textColor} ${
-                      hoveredService === index ? "animate-pulse" : ""
-                    }`}
-                  >
-                    {level.level}
-                  </CardTitle>
-                  <CardDescription className="text-base text-[#6B4A2E]">{level.subtitle}</CardDescription>
-                </CardHeader>
-                <CardContent className="relative z-10">
-                  <div className="space-y-3">
-                    {level.features.map((feature, featureIndex) => (
-                      <div
-                        key={featureIndex}
-                        className="flex items-start gap-2 group-hover:translate-x-1 transition-transform duration-300"
-                        style={{ transitionDelay: `${featureIndex * 0.1}s` }}
-                      >
-                        <CheckCircle className="h-4 w-4 mt-0.5 flex-shrink-0 text-primary group-hover:animate-pulse" />
-                        <span className="text-sm text-[#413328]">{feature}</span>
+                )}
+
+                <CardContent className={`p-4 sm:p-6 lg:p-8 ${tier.popular ? "pt-12 sm:pt-14" : ""}`}>
+                  <div className="text-center mb-4 sm:mb-6">
+                    <h3 className={`text-xl sm:text-2xl font-bold mb-2 ${tier.textColor}`}>{tier.level}</h3>
+                    <p className="text-sm sm:text-base text-[#6B4A2E] mb-3 sm:mb-4">{tier.subtitle}</p>
+                    <p className="text-xs sm:text-sm text-[#995925] leading-relaxed px-2">{tier.description}</p>
+                  </div>
+
+                  <div className="text-center mb-4 sm:mb-6">
+                    <div className="text-2xl sm:text-3xl font-bold text-primary mb-1">{tier.price}</div>
+                    <div className="text-sm text-[#6B4A2E]">{tier.period}</div>
+                  </div>
+
+                  <div className="bg-primary/10 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6 border border-primary/20">
+                    <div className="text-center">
+                      <div className="text-xs sm:text-sm text-[#995925] mb-1">Pacote Completo (4 pilares)</div>
+                      <div className="flex items-center justify-center gap-2 mb-2">
+                        <span className="text-lg sm:text-xl font-bold text-primary">{tier.packagePrice}</span>
+                        <Badge className="bg-primary text-white text-xs">{tier.packageDiscount}</Badge>
                       </div>
+                      <div className="text-xs text-[#6B4A2E] line-through">{tier.originalPackagePrice}</div>
+                    </div>
+                  </div>
+
+                  <ul className="space-y-2 sm:space-y-3 mb-6 sm:mb-8">
+                    {tier.features.map((feature, featureIndex) => (
+                      <li key={featureIndex} className="flex items-start gap-2 text-xs sm:text-sm">
+                        <CheckCircle className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                        <span className="text-[#6B4A2E]">{feature}</span>
+                      </li>
                     ))}
+                  </ul>
+
+                  <div className="space-y-2 sm:space-y-3">
+                    <Button
+                      className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-2 sm:py-3 text-sm sm:text-base"
+                      onClick={() => handleProductSelection(`pacote-${tier.level.toLowerCase()}`)}
+                    >
+                      Solicitar Pacote Completo
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="w-full border-primary text-primary hover:bg-primary hover:text-white font-semibold py-2 sm:py-3 text-sm sm:text-base bg-transparent"
+                      onClick={() => handleProductSelection(`pilar-${tier.level.toLowerCase()}`)}
+                    >
+                      Contratar Pilares Individuais
+                    </Button>
                   </div>
                 </CardContent>
-                <div className="p-4">
-                  <Button
-                    className={`w-full ${level.buttonColor} hover:from-primary/90 hover:to-[#995925]/90 text-white font-semibold py-3 transition-all duration-300 hover:scale-105 hover:shadow-lg`}
-                    onClick={scrollToAuditForm}
-                  >
-                    Começar Agora
-                  </Button>
-                </div>
               </Card>
             ))}
           </div>
@@ -1721,38 +1681,31 @@ export default function AxendRevOpsLanding() {
       </footer>
 
       {showCalendarPopup && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md">
-            <h2 className="text-xl font-semibold text-[#413328] mb-4">Agende sua Consultoria Personalizada</h2>
-            <p className="text-sm text-[#6B4A2E] mb-6">
-              Escolha o melhor horário para discutir sua auditoria e receber uma proposta sob medida.
-            </p>
-            <div className="flex justify-center">
-              <Button
-                className="bg-gradient-to-r from-primary to-[#995925] hover:from-primary/90 hover:to-[#995925]/90 text-white font-semibold py-3 px-6 transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                onClick={() => {
-                  setShowCalendar(true)
-                  setShowCalendarPopup(false)
-                }}
-              >
-                Agendar Agora
-                <Calendar className="h-4 w-4 ml-2" />
-              </Button>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-2xl max-w-md w-full p-6 relative animate-in zoom-in-95 duration-300">
+            <button
+              onClick={() => setShowCalendarPopup(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <div className="text-center mb-6">
+              <Calendar className="h-12 w-12 text-primary mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-[#413328] mb-2">Agende sua Consultoria Personalizada</h3>
+              <p className="text-[#6B4A2E]">
+                Vamos apresentar sua auditoria e discutir as melhores soluções para sua empresa
+              </p>
+            </div>
+
+            <div className="text-center">
+              <div id="google-calendar-button"></div>
             </div>
           </div>
         </div>
       )}
 
-      {showCalendar && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
-          <iframe
-            src="https://calendar.google.com/calendar/embed?src=c_a99ef1c5ef9c99f79c318b1a9f1a9989198e9a9999c99f99a99e999999999999%40group.calendar.google.com&ctz=America%2FSao_Paulo"
-            style={{ border: "0", width: "800px", height: "600px" }}
-            frameBorder="0"
-            scrolling="no"
-          ></iframe>
-        </div>
-      )}
+      <elevenlabs-convai agent-id="agent_1201k3e4rvf1eanr3eqqs3xmzka0"></elevenlabs-convai>
     </div>
   )
 }
