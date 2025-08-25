@@ -536,13 +536,7 @@ export default function SolucoesPage() {
                   Auditoria Gratuita <ArrowRight className="h-5 w-5" />
                 </Link>
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-white/30 text-white hover:bg-white/10 px-8 py-4 text-lg bg-transparent"
-              >
-                Ver Preços
-              </Button>
+              
             </div>
           </div>
         </div>
@@ -908,7 +902,7 @@ export default function SolucoesPage() {
           </div>
 
           <div className="border-t border-white/20 mt-8 pt-8 text-center text-white/60">
-            <p>&copy; 2024 Grupo Axend. Todos os direitos reservados.</p>
+            <p>© 2025 Grupo Axend. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>

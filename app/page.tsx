@@ -1079,7 +1079,7 @@ export default function AxendRevOpsLanding() {
                 Nossa metodologia integra <strong className="text-white">Processos & Rituais</strong>,{" "}
                 <strong className="text-white">CRM Vivo</strong>,
                 <strong className="text-white"> Business Intelligence</strong> e{" "}
-                <strong className="text-white">Agentes de IA</strong>
+                <strong className="text-white">Agentes de IA </strong>
                 em uma solução completa que transforma sua operação de receita em uma máquina previsível e escalável.
               </p>
             </div>
@@ -1320,7 +1320,7 @@ export default function AxendRevOpsLanding() {
             ].map((tier, index) => (
               <Card
                 key={index}
-                className={`relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105 border-2 ${tier.borderColor} ${tier.bgColor} group`}
+                className={`relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105 border-2 bg-slate-50 text-slate-50 ${tier.borderColor} ${tier.bgColor} group`}
               >
                 {tier.popular && (
                   <div className="absolute top-0 left-0 right-0 bg-primary text-white text-center py-2 text-xs sm:text-sm font-bold">
@@ -1328,7 +1328,7 @@ export default function AxendRevOpsLanding() {
                   </div>
                 )}
 
-                <CardContent className={`p-4 sm:p-6 lg:p-8 ${tier.popular ? "pt-12 sm:pt-14" : ""}`}>
+                <CardContent className={`p-4 sm:p-6 lg:p-8 text-slate-50 bg-slate-50 ${tier.popular ? "pt-12 sm:pt-14" : ""}`}>
                   <div className="text-center mb-4 sm:mb-6">
                     <h3 className={`text-xl sm:text-2xl font-bold mb-2 ${tier.textColor}`}>{tier.level}</h3>
                     <p className="text-sm sm:text-base text-[#6B4A2E] mb-3 sm:mb-4">{tier.subtitle}</p>
@@ -1595,7 +1595,7 @@ export default function AxendRevOpsLanding() {
           </div>
 
           <div className="border-t border-white/20 mt-8 pt-8 text-center text-white/60">
-            <p>&copy; 2024 Grupo Axend. Todos os direitos reservados.</p>
+            <p>© 2025 Grupo Axend. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>
