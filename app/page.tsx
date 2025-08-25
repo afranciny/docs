@@ -6,6 +6,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
 import {
   TrendingUp,
   Clock,
@@ -23,6 +24,8 @@ import {
   Crown,
   DollarSign,
   LineChart,
+  Send,
+  X,
 } from "lucide-react"
 import Link from "next/link"
 
@@ -75,6 +78,18 @@ export default function AxendRevOpsLanding() {
   const [submitError, setSubmitError] = useState("")
   const [showCalendarPopup, setShowCalendarPopup] = useState(false)
   const [hoveredService, setHoveredService] = useState<number | null>(null)
+
+  const [showLeadPopup, setShowLeadPopup] = useState(false)
+  const [leadFormData, setLeadFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    website: "",
+    cnpj: "",
+    interest: "Auditoria Gratuita",
+  })
+  const [isSubmittingLead, setIsSubmittingLead] = useState(false)
+  const [leadSubmitSuccess, setLeadSubmitSuccess] = useState(false)
 
   const serviceLevels = {
     essencial: {
@@ -274,6 +289,66 @@ export default function AxendRevOpsLanding() {
     scrollToAuditForm()
   }
 
+  const handleLeadSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmittingLead(true)
+
+    try {
+      const response = await fetch("/api/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: leadFormData.name,
+          email: leadFormData.email,
+          phone: leadFormData.phone,
+          website: leadFormData.website,
+          cnpj: leadFormData.cnpj,
+          company_size: "Não informado",
+          monthly_revenue: "Não informado",
+          conversion_rate: "Não informado",
+          average_ticket: "Não informado",
+          crm_score: 5,
+          bi_score: 5,
+          ai_score: 5,
+          processes_score: 5,
+          product_interest: leadFormData.interest,
+          additional_details: `Interesse: ${leadFormData.interest}`,
+          recommendation: "Lead capturado via popup",
+        }),
+      })
+
+      if (response.ok) {
+        setLeadSubmitSuccess(true)
+        setLeadFormData({
+          name: "",
+          email: "",
+          phone: "",
+          website: "",
+          cnpj: "",
+          interest: "Auditoria Gratuita",
+        })
+        setTimeout(() => {
+          setShowLeadPopup(false)
+          setLeadSubmitSuccess(false)
+        }, 3000)
+      } else {
+        throw new Error("Erro ao enviar formulário")
+      }
+    } catch (error) {
+      console.error("Erro:", error)
+      alert("Erro ao enviar formulário. Tente novamente.")
+    } finally {
+      setIsSubmittingLead(false)
+    }
+  }
+
+  const openLeadPopup = (interest: string) => {
+    setLeadFormData((prev) => ({ ...prev, interest }))
+    setShowLeadPopup(true)
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-[#E6E4E3]/10 to-background text-foreground overflow-x-hidden">
       <header className="border-b border-[#E6E4E3]/20 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
@@ -301,17 +376,23 @@ export default function AxendRevOpsLanding() {
         <div className="absolute inset-0 bg-[url('/placeholder.svg?height=1080&width=1920')] opacity-5"></div>
 
         <div
-          className="absolute top-20 left-2 sm:left-4 lg:left-10 w-12 sm:w-16 lg:w-20 h-12 sm:h-16 lg:h-20 bg-primary/10 rounded-full animate-float backdrop-blur-sm border border-primary/20"
+          className="absolute top-20 left-2 sm:left-4 lg:left-10 w-12 sm:w-16 lg:w-20 h-12 sm:h-16 lg:h-20 bg-primary/10 rounded-full animate-float backdrop-blur-sm border border-primary/20 flex items-center justify-center"
           style={{ transform: `translateZ(${Math.sin(scrollY * 0.01) * 20}px)` }}
-        />
+        >
+          <DollarSign className="w-6 sm:w-8 lg:w-10 h-6 sm:h-8 lg:h-10 text-primary" />
+        </div>
         <div
-          className="absolute top-32 sm:top-40 right-2 sm:right-4 lg:right-20 w-10 sm:w-12 lg:w-16 h-10 sm:h-12 lg:h-16 bg-[#995925]/10 rounded-full animate-float-delayed backdrop-blur-sm border border-[#995925]/20"
+          className="absolute top-32 sm:top-40 right-2 sm:right-4 lg:right-20 w-10 sm:w-12 lg:w-16 h-10 sm:h-12 lg:h-16 bg-[#995925]/10 rounded-full animate-float-delayed backdrop-blur-sm border border-[#995925]/20 flex items-center justify-center"
           style={{ transform: `translateZ(${Math.cos(scrollY * 0.01) * 15}px)` }}
-        />
+        >
+          <DollarSign className="w-5 sm:w-6 lg:w-8 h-5 sm:h-6 lg:h-8 text-[#995925]" />
+        </div>
         <div
-          className="absolute bottom-20 left-2 sm:left-4 lg:left-20 w-8 sm:w-10 lg:w-12 h-8 sm:h-10 lg:h-12 bg-[#6B4A2E]/10 rounded-full animate-float backdrop-blur-sm border border-[#6B4A2E]/20"
+          className="absolute bottom-20 left-2 sm:left-4 lg:left-20 w-8 sm:w-10 lg:w-12 h-8 sm:h-10 lg:h-12 bg-[#6B4A2E]/10 rounded-full animate-float backdrop-blur-sm border border-[#6B4A2E]/20 flex items-center justify-center"
           style={{ transform: `translateZ(${Math.sin(scrollY * 0.015) * 10}px)` }}
-        />
+        >
+          <DollarSign className="w-4 sm:w-5 lg:w-6 h-4 sm:h-5 lg:h-6 text-[#6B4A2E]" />
+        </div>
 
         <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <div className="text-center space-y-6 sm:space-y-8 lg:space-y-12 max-w-5xl mx-auto">
@@ -353,7 +434,7 @@ export default function AxendRevOpsLanding() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button
-                onClick={scrollToAuditForm}
+                onClick={() => openLeadPopup("Auditoria Gratuita")}
                 size="lg"
                 className="bg-gradient-to-r from-primary to-[#995925] hover:from-primary/90 hover:to-[#995925]/90 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl w-full sm:w-auto"
               >
@@ -723,7 +804,7 @@ export default function AxendRevOpsLanding() {
                   <Button
                     size="lg"
                     className="bg-[#EB6A00] hover:bg-[#995925] text-white px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300"
-                    onClick={() => scrollToForm()}
+                    onClick={() => openLeadPopup("Pacote Completo")}
                   >
                     <Crown className="h-5 w-5 mr-2" />
                     Solicitar Pacote Completo
@@ -756,7 +837,10 @@ export default function AxendRevOpsLanding() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-lg font-bold text-[#413328]">Total: {calculateSelectedTotal()}</span>
-                  <Button className="bg-[#EB6A00] hover:bg-[#995925] text-white" onClick={() => scrollToForm()}>
+                  <Button
+                    className="bg-[#EB6A00] hover:bg-[#995925] text-white"
+                    onClick={() => openLeadPopup("Pilares Selecionados")}
+                  >
                     Solicitar Pilares Selecionados
                   </Button>
                 </div>
@@ -895,7 +979,6 @@ export default function AxendRevOpsLanding() {
                 onMouseEnter={() => setHoveredService(index)}
                 onMouseLeave={() => setHoveredService(null)}
               >
-                {/* Changed hover gradient from white to orange */}
                 <div className="absolute inset-0 bg-gradient-to-br from-[#EB6A00]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                 <CardContent className="p-6 text-center relative z-10">
@@ -952,7 +1035,7 @@ export default function AxendRevOpsLanding() {
         data-animate
       >
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-full h-full bg-[url('/placeholder.svg?height=800&width=1200)')] opacity-20" />
+          <div className="absolute top-0 left-0 w-full h-full bg-[url('/placeholder.svg?height=800&width=1200)'] opacity-20" />
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
@@ -1290,6 +1373,139 @@ export default function AxendRevOpsLanding() {
           </div>
         </div>
       </section>
+
+      {/* Lead Popup Modal */}
+      {showLeadPopup && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-2xl font-bold text-[#413328]">Fale Conosco</h3>
+                  <p className="text-[#6B4A2E] mt-1">Receba uma proposta personalizada</p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowLeadPopup(false)}
+                  className="text-[#6B4A2E] hover:bg-[#E6E4E3]"
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+
+              {leadSubmitSuccess ? (
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle className="h-8 w-8 text-green-600" />
+                  </div>
+                  <h4 className="text-xl font-bold text-[#413328] mb-2">Obrigado!</h4>
+                  <p className="text-[#6B4A2E]">
+                    Recebemos suas informações. Nossa equipe entrará em contato em breve.
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={handleLeadSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-[#413328] mb-2">Nome Completo *</label>
+                    <Input
+                      type="text"
+                      required
+                      value={leadFormData.name}
+                      onChange={(e) => setLeadFormData((prev) => ({ ...prev, name: e.target.value }))}
+                      className="border-[#E6E4E3] focus:border-[#EB6A00]"
+                      placeholder="Seu nome completo"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-[#413328] mb-2">Email Corporativo *</label>
+                    <Input
+                      type="email"
+                      required
+                      value={leadFormData.email}
+                      onChange={(e) => setLeadFormData((prev) => ({ ...prev, email: e.target.value }))}
+                      className="border-[#E6E4E3] focus:border-[#EB6A00]"
+                      placeholder="seu@empresa.com"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-[#413328] mb-2">Telefone/WhatsApp *</label>
+                    <Input
+                      type="tel"
+                      required
+                      value={leadFormData.phone}
+                      onChange={(e) => setLeadFormData((prev) => ({ ...prev, phone: e.target.value }))}
+                      className="border-[#E6E4E3] focus:border-[#EB6A00]"
+                      placeholder="(11) 99999-9999"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-[#413328] mb-2">Site da Empresa</label>
+                    <Input
+                      type="url"
+                      value={leadFormData.website}
+                      onChange={(e) => setLeadFormData((prev) => ({ ...prev, website: e.target.value }))}
+                      className="border-[#E6E4E3] focus:border-[#EB6A00]"
+                      placeholder="https://suaempresa.com"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-[#413328] mb-2">CNPJ da Empresa *</label>
+                    <Input
+                      type="text"
+                      required
+                      value={leadFormData.cnpj}
+                      onChange={(e) => setLeadFormData((prev) => ({ ...prev, cnpj: e.target.value }))}
+                      className="border-[#E6E4E3] focus:border-[#EB6A00]"
+                      placeholder="00.000.000/0001-00"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-[#413328] mb-2">Interesse</label>
+                    <select
+                      value={leadFormData.interest}
+                      onChange={(e) => setLeadFormData((prev) => ({ ...prev, interest: e.target.value }))}
+                      className="w-full p-3 border border-[#E6E4E3] rounded-lg focus:border-[#EB6A00] focus:outline-none"
+                    >
+                      <option value="Auditoria Gratuita">Auditoria Gratuita</option>
+                      <option value="Pacote Completo">Pacote Completo</option>
+                      <option value="Pilares Selecionados">Pilares Selecionados</option>
+                      <option value="Orçamento Personalizado">Orçamento Personalizado</option>
+                      <option value="CRM">CRM</option>
+                      <option value="BI">BI</option>
+                      <option value="IA">Agentes de IA</option>
+                      <option value="Processos">Processos & Rituais</option>
+                    </select>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={isSubmittingLead}
+                    className="w-full bg-gradient-to-r from-[#EB6A00] to-[#995925] hover:from-[#EB6A00]/90 hover:to-[#995925]/90 text-white font-semibold py-3 text-lg transition-all duration-300"
+                  >
+                    {isSubmittingLead ? (
+                      <div className="flex items-center gap-2 justify-center">
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Enviando...
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 justify-center">
+                        <Send className="h-5 w-5" />
+                        Enviar Solicitação
+                      </div>
+                    )}
+                  </Button>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       <footer className="bg-[#413328] text-white py-12">
         <div className="container mx-auto px-4">
