@@ -4,85 +4,97 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
-  ArrowRight,
-  CheckCircle,
   TrendingUp,
-  Users,
-  BarChart3,
   Clock,
   Target,
+  Zap,
+  Rocket,
+  ArrowRight,
+  CheckCircle,
+  BarChart3,
+  Users,
+  ChevronDown,
   Sparkles,
   Cog,
   Brain,
-  ChevronDown,
-  Rocket,
-  Zap,
-  LineChart,
-  Calendar,
   Crown,
   DollarSign,
-  X,
+  LineChart,
 } from "lucide-react"
+import Link from "next/link"
 
 export default function AxendRevOpsLanding() {
   const [scrollY, setScrollY] = useState(0)
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    cnpj: "",
+    website: "",
+    monthlyRevenue: "",
+    conversionRate: "",
+    averageTicket: "",
+    companySize: "",
+    productInterest: "",
+    crm: 3,
+    bi: 3,
+    ia: 3,
+    processos: 3,
+    details: "",
+  })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
-  const [submitError, setSubmitError] = useState("")
+  const [showCalendar, setShowCalendar] = useState(false)
+  const [isFormMinimized, setIsFormMinimized] = useState(false)
   const [showEvaluationSection, setShowEvaluationSection] = useState(false)
   const [showNeedsSection, setShowNeedsSection] = useState(false)
-  const [isFormMinimized, setIsFormMinimized] = useState(false)
-  const [auditRecommendation, setAuditRecommendation] = useState("")
-  const [showCalendarPopup, setShowCalendarPopup] = useState(false)
+  const [recommendation, setRecommendation] = useState("")
   const [selectedPillars, setSelectedPillars] = useState<string[]>([])
-  const [selectedBuildingLevel, setSelectedBuildingLevel] = useState<keyof typeof serviceLevels>("essencial")
-  const [selectedLevel, setSelectedLevel] = useState<keyof typeof serviceLevels>("essencial")
-
+  const [selectedLevel, setSelectedLevel] = useState<string>("essencial")
   const [auditForm, setAuditForm] = useState({
     name: "",
     email: "",
     phone: "",
     cnpj: "",
     website: "",
-    productInterest: "",
     companySize: "",
-    aiUsage: 0,
-    biQuality: 0,
-    crmAdoption: 0,
-    processMaturity: 0,
+    productInterest: "",
+    aiUsage: 3,
+    biQuality: 3,
+    crmAdoption: 3,
+    processMaturity: 3,
     additionalDetails: "",
   })
-
+  const [auditRecommendation, setAuditRecommendation] = useState<{
+    description: string
+    estimatedInvestment: string
+  } | null>(null)
+  const [submitError, setSubmitError] = useState("")
+  const [showCalendarPopup, setShowCalendarPopup] = useState(false)
   const [hoveredService, setHoveredService] = useState<number | null>(null)
 
   const serviceLevels = {
     essencial: {
       name: "Essencial",
       description: "Para empresas iniciando a jornada RevOps",
-      originalPrice: 8000,
-      packagePrice: 6000,
       services: {
         processos: {
           name: "Processos Essencial",
-          price: 1500,
           features: ["Mapeamento básico", "SOP inicial", "Treinamento equipe"],
         },
         crm: {
           name: "CRM Essencial",
-          price: 2000,
           features: ["Configuração HubSpot/Pipedrive", "Automações básicas", "Dashboards iniciais"],
         },
         bi: {
           name: "BI Essencial",
-          price: 2000,
           features: ["Relatórios básicos", "KPIs principais", "Dashboard executivo"],
         },
         ia: {
           name: "IA Essencial",
-          price: 2500,
           features: ["Chatbot básico", "Automação emails", "Lead scoring simples"],
         },
       },
@@ -90,27 +102,21 @@ export default function AxendRevOpsLanding() {
     profissional: {
       name: "Profissional",
       description: "Para empresas em crescimento acelerado",
-      originalPrice: 15000,
-      packagePrice: 12000,
       services: {
         processos: {
           name: "Processos Profissional",
-          price: 3000,
           features: ["Processos avançados", "Automação workflows", "Métricas detalhadas"],
         },
         crm: {
           name: "CRM Profissional",
-          price: 4000,
           features: ["CRM customizado", "Integrações avançadas", "Automação completa"],
         },
         bi: {
           name: "BI Profissional",
-          price: 4000,
           features: ["Analytics avançado", "Previsões IA", "Dashboards interativos"],
         },
         ia: {
           name: "IA Profissional",
-          price: 4000,
           features: ["IA conversacional", "Análise preditiva", "Automação inteligente"],
         },
       },
@@ -118,23 +124,18 @@ export default function AxendRevOpsLanding() {
     avancado: {
       name: "Avançado",
       description: "Para empresas que buscam excelência operacional",
-      originalPrice: 25000,
-      packagePrice: 20000,
       services: {
         processos: {
           name: "Processos Avançado",
-          price: 5000,
           features: ["Otimização contínua", "IA nos processos", "Benchmarking"],
         },
         crm: {
           name: "CRM Avançado",
-          price: 7000,
           features: ["Plataforma enterprise", "IA integrada", "Customizações ilimitadas"],
         },
-        bi: { name: "BI Avançado", price: 6500, features: ["Data Science", "ML avançado", "Insights preditivos"] },
+        bi: { name: "BI Avançado", features: ["Data Science", "ML avançado", "Insights preditivos"] },
         ia: {
           name: "IA Avançado",
-          price: 6500,
           features: ["IA generativa", "Automação total", "Insights estratégicos"],
         },
       },
@@ -275,6 +276,27 @@ export default function AxendRevOpsLanding() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-[#E6E4E3]/10 to-background text-foreground overflow-x-hidden">
+      <header className="border-b border-[#E6E4E3]/20 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <Link href="/" className="text-2xl font-bold text-[#413328]">
+              Grupo Axend
+            </Link>
+            <nav className="hidden md:flex items-center gap-6">
+              <Link href="/" className="text-[#EB6A00] font-semibold">
+                Início
+              </Link>
+              <Link href="/solucoes" className="text-[#413328] hover:text-[#EB6A00] transition-colors">
+                Soluções
+              </Link>
+              <Button asChild className="bg-[#EB6A00] hover:bg-[#995925]">
+                <Link href="#auditoria">Auditoria Gratuita</Link>
+              </Button>
+            </nav>
+          </div>
+        </div>
+      </header>
+
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-[#E6E4E3]/20 to-background pt-16">
         <div className="absolute inset-0 bg-[url('/placeholder.svg?height=1080&width=1920')] opacity-5"></div>
 
@@ -305,7 +327,7 @@ export default function AxendRevOpsLanding() {
             </h1>
 
             <p className="text-lg sm:text-xl lg:text-2xl text-[#6B4A2E] max-w-3xl mx-auto leading-relaxed">
-              Transforme sua operação de vendas com metodologia RevOps comprovada por{" "}
+              Transforme sua operação com metodologia RevOps comprovada por{" "}
               <span className="font-bold text-primary">771% de ROI</span>
             </p>
 
@@ -1144,19 +1166,13 @@ export default function AxendRevOpsLanding() {
       </section>
 
       {/* Service Levels Section */}
-      <section
-        className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-background to-[#E6E4E3]/30 relative overflow-hidden"
-        data-animate
-      >
+      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-[#E6E4E3]/20 to-[#995925]/10 relative overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12 sm:mb-16 max-w-4xl mx-auto">
-            <Badge className="bg-primary/10 text-primary border-primary/20 mb-4 sm:mb-6 animate-pulse text-xs sm:text-sm">
-              🎯 Soluções Personalizadas por Nível
-            </Badge>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-[#413328] px-4">
-              Escolha o Nível Ideal para sua <span className="text-primary">Transformação RevOps</span>
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-[#413328]">
+              Nossos Níveis de Serviço
             </h2>
-            <p className="text-lg sm:text-xl text-[#6B4A2E] px-4">
+            <p className="text-base sm:text-lg lg:text-xl text-[#6B4A2E] max-w-3xl mx-auto leading-relaxed">
               Cada pilar disponível em 3 níveis de complexidade, ou adquira o pacote completo com desconto
             </p>
           </div>
@@ -1167,17 +1183,6 @@ export default function AxendRevOpsLanding() {
                 level: "Essencial",
                 subtitle: "Para pequenas empresas",
                 description: "Fundação sólida para começar sua jornada RevOps",
-                price: "R$ 1.750",
-                period: "/pilar",
-                packagePrice: "R$ 6.000",
-                packageDiscount: "25% OFF",
-                originalPackagePrice: "R$ 8.000",
-                pillars: {
-                  crm: "R$ 1.750",
-                  bi: "R$ 1.750",
-                  processos: "R$ 1.750",
-                  ia: "R$ 1.750",
-                },
                 features: [
                   "Setup básico de CRM",
                   "Dashboards essenciais",
@@ -1193,17 +1198,6 @@ export default function AxendRevOpsLanding() {
                 level: "Profissional",
                 subtitle: "Para médias empresas",
                 description: "Solução completa para crescimento acelerado",
-                price: "R$ 3.750",
-                period: "/pilar",
-                packagePrice: "R$ 12.000",
-                packageDiscount: "20% OFF",
-                originalPackagePrice: "R$ 15.000",
-                pillars: {
-                  crm: "R$ 3.750",
-                  bi: "R$ 3.750",
-                  processos: "R$ 3.750",
-                  ia: "R$ 3.750",
-                },
                 features: [
                   "CRM avançado + automações",
                   "BI completo + alertas",
@@ -1220,17 +1214,6 @@ export default function AxendRevOpsLanding() {
                 level: "Avançado",
                 subtitle: "Para grandes empresas",
                 description: "Transformação completa com IA e automação total",
-                price: "R$ 6.250",
-                period: "/pilar",
-                packagePrice: "R$ 20.000",
-                packageDiscount: "20% OFF",
-                originalPackagePrice: "R$ 25.000",
-                pillars: {
-                  crm: "R$ 6.250",
-                  bi: "R$ 6.250",
-                  processos: "R$ 6.250",
-                  ia: "R$ 6.250",
-                },
                 features: [
                   "CRM enterprise + IA",
                   "BI preditivo + ML",
@@ -1263,51 +1246,19 @@ export default function AxendRevOpsLanding() {
                   </div>
 
                   <div className="mb-4 sm:mb-6">
-                    <h4 className="text-sm font-semibold text-[#413328] mb-3 text-center">4 Pilares Individuais:</h4>
+                    <h4 className="text-sm font-semibold text-[#413328] mb-3 text-center">4 Pilares Inclusos:</h4>
                     <div className="grid grid-cols-2 gap-2 text-xs">
                       <div className="flex justify-between items-center bg-white/50 rounded p-2">
                         <span className="text-[#6B4A2E]">🔧 CRM</span>
-                        <span className="font-semibold text-primary">{tier.pillars.crm}</span>
                       </div>
                       <div className="flex justify-between items-center bg-white/50 rounded p-2">
                         <span className="text-[#6B4A2E]">📊 BI</span>
-                        <span className="font-semibold text-primary">{tier.pillars.bi}</span>
                       </div>
                       <div className="flex justify-between items-center bg-white/50 rounded p-2">
                         <span className="text-[#6B4A2E]">⚙️ Processos</span>
-                        <span className="font-semibold text-primary">{tier.pillars.processos}</span>
                       </div>
                       <div className="flex justify-between items-center bg-white/50 rounded p-2">
                         <span className="text-[#6B4A2E]">🤖 IA</span>
-                        <span className="font-semibold text-primary">{tier.pillars.ia}</span>
-                      </div>
-                    </div>
-                    <div className="text-center mt-2 pt-2 border-t border-[#E6E4E3]">
-                      <span className="text-xs text-[#995925]">Total individual: </span>
-                      <span className="text-sm font-semibold text-[#6B4A2E] line-through">
-                        {tier.originalPackagePrice}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="bg-gradient-to-r from-primary/10 to-[#995925]/10 rounded-lg p-4 mb-4 sm:mb-6 border-2 border-primary/30">
-                    <div className="text-center">
-                      <div className="text-xs sm:text-sm text-[#995925] mb-2 font-semibold">
-                        🎁 PACOTE COMPLETO (4 pilares)
-                      </div>
-                      <div className="flex items-center justify-center gap-3 mb-2">
-                        <span className="text-2xl sm:text-3xl font-bold text-primary">{tier.packagePrice}</span>
-                        <Badge className="bg-primary text-white text-xs sm:text-sm px-2 py-1 animate-pulse">
-                          {tier.packageDiscount}
-                        </Badge>
-                      </div>
-                      <div className="text-xs text-[#6B4A2E]">
-                        <span className="line-through opacity-60">{tier.originalPackagePrice}</span>
-                        <span className="ml-2 text-green-600 font-semibold">
-                          Economia: R${" "}
-                          {Number.parseInt(tier.originalPackagePrice.replace("R$ ", "").replace(".", "")) -
-                            Number.parseInt(tier.packagePrice.replace("R$ ", "").replace(".", ""))}
-                        </span>
                       </div>
                     </div>
                   </div>
@@ -1321,19 +1272,12 @@ export default function AxendRevOpsLanding() {
                     ))}
                   </ul>
 
-                  <div className="space-y-2 sm:space-y-3">
+                  <div className="space-y-3">
                     <Button
-                      className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-2 sm:py-3 text-sm sm:text-base"
-                      onClick={() => handleProductSelection(`pacote-${tier.level.toLowerCase()}`)}
+                      onClick={scrollToAuditForm}
+                      className="w-full bg-gradient-to-r from-primary to-[#995925] hover:from-primary/90 hover:to-[#995925]/90 text-white font-semibold py-2 sm:py-3 transition-all duration-300 hover:scale-105"
                     >
-                      Solicitar Pacote Completo
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="w-full border-primary text-primary hover:bg-primary/10 py-2 sm:py-3 text-sm sm:text-base bg-transparent"
-                      onClick={() => handleProductSelection(`pilar-individual-${tier.level.toLowerCase()}`)}
-                    >
-                      Contratar Pilar Individual
+                      Solicitar Orçamento
                     </Button>
                   </div>
                 </CardContent>
@@ -1343,63 +1287,63 @@ export default function AxendRevOpsLanding() {
         </div>
       </section>
 
-      <section className="py-20 bg-gradient-to-br from-background to-[#E6E4E3]/20 relative" data-animate>
+      <footer className="bg-[#413328] text-white py-12">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#413328]">
-              Pronto para <span className="text-primary">decolar</span> sua receita?
-            </h2>
-            <p className="text-xl text-[#6B4A2E]">
-              Agende agora sua auditoria gratuita e descubra o poder do RevOps + IA
-            </p>
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-[#EB6A00]">Grupo Axend</h3>
+              <p className="text-white/80 mb-4">
+                Especialistas em Revenue Operations para empresas B2B que buscam crescimento previsível.
+              </p>
+              <div className="text-sm text-white/60">
+                <p>CNPJ: 48.929.432/0001-08</p>
+                <p>contato@grupoaxend.com</p>
+                <p>WhatsApp: +55 (33) 984605718</p>
+              </div>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-4">Soluções</h4>
+              <ul className="space-y-2 text-white/80">
+                <li>CRM Intelligence</li>
+                <li>Business Intelligence</li>
+                <li>Processos & Rituais</li>
+                <li>Agentes de IA</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-4">Níveis</h4>
+              <ul className="space-y-2 text-white/80">
+                <li>Essencial</li>
+                <li>Profissional</li>
+                <li>Avançado</li>
+                <li>Pacotes Completos</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-4">Contato</h4>
+              <ul className="space-y-2 text-white/80">
+                <li>
+                  <Link href="#auditoria" className="hover:text-[#EB6A00] transition-colors">
+                    Auditoria Gratuita
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/solucoes" className="hover:text-[#EB6A00] transition-colors">
+                    Soluções Detalhadas
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <div className="flex justify-center">
-            <Button
-              className="bg-gradient-to-r from-primary to-[#995925] hover:from-primary/90 hover:to-[#995925]/90 text-white font-semibold py-4 px-8 transition-all duration-300 hover:scale-105 hover:shadow-lg"
-              onClick={scrollToAuditForm}
-            >
-              Agendar Auditoria Gratuita
-              <ArrowRight className="h-5 w-5 ml-2" />
-            </Button>
+          <div className="border-t border-white/20 mt-8 pt-8 text-center text-white/60">
+            <p>&copy; 2024 Grupo Axend. Todos os direitos reservados.</p>
           </div>
-        </div>
-      </section>
-
-      <footer className="py-12 bg-background border-t">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-sm text-[#6B4A2E]">
-            © {new Date().getFullYear()} Axend RevOps. Todos os direitos reservados.
-          </p>
         </div>
       </footer>
-
-      {showCalendarPopup && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-2xl max-w-md w-full p-6 relative animate-in zoom-in-95 duration-300">
-            <button
-              onClick={() => setShowCalendarPopup(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
-            >
-              <X className="h-5 w-5" />
-            </button>
-
-            <div className="text-center mb-6">
-              <Calendar className="h-12 w-12 text-primary mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-[#413328] mb-2">Agende sua Consultoria Personalizada</h3>
-              <p className="text-[#6B4A2E]">
-                Vamos apresentar sua auditoria e discutir as melhores soluções para sua empresa
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div id="google-calendar-button"></div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <elevenlabs-convai agent-id="agent_1201k3e4rvf1eanr3eqqs3xmzka0"></elevenlabs-convai>
     </div>
   )
 }
