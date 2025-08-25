@@ -651,6 +651,7 @@ export default function AxendRevOpsLanding() {
 
       {/* Pillars Section */}
       <section
+        id="solucoes"
         className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-[#E6E4E3]/20 to-[#995925]/10 relative overflow-hidden"
         data-animate
       >
@@ -1166,7 +1167,10 @@ export default function AxendRevOpsLanding() {
       </section>
 
       {/* Service Levels Section */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-[#E6E4E3]/20 to-[#995925]/10 relative overflow-hidden">
+      <section
+        id="niveis"
+        className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-[#E6E4E3]/20 to-[#995925]/10 relative overflow-hidden"
+      >
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-8 sm:mb-12 lg:mb-16">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-[#413328]">
@@ -1305,20 +1309,52 @@ export default function AxendRevOpsLanding() {
             <div>
               <h4 className="font-semibold mb-4">Soluções</h4>
               <ul className="space-y-2 text-white/80">
-                <li>CRM Intelligence</li>
-                <li>Business Intelligence</li>
-                <li>Processos & Rituais</li>
-                <li>Agentes de IA</li>
+                <li>
+                  <a href="#solucoes" className="hover:text-[#EB6A00] transition-colors">
+                    CRM Intelligence
+                  </a>
+                </li>
+                <li>
+                  <a href="#solucoes" className="hover:text-[#EB6A00] transition-colors">
+                    Business Intelligence
+                  </a>
+                </li>
+                <li>
+                  <a href="#solucoes" className="hover:text-[#EB6A00] transition-colors">
+                    Processos & Rituais
+                  </a>
+                </li>
+                <li>
+                  <a href="#solucoes" className="hover:text-[#EB6A00] transition-colors">
+                    Agentes de IA
+                  </a>
+                </li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-semibold mb-4">Níveis</h4>
               <ul className="space-y-2 text-white/80">
-                <li>Essencial</li>
-                <li>Profissional</li>
-                <li>Avançado</li>
-                <li>Pacotes Completos</li>
+                <li>
+                  <a href="#niveis" className="hover:text-[#EB6A00] transition-colors">
+                    Essencial
+                  </a>
+                </li>
+                <li>
+                  <a href="#niveis" className="hover:text-[#EB6A00] transition-colors">
+                    Profissional
+                  </a>
+                </li>
+                <li>
+                  <a href="#niveis" className="hover:text-[#EB6A00] transition-colors">
+                    Avançado
+                  </a>
+                </li>
+                <li>
+                  <a href="#niveis" className="hover:text-[#EB6A00] transition-colors">
+                    Pacotes Completos
+                  </a>
+                </li>
               </ul>
             </div>
 
