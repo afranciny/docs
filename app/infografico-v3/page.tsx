@@ -288,110 +288,7 @@ export default function InfographicV3() {
       </section>
 
       {/* Seção 1: Diagnóstico - ALWAYS VISIBLE */}
-      <section className="py-16 bg-gradient-to-r from-red-50 to-orange-50 relative">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-red-500 to-red-600 rounded-full mb-6 shadow-lg">
-                <AlertTriangle className="w-10 h-10 text-white" />
-              </div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#413328]">
-                Sua Empresa Reconhece Estes Sinais?
-              </h2>
-              <p className="text-lg text-[#6B4A2E]">Marque os problemas que sua empresa enfrenta atualmente</p>
-              <div className="mt-4 text-sm text-red-600 font-medium">
-                ⚠️ Cada problema marcado representa uma sangria financeira real
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-4 mb-8">
-              {problems.map((problem) => (
-                <Card
-                  key={problem.id}
-                  className={`cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1 ${
-                    checkedProblems.includes(problem.id)
-                      ? "ring-2 ring-red-500 bg-red-50 shadow-lg"
-                      : "hover:bg-gray-50 hover:shadow-md"
-                  }`}
-                  onClick={() => handleProblemCheck(problem.id)}
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="mt-1">
-                        {checkedProblems.includes(problem.id) ? (
-                          <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
-                            <CheckCircle className="w-4 h-4 text-white" />
-                          </div>
-                        ) : (
-                          <div className="w-6 h-6 border-2 border-gray-300 rounded-full hover:border-red-400 transition-colors" />
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-medium text-[#413328] mb-3">{problem.text}</p>
-                        <div className="flex items-center justify-between">
-                          <Badge
-                            variant={problem.impact === "Crítico" ? "destructive" : "secondary"}
-                            className="text-xs"
-                          >
-                            Impacto {problem.impact}
-                          </Badge>
-                          
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            <div className="bg-white rounded-xl p-8 border-l-4 border-red-500 shadow-lg">
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-red-500 mb-2">{Math.round(problemPercentage)}%</div>
-                  <div className="text-sm text-[#6B4A2E]">Nível de Risco</div>
-                  <Progress value={problemPercentage} className="mt-2" />
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-red-500 mb-2">R$ {totalMonthlyCost.toLocaleString()}</div>
-                  <div className="text-sm text-[#6B4A2E]">Perda Mensal</div>
-                  <div className="text-xs text-red-600 mt-1">Apenas nos problemas marcados</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-red-500 mb-2">
-                    R$ {(totalMonthlyCost * 12).toLocaleString()}
-                  </div>
-                  <div className="text-sm text-[#6B4A2E]">Perda Anual</div>
-                  <div className="text-xs text-red-600 mt-1">Projeção conservadora</div>
-                </div>
-              </div>
-
-              <div className="mt-6 p-4 bg-red-50 rounded-lg">
-                <p className="text-center text-[#6B4A2E]">
-                  {checkedProblems.length >= 5 ? (
-                    <span className="text-red-600 font-semibold flex items-center justify-center gap-2">
-                      <AlertTriangle className="w-5 h-5" />🚨 CRÍTICO: Sua empresa está em alto risco de ineficiência
-                      operacional
-                    </span>
-                  ) : checkedProblems.length >= 3 ? (
-                    <span className="text-orange-600 font-semibold flex items-center justify-center gap-2">
-                      <AlertTriangle className="w-5 h-5" />
-                      ⚠️ ALERTA: Sinais claros de ineficiência detectados
-                    </span>
-                  ) : checkedProblems.length > 0 ? (
-                    <span className="text-yellow-600 font-semibold flex items-center justify-center gap-2">
-                      <Eye className="w-5 h-5" />⚡ ATENÇÃO: Alguns pontos de melhoria identificados
-                    </span>
-                  ) : (
-                    <span className="text-gray-600 font-medium">
-                      Marque os problemas que sua empresa enfrenta para ver o impacto financeiro
-                    </span>
-                  )}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      
 
       {/* Seção 2: Identificação do Inimigo - ALWAYS VISIBLE */}
       <section className="py-16 bg-gradient-to-r from-gray-900 to-gray-800 text-white relative overflow-hidden">
@@ -647,7 +544,7 @@ export default function InfographicV3() {
               <h3 className="text-2xl font-bold text-center mb-8 text-orange-100">A Realidade do Mercado</h3>
               <div className="grid md:grid-cols-3 gap-6 text-center">
                 <div>
-                  <div className="text-3xl font-bold text-yellow-300 mb-2">2024</div>
+                  <div className="text-3xl font-bold text-yellow-300 mb-2">2025</div>
                   <div className="text-orange-200 text-sm">Ano da IA Aplicada</div>
                   <div className="text-xs text-orange-300 mt-2">Quem não adotar agora, fica para trás</div>
                 </div>
@@ -788,7 +685,7 @@ export default function InfographicV3() {
       </section>
 
       {/* Footer */}
-      <footer className="py-16 bg-background text-[#413328]">
+      <footer className="py-16 text-[#413328] bg-sidebar-accent-foreground">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
@@ -796,12 +693,12 @@ export default function InfographicV3() {
                 <div className="w-8 h-8 bg-gradient-to-br from-[#EB6A00] to-[#995925] rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-sm">A</span>
                 </div>
-                <span className="font-bold text-xl">Grupo Axend</span>
+                <span className="font-bold text-xl text-white">Grupo Axend</span>
               </div>
               <p className="text-gray-300 text-sm">Transformando operações de receita com IA e RevOps</p>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Soluções</h4>
+              <h4 className="font-semibold mb-4 text-white">Soluções</h4>
               <ul className="space-y-2 text-sm text-gray-300">
                 <li>
                   <Link href="/solucoes" className="hover:text-[#EB6A00] transition-colors">
@@ -826,7 +723,7 @@ export default function InfographicV3() {
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Empresa</h4>
+              <h4 className="font-semibold mb-4 bg-transparent text-white">Empresa</h4>
               <ul className="space-y-2 text-sm text-gray-300">
                 <li>
                   <Link href="/" className="hover:text-[#EB6A00] transition-colors">
@@ -846,7 +743,7 @@ export default function InfographicV3() {
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Contato</h4>
+              <h4 className="font-semibold mb-4 text-white">Contato</h4>
               <ul className="space-y-2 text-sm text-gray-300">
                 <li>contato@grupoaxend.tech</li>
                 <li>+55 (11) 99999-9999</li>
@@ -855,7 +752,7 @@ export default function InfographicV3() {
             </div>
           </div>
           <div className="border-t border-gray-600 mt-8 pt-8 text-center text-sm text-gray-400">
-            <p>&copy; 2024 Grupo Axend. Todos os direitos reservados.</p>
+            <p>© 2025 Grupo Axend. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>
