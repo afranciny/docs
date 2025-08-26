@@ -30,7 +30,7 @@ const serviceLevels = {
     timeline: "2-4 semanas",
     services: {
       processos: {
-        price: 4000,
+        price: 8000,
         objective: "Colocar disciplina mínima em 30 dias e parar as perdas óbvias",
         scope: [
           "Mapear o funil ponta-a-ponta (entrada, qualificação, oportunidade, fechamento, onboarding)",
@@ -57,8 +57,8 @@ const serviceLevels = {
         ],
       },
       crm: {
-        price: 4000,
-        monthlyMaintenance: 1000,
+        price: 8000,
+        monthlyMaintenance: 2000,
         objective: "Tirar o 'CRM de fachada' e colocar uso disciplinado em poucas semanas",
         scope: [
           "Processo e objetos padrão: Contas, Contatos, Leads e Oportunidades",
@@ -84,8 +84,8 @@ const serviceLevels = {
         ],
       },
       bi: {
-        price: 4000,
-        monthlyMaintenance: 1000,
+        price: 8000,
+        monthlyMaintenance: 2000,
         objective: "Entregar visibilidade rápida para decisões imediatas",
         scope: [
           "Conectar 4-8 fontes (Salesforce/HubSpot, RD/GA4, Google Ads/Meta, ERP)",
@@ -109,8 +109,8 @@ const serviceLevels = {
         ],
       },
       ia: {
-        price: 4000,
-        monthlyMaintenance: 1000,
+        price: 8000,
+        monthlyMaintenance: 2000,
         objective: "Lançar 1 caso de uso com ROI direto e risco controlado",
         scope: [
           "1 agente ativo (SDR inbound, CS suporte ou Meeting Prep)",
@@ -135,8 +135,8 @@ const serviceLevels = {
         ],
       },
     },
-    originalPrice: 16000,
-    packagePrice: 12000,
+    originalPrice: 32000,
+    packagePrice: 24000,
   },
   profissional: {
     name: "Profissional",

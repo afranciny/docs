@@ -26,6 +26,8 @@ import {
   LineChart,
   Send,
   X,
+  Shield,
+  Star,
 } from "lucide-react"
 import Link from "next/link"
 
@@ -364,9 +366,6 @@ export default function AxendRevOpsLanding() {
               <Link href="/solucoes" className="text-[#413328] hover:text-[#EB6A00] transition-colors">
                 Soluções
               </Link>
-              <Link href="/auth/login" className="text-[#413328] hover:text-[#EB6A00] transition-colors">
-                Login
-              </Link>
               <Button asChild className="bg-[#EB6A00] hover:bg-[#995925]">
                 <Link href="#auditoria">Auditoria Gratuita</Link>
               </Button>
@@ -560,9 +559,9 @@ export default function AxendRevOpsLanding() {
                         className="w-full px-3 py-2 sm:py-3 border border-[#995925]/30 rounded-md bg-white text-[#413328] focus:ring-2 focus:ring-primary focus:border-transparent transition-all hover:border-primary/50 text-sm sm:text-base"
                       >
                         <option value="">Selecione o porte</option>
-                        <option value="pequena">Pequena Empresa (até R$ 100k/mês)</option>
-                        <option value="media">Média Empresa (R$ 100k - R$ 500k/mês)</option>
-                        <option value="grande">Grande Empresa (R$ 500k+/mês)</option>
+                        <option value="pequena">Pequena Empresa (até R$ 200k/mês)</option>
+                        <option value="media">Média Empresa (R$ 200k - R$ 1M/mês)</option>
+                        <option value="grande">Grande Empresa (R$ 1M+/mês)</option>
                       </select>
                     </div>
 
@@ -737,15 +736,51 @@ export default function AxendRevOpsLanding() {
         className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-[#E6E4E3]/20 to-[#995925]/10 relative overflow-hidden"
         data-animate
       >
-        <div className="container mx-auto px-4 sm:px-6">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-10 left-10 w-20 h-20 bg-primary/10 rounded-full animate-float"></div>
+          <div
+            className="absolute bottom-20 right-20 w-16 h-16 bg-[#995925]/10 rounded-full animate-float"
+            style={{ animationDelay: "2s" }}
+          ></div>
+          <div
+            className="absolute top-1/2 left-1/4 w-12 h-12 bg-[#EB6A00]/10 rounded-full animate-float"
+            style={{ animationDelay: "4s" }}
+          ></div>
+        </div>
+
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12 sm:mb-16">
+              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-200 rounded-full px-4 py-2 mb-4">
+                <Clock className="h-4 w-4 text-red-600 animate-pulse" />
+                <span className="text-sm font-semibold text-red-700">Oferta Limitada - Apenas 5 Vagas/Mês</span>
+              </div>
+
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 text-[#413328]">
                 Os 4 Pilares do RevOps
+                <span className="block text-primary text-xl sm:text-2xl md:text-3xl mt-2">
+                  Transforme sua operação em 90 dias
+                </span>
               </h2>
               <p className="text-lg sm:text-xl text-[#6B4A2E] mb-6 sm:mb-8 px-4">
-                Cada pilar pode ser contratado individualmente de acordo com a sua necessidade
+                Cada pilar pode ser contratado individualmente ou em pacote completo com{" "}
+                <strong className="text-primary">desconto de até 25%</strong>
               </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto mb-8">
+                <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border border-primary/20">
+                  <div className="text-2xl font-bold text-primary mb-1">90 dias</div>
+                  <div className="text-sm text-[#6B4A2E]">Implementação completa</div>
+                </div>
+                <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border border-primary/20">
+                  <div className="text-2xl font-bold text-primary mb-1">ROI 300%+</div>
+                  <div className="text-sm text-[#6B4A2E]">Retorno garantido em 12 meses</div>
+                </div>
+                <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border border-primary/20">
+                  <div className="text-2xl font-bold text-primary mb-1">24/7</div>
+                  <div className="text-sm text-[#6B4A2E]">Suporte especializado</div>
+                </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
@@ -759,14 +794,20 @@ export default function AxendRevOpsLanding() {
                 return (
                   <Card
                     key={pillar.id}
-                    className={`group cursor-pointer transition-all duration-300 hover:shadow-xl border-2 ${
+                    className={`group cursor-pointer transition-all duration-300 hover:shadow-xl border-2 relative overflow-hidden ${
                       isSelected
                         ? "border-primary bg-primary/5 shadow-lg scale-105"
                         : "border-[#E6E4E3] hover:border-primary/50 bg-white"
                     }`}
                     onClick={() => togglePillar(pillar.id)}
                   >
-                    <CardContent className="p-4 sm:p-6 text-center">
+                    {pillar.id === "crm" && (
+                      <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-primary to-[#995925] text-white text-center py-1 text-xs font-bold">
+                        MAIS PROCURADO
+                      </div>
+                    )}
+
+                    <CardContent className={`p-4 sm:p-6 text-center ${pillar.id === "crm" ? "pt-8" : ""}`}>
                       <div
                         className={`w-12 sm:w-16 h-12 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-full flex items-center justify-center transition-all duration-300 ${
                           isSelected
@@ -781,6 +822,11 @@ export default function AxendRevOpsLanding() {
                         {currentService.description}
                       </p>
 
+                      <div className="bg-gradient-to-r from-primary/10 to-[#995925]/10 rounded-lg p-3 mb-3">
+                        <div className="text-lg font-bold text-primary">{currentService.price}</div>
+                        <div className="text-xs text-[#6B4A2E]">+ manutenção mensal</div>
+                      </div>
+
                       <div className="text-xs sm:text-sm text-[#995925] font-medium">{currentService.timeline}</div>
                     </CardContent>
                   </Card>
@@ -789,27 +835,51 @@ export default function AxendRevOpsLanding() {
             </div>
 
             {/* Package Deal Section */}
-            <div className="bg-gradient-to-r from-[#413328] to-[#6B4A2E] rounded-2xl p-8 text-white relative overflow-hidden">
+            <div className="bg-gradient-to-r from-[#413328] to-[#6B4A2E] rounded-2xl p-8 text-white relative overflow-hidden mb-8">
               <div className="absolute inset-0 bg-gradient-to-br from-[#EB6A00]/20 to-transparent" />
+              <div className="absolute top-4 right-4 bg-white/20 rounded-full p-2">
+                <Crown className="h-6 w-6 text-yellow-300 animate-pulse" />
+              </div>
+
               <div className="relative z-10">
                 <div className="text-center mb-8">
-                  <div className="inline-flex items-center gap-2 bg-[#EB6A00] px-4 py-2 rounded-full mb-4">
+                  <div className="inline-flex items-center gap-2 bg-[#EB6A00] px-6 py-3 rounded-full mb-4 shadow-lg">
                     <Crown className="h-5 w-5" />
-                    <span className="font-bold">OFERTA ESPECIAL</span>
+                    <span className="font-bold text-lg">OFERTA ESPECIAL</span>
                   </div>
-                  <h3 className="text-3xl font-bold mb-4">Pacote Completo - 4 Pilares</h3>
-                  <p className="text-lg opacity-90 mb-6">Contrate todos os 4 pilares e receba desconto especial</p>
+                  <h3 className="text-3xl md:text-4xl font-bold mb-4">Pacote Completo - 4 Pilares</h3>
+                  <p className="text-lg opacity-90 mb-6">
+                    Contrate todos os 4 pilares e receba <strong className="text-yellow-300">desconto de 25%</strong>
+                  </p>
+
+                  <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto mb-6">
+                    <div className="bg-white/10 rounded-lg p-4 border border-white/20">
+                      <div className="text-sm opacity-75 mb-1">Preço Individual:</div>
+                      <div className="text-2xl font-bold line-through opacity-60">R$ 32.000</div>
+                    </div>
+                    <div className="bg-gradient-to-r from-yellow-400/20 to-orange-400/20 rounded-lg p-4 border-2 border-yellow-400/50">
+                      <div className="text-sm mb-1">Pacote Completo:</div>
+                      <div className="text-3xl font-bold text-yellow-300">R$ 24.000</div>
+                      <div className="text-sm text-green-300">Economia de R$ 8.000</div>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="text-center mt-8">
                   <Button
                     size="lg"
-                    className="bg-[#EB6A00] hover:bg-[#995925] text-white px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300"
+                    className="bg-[#EB6A00] hover:bg-[#995925] text-white px-8 py-4 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
                     onClick={() => openLeadPopup("Pacote Completo")}
                   >
                     <Crown className="h-5 w-5 mr-2" />
                     Solicitar Pacote Completo
+                    <ArrowRight className="h-5 w-5 ml-2" />
                   </Button>
+
+                  <div className="mt-4 inline-flex items-center gap-2 text-sm opacity-90">
+                    <Shield className="h-4 w-4" />
+                    <span>Garantia de satisfação de 30 dias</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -945,7 +1015,7 @@ export default function AxendRevOpsLanding() {
                 icon: BarChart3,
                 title: "Forecast que sempre falha",
                 desc: "Previsões baseadas em achismo, não em dados confiáveis",
-                impact: "Custo: R$50k+/mês em decisões erradas",
+                impact: "Custo: R$100k+/mês em decisões erradas",
                 severity: "critical",
                 animation: "animate-bounce",
               },
@@ -1024,7 +1094,7 @@ export default function AxendRevOpsLanding() {
               <Zap className="h-6 w-6 text-destructive animate-pulse" />
               <div className="text-left">
                 <p className="font-bold text-destructive">Impacto Total Estimado:</p>
-                <p className="text-sm text-[#6B4A2E]">R$200k+ perdidos anualmente por empresa sem RevOps</p>
+                <p className="text-sm text-[#6B4A2E]">R$400k+ perdidos anualmente por empresa sem RevOps</p>
               </div>
             </div>
           </div>
@@ -1257,11 +1327,18 @@ export default function AxendRevOpsLanding() {
       >
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-200 rounded-full px-4 py-2 mb-4">
+              <Zap className="h-4 w-4 text-amber-600 animate-pulse" />
+              <span className="text-sm font-semibold text-amber-700">Últimas 3 vagas disponíveis este mês</span>
+            </div>
+
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-[#413328]">
               Nossos Níveis de Serviço
+              <span className="block text-primary text-lg sm:text-xl mt-2">Escolha o nível ideal para sua empresa</span>
             </h2>
             <p className="text-base sm:text-lg lg:text-xl text-[#6B4A2E] max-w-3xl mx-auto leading-relaxed">
-              Cada pilar disponível em 3 níveis de complexidade, ou adquira o pacote completo com desconto
+              Cada pilar disponível em 3 níveis de complexidade, ou adquira o pacote completo com{" "}
+              <strong className="text-primary">desconto especial</strong>
             </p>
           </div>
 
@@ -1271,6 +1348,9 @@ export default function AxendRevOpsLanding() {
                 level: "Essencial",
                 subtitle: "Para pequenas empresas",
                 description: "Fundação sólida para começar sua jornada RevOps",
+                price: "R$ 8.000",
+                maintenance: "R$ 2.000/mês",
+                savings: null,
                 features: [
                   "Setup básico de CRM",
                   "Dashboards essenciais",
@@ -1286,6 +1366,9 @@ export default function AxendRevOpsLanding() {
                 level: "Profissional",
                 subtitle: "Para médias empresas",
                 description: "Solução completa para crescimento acelerado",
+                price: "R$ 12.000",
+                maintenance: "R$ 2.500/mês",
+                savings: "Mais escolhido",
                 features: [
                   "CRM avançado + automações",
                   "BI completo + alertas",
@@ -1302,6 +1385,9 @@ export default function AxendRevOpsLanding() {
                 level: "Avançado",
                 subtitle: "Para grandes empresas",
                 description: "Transformação completa com IA e automação total",
+                price: "R$ 20.000",
+                maintenance: "R$ 5.000/mês",
+                savings: "Melhor ROI",
                 features: [
                   "CRM enterprise + IA",
                   "BI preditivo + ML",
@@ -1326,10 +1412,24 @@ export default function AxendRevOpsLanding() {
                   </div>
                 )}
 
-                <CardContent className={`p-4 sm:p-6 lg:p-8 ${tier.popular ? "pt-12 sm:pt-14" : ""}`}>
+                {tier.savings && !tier.popular && (
+                  <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-center py-2 text-xs sm:text-sm font-bold">
+                    {tier.savings}
+                  </div>
+                )}
+
+                <CardContent className={`p-4 sm:p-6 lg:p-8 ${tier.popular || tier.savings ? "pt-12 sm:pt-14" : ""}`}>
                   <div className="text-center mb-4 sm:mb-6">
                     <h3 className={`text-xl sm:text-2xl font-bold mb-2 ${tier.textColor}`}>{tier.level}</h3>
                     <p className="text-sm sm:text-base text-[#6B4A2E] mb-3 sm:mb-4">{tier.subtitle}</p>
+
+                    <div className="bg-gradient-to-r from-primary/10 to-[#995925]/10 rounded-xl p-4 mb-4">
+                      <div className="text-3xl font-bold text-primary mb-1">{tier.price}</div>
+                      <div className="text-sm text-[#6B4A2E] mb-2">por pilar</div>
+                      <div className="text-lg font-semibold text-[#995925]">{tier.maintenance}</div>
+                      <div className="text-xs text-[#6B4A2E]">manutenção (CRM, BI, IA)</div>
+                    </div>
+
                     <p className="text-xs sm:text-sm text-[#995925] leading-relaxed px-2">{tier.description}</p>
                   </div>
 
@@ -1363,14 +1463,30 @@ export default function AxendRevOpsLanding() {
                   <div className="space-y-3">
                     <Button
                       onClick={scrollToAuditForm}
-                      className="w-full bg-gradient-to-r from-primary to-[#995925] hover:from-primary/90 hover:to-[#995925]/90 text-white font-semibold py-2 sm:py-3 transition-all duration-300 hover:scale-105"
+                      className={`w-full font-semibold py-2 sm:py-3 transition-all duration-300 hover:scale-105 ${
+                        tier.popular
+                          ? "bg-gradient-to-r from-primary to-[#995925] hover:from-primary/90 hover:to-[#995925]/90 text-white shadow-lg"
+                          : "bg-gradient-to-r from-primary to-[#995925] hover:from-primary/90 hover:to-[#995925]/90 text-white"
+                      }`}
                     >
-                      Solicitar Orçamento
+                      {tier.popular ? "Escolher Mais Popular" : "Solicitar Orçamento"}
+                      <ArrowRight className="h-4 w-4 ml-2" />
                     </Button>
+
+                    <div className="text-center">
+                      <div className="inline-flex items-center gap-1 text-xs text-[#6B4A2E]">
+                        <Shield className="h-3 w-3" />
+                        <span>Garantia de 30 dias</span>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             ))}
+          </div>
+
+          <div className="mt-16 text-center">
+            
           </div>
         </div>
       </section>

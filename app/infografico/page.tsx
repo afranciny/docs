@@ -108,7 +108,7 @@ const axendProducts = [
     description: "SDR/BDR/CS automatizados 24/7 com compliance LGPD.",
     metrics: ["FRT <5min", "Booking +50%", "CSAT >85%"],
     tiers: ["Essencial", "Profissional", "Avançado"],
-    prices: ["R$ 4.000", "R$ 7.000", "R$ 12.000"],
+    prices: ["R$ 8.000", "R$ 7.000", "R$ 12.000"],
     cta: "Piloto IA",
     color: "from-orange-600 to-orange-800",
   },

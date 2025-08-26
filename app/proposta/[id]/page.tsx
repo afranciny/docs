@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server"
+import { createClient } from "@supabase/supabase-js"
 import { notFound, redirect } from "next/navigation"
 import PropostaView from "./proposta-view"
 
@@ -10,17 +10,9 @@ interface Props {
 export default async function PropostaPage({ params, searchParams }: Props) {
   const { id } = await params
   const { preview, token } = await searchParams
-  const supabase = await createClient()
+  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 
-  // If it's a preview (internal user), check authentication
-  if (preview === "true") {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) {
-      redirect("/auth/login")
-    }
-  }
+  // If it's a preview (internal user), allow access without auth
 
   // Fetch proposal
   const { data: proposal, error } = await supabase.from("proposals").select("*").eq("id", id).single()

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -10,7 +10,6 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { FileText } from "lucide-react"
-import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 
 interface Product {
@@ -30,7 +29,7 @@ const products: Product[] = [
     name: "Processos & Rituais RevOps",
     category: "RevOps",
     levels: {
-      essencial: { price: 4000 },
+      essencial: { price: 8000 },
       profissional: { price: 12000 },
       avancado: { price: 20000 },
     },
@@ -40,7 +39,7 @@ const products: Product[] = [
     name: "CRM Inteligente",
     category: "Technology",
     levels: {
-      essencial: { price: 4000, maintenance: 1000 },
+      essencial: { price: 8000, maintenance: 2000 },
       profissional: { price: 12000, maintenance: 2500 },
       avancado: { price: 20000, maintenance: 5000 },
     },
@@ -50,7 +49,7 @@ const products: Product[] = [
     name: "BI Analytics powered by AI",
     category: "Analytics",
     levels: {
-      essencial: { price: 4000, maintenance: 1000 },
+      essencial: { price: 8000, maintenance: 2000 },
       profissional: { price: 12000, maintenance: 2500 },
       avancado: { price: 20000, maintenance: 5000 },
     },
@@ -60,7 +59,7 @@ const products: Product[] = [
     name: "Agentes Conversacionais com IA",
     category: "AI",
     levels: {
-      essencial: { price: 4000, maintenance: 1000 },
+      essencial: { price: 8000, maintenance: 2000 },
       profissional: { price: 12000, maintenance: 2500 },
       avancado: { price: 20000, maintenance: 5000 },
     },
@@ -68,8 +67,6 @@ const products: Product[] = [
 ]
 
 export default function GeradorProposta() {
-  const [user, setUser] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
   const [companyName, setCompanyName] = useState("")
   const [companyLogo, setCompanyLogo] = useState("")
   const [customNotes, setCustomNotes] = useState("")
@@ -77,23 +74,6 @@ export default function GeradorProposta() {
   const [discountPercentage, setDiscountPercentage] = useState(0)
   const [isGenerating, setIsGenerating] = useState(false)
   const router = useRouter()
-  const supabase = createClient()
-
-  useEffect(() => {
-    checkUser()
-  }, [])
-
-  const checkUser = async () => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) {
-      router.push("/auth/login")
-      return
-    }
-    setUser(user)
-    setLoading(false)
-  }
 
   const handleProductSelection = (productId: string, level: string) => {
     setSelectedProducts((prev) => ({
@@ -132,10 +112,7 @@ export default function GeradorProposta() {
     setIsGenerating(true)
 
     try {
-      const { subtotal, finalValue, monthlyMaintenance } = calculateTotals()
-      const proposalNumber = `PROP-${Date.now()}`
-      const accessToken = Math.random().toString(36).substring(2, 15)
-      const clientPassword = Math.random().toString(36).substring(2, 10)
+      const { subtotal, finalValue } = calculateTotals()
 
       const selectedProductsData = Object.entries(selectedProducts).map(([productId, level]) => {
         const product = products.find((p) => p.id === productId)!
@@ -149,38 +126,35 @@ export default function GeradorProposta() {
         }
       })
 
-      const { data, error } = await supabase
-        .from("proposals")
-        .insert({
-          proposal_number: proposalNumber,
-          company_name: companyName,
-          company_logo: companyLogo,
-          selected_products: selectedProductsData,
-          total_value: subtotal,
-          discount_percentage: discountPercentage,
-          final_value: finalValue,
-          custom_notes: customNotes,
-          client_access_token: accessToken,
-          client_password: clientPassword,
-          created_by: user.id,
-        })
-        .select()
-        .single()
+      const response = await fetch("/api/proposals", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          companyName,
+          companyLogo,
+          selectedProducts: selectedProductsData,
+          totalValue: subtotal,
+          discountPercentage,
+          finalValue,
+          customNotes,
+        }),
+      })
 
-      if (error) throw error
+      const result = await response.json()
 
-      // Redirect to proposal view
-      router.push(`/proposta/${data.id}?preview=true`)
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to create proposal")
+      }
+
+      router.push(`/proposta/${result.proposal.id}?preview=true`)
     } catch (error) {
       console.error("Error generating proposal:", error)
       alert("Erro ao gerar proposta. Tente novamente.")
     } finally {
       setIsGenerating(false)
     }
-  }
-
-  if (loading) {
-    return <div className="flex items-center justify-center min-h-screen">Carregando...</div>
   }
 
   const { subtotal, discountAmount, finalValue, monthlyMaintenance } = calculateTotals()
