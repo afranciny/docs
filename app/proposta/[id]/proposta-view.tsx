@@ -111,6 +111,12 @@ export default function PropostaView({ proposal, isPreview }: Props) {
       color: "from-[#EB6A00] to-[#995925]",
       roi: "300%",
       timeline: "30 dias",
+      kpis: [
+        "Melhoria significativa na precisão do forecast baseada no seu baseline atual",
+        "Redução substancial do ciclo de vendas conforme métricas históricas",
+        "Aumento da taxa de conversão proporcional ao desempenho atual",
+        "Otimização dos processos com base na situação específica da empresa",
+      ],
     },
     {
       icon: Bot,
@@ -121,6 +127,12 @@ export default function PropostaView({ proposal, isPreview }: Props) {
       color: "from-[#995925] to-[#6B4A2E]",
       roi: "450%",
       timeline: "15 dias",
+      kpis: [
+        "Redução significativa do tempo de primeira resposta baseada no baseline atual",
+        "Melhoria da taxa de agendamento proporcional ao desempenho histórico",
+        "Aumento da satisfação do cliente conforme métricas atuais de CSAT",
+        "Otimização de custos operacionais baseada na estrutura atual da empresa",
+      ],
     },
     {
       icon: Database,
@@ -131,6 +143,12 @@ export default function PropostaView({ proposal, isPreview }: Props) {
       color: "from-[#6B4A2E] to-[#413328]",
       roi: "250%",
       timeline: "45 dias",
+      kpis: [
+        "Aumento da taxa de adoção do CRM baseado no uso atual da equipe",
+        "Melhoria da qualidade e completude dos dados conforme situação atual",
+        "Otimização do ciclo de vendas proporcional aos processos existentes",
+        "Implementação de governança de dados adequada ao contexto da empresa",
+      ],
     },
     {
       icon: BarChart3,
@@ -140,6 +158,12 @@ export default function PropostaView({ proposal, isPreview }: Props) {
       color: "from-[#413328] to-[#EB6A00]",
       roi: "400%",
       timeline: "60 dias",
+      kpis: [
+        "Redução da latência de dados baseada na infraestrutura atual",
+        "Melhoria da reconciliação de dados conforme processos existentes",
+        "Aumento da visibilidade do ROI proporcional às métricas atuais",
+        "Aceleração da velocidade de decisão baseada no contexto organizacional",
+      ],
     },
   ]
 
@@ -159,9 +183,52 @@ export default function PropostaView({ proposal, isPreview }: Props) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-[#E6E4E3]/30 p-4 sm:p-6 lg:p-8">
+      <style jsx global>{`
+        @media print {
+          .page-break-before {
+            page-break-before: always;
+          }
+          .page-break-after {
+            page-break-after: always;
+          }
+          .page-break-inside-avoid {
+            page-break-inside: avoid;
+          }
+          .no-print {
+            display: none !important;
+          }
+          body {
+            -webkit-print-color-adjust: exact;
+            color-adjust: exact;
+            background: white !important;
+          }
+          .max-w-4xl {
+            max-width: 100% !important;
+          }
+          .p-4, .sm\\:p-6, .lg\\:p-8 {
+            padding: 1rem !important;
+          }
+          /* Force white background for all elements in print */
+          * {
+            background: white !important;
+            background-color: white !important;
+            background-image: none !important;
+          }
+          /* Preserve only essential background colors for cards and badges */
+          .bg-red-50, .bg-green-50, .bg-blue-50, .bg-yellow-50, .bg-orange-50 {
+            background: #fafafa !important;
+            background-color: #fafafa !important;
+          }
+          .bg-red-100, .bg-green-100, .bg-blue-100, .bg-yellow-100, .bg-orange-100 {
+            background: #f5f5f5 !important;
+            background-color: #f5f5f5 !important;
+          }
+        }
+      `}</style>
+
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="mb-8 text-center">
+        <div className="mb-8 text-center page-break-inside-avoid">
           <div className="flex items-center justify-center gap-4 mb-4">
             {proposal.company_logo && (
               <img
@@ -194,7 +261,7 @@ export default function PropostaView({ proposal, isPreview }: Props) {
         {/* Proposal Content */}
         <div className="space-y-6">
           {/* Introduction */}
-          <Card>
+          <Card className="page-break-inside-avoid">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Building2 className="w-5 h-5" />
@@ -210,7 +277,8 @@ export default function PropostaView({ proposal, isPreview }: Props) {
             </CardContent>
           </Card>
 
-          <Card>
+          {/* Diagnóstico: Sinais de Ineficiência Operacional */}
+          <Card className="page-break-before page-break-inside-avoid">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5 text-[#EB6A00]" />
@@ -243,7 +311,8 @@ export default function PropostaView({ proposal, isPreview }: Props) {
             </CardContent>
           </Card>
 
-          <Card>
+          {/* Implicações Diretas no Seu Negócio */}
+          <Card className="page-break-inside-avoid">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingDown className="w-5 h-5 text-red-500" />
@@ -267,7 +336,8 @@ export default function PropostaView({ proposal, isPreview }: Props) {
             </CardContent>
           </Card>
 
-          <Card>
+          {/* Nossa Solução: Os 4 Pilares do RevOps */}
+          <Card className="page-break-before page-break-inside-avoid">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5 text-green-600" />
@@ -280,7 +350,10 @@ export default function PropostaView({ proposal, isPreview }: Props) {
               </p>
               <div className="grid gap-6">
                 {solutions.map((solution, index) => (
-                  <div key={index} className="border rounded-lg p-4 bg-gradient-to-r from-green-50 to-blue-50">
+                  <div
+                    key={index}
+                    className="border rounded-lg p-4 bg-gradient-to-r from-green-50 to-blue-50 page-break-inside-avoid"
+                  >
                     <div className="flex items-start gap-4">
                       <div
                         className={`w-12 h-12 rounded-xl bg-gradient-to-br ${solution.color} flex items-center justify-center flex-shrink-0`}
@@ -313,6 +386,17 @@ export default function PropostaView({ proposal, isPreview }: Props) {
                             </div>
                           </div>
                         </div>
+                        <div className="mt-4">
+                          <h5 className="text-sm font-semibold text-[#995925] mb-2">KPIs e Resultados Esperados:</h5>
+                          <ul className="text-xs text-[#6B4A2E] space-y-1">
+                            {solution.kpis.map((kpi, idx) => (
+                              <li key={idx} className="flex items-center gap-2">
+                                <Target className="w-3 h-3 text-[#EB6A00] mt-0.5 flex-shrink-0" />
+                                {kpi}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -321,7 +405,8 @@ export default function PropostaView({ proposal, isPreview }: Props) {
             </CardContent>
           </Card>
 
-          <Card>
+          {/* Por Que Agir Agora? */}
+          <Card className="page-break-inside-avoid">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Zap className="w-5 h-5 text-yellow-500" />
@@ -351,8 +436,8 @@ export default function PropostaView({ proposal, isPreview }: Props) {
             </CardContent>
           </Card>
 
-          {/* Selected Products */}
-          <Card>
+          {/* Produtos e Serviços Inclusos */}
+          <Card className="page-break-before">
             <CardHeader>
               <CardTitle>Produtos e Serviços Inclusos</CardTitle>
             </CardHeader>
@@ -362,73 +447,47 @@ export default function PropostaView({ proposal, isPreview }: Props) {
                   const baseDetails = {
                     "RevOps (Processos & Rituais)": {
                       scope:
-                        "Implementação completa de processos de Revenue Operations com rituais estruturados e governança de dados",
+                        "Implementação completa de processos de Revenue Operations com rituais estruturados e governança de dados adaptados ao contexto específico da empresa",
                       deliverables: [
-                        "Mapeamento completo do funil de vendas",
-                        "Definição de SLAs entre Marketing e Vendas",
-                        "Implementação de rituais de forecast",
-                        "Dashboard de acompanhamento em tempo real",
-                        "Documentação de processos e playbooks",
+                        "Mapeamento e otimização do funil de vendas atual",
+                        "Definição de SLAs personalizados entre Marketing e Vendas",
+                        "Implementação de rituais de forecast baseados no baseline da empresa",
+                        "Dashboard de acompanhamento customizado para suas métricas",
+                        "Documentação de processos e playbooks específicos do negócio",
                       ],
-                      kpis: [
-                        "MAPE (Mean Absolute Percentage Error) < 15%",
-                        "Precisão do forecast ≥ 90%",
-                        "Redução do ciclo de vendas em 25%",
-                        "Aumento da conversão em 20%",
-                      ],
-                      timeline: "30 dias para implementação completa",
                     },
                     "Agentes Conversacionais com IA": {
                       scope:
-                        "Desenvolvimento e implementação de agentes de IA para automação de SDR, BDR e Customer Success",
+                        "Desenvolvimento e implementação de agentes de IA personalizados para automação de SDR, BDR e Customer Success baseados no contexto e necessidades específicas da empresa",
                       deliverables: [
-                        "Agente SDR IA para qualificação de leads",
-                        "Agente BDR IA para prospecção ativa",
-                        "Agente CS IA para suporte e upsell",
-                        "Integração completa com CRM",
-                        "Treinamento personalizado dos agentes",
+                        "Agente SDR IA treinado com dados e contexto da empresa",
+                        "Agente BDR IA personalizado para o perfil de cliente ideal",
+                        "Agente CS IA adaptado aos produtos e serviços específicos",
+                        "Integração completa com CRM e ferramentas existentes",
+                        "Treinamento e calibração baseados no histórico da empresa",
                       ],
-                      kpis: [
-                        "First Response Time ≤ 2 minutos",
-                        "Taxa de agendamento ≥ 12%",
-                        "CSAT (Customer Satisfaction) ≥ 90%",
-                        "Redução de custos operacionais em 60%",
-                      ],
-                      timeline: "15 dias para implementação e treinamento",
                     },
                     "CRM (Implementação & Manutenção)": {
-                      scope: "Configuração, customização e otimização completa do CRM (Salesforce ou HubSpot)",
+                      scope:
+                        "Configuração, customização e otimização completa do CRM adaptada aos processos e necessidades específicas da empresa",
                       deliverables: [
-                        "Configuração completa do CRM",
-                        "Automações de workflow",
-                        "Integrações com ferramentas existentes",
-                        "Relatórios e dashboards personalizados",
-                        "Treinamento da equipe",
+                        "Configuração personalizada baseada nos processos atuais",
+                        "Automações de workflow específicas para o negócio",
+                        "Integrações com ferramentas e sistemas existentes",
+                        "Relatórios e dashboards customizados para KPIs relevantes",
+                        "Treinamento da equipe baseado nos processos implementados",
                       ],
-                      kpis: [
-                        "Taxa de adoção ≥ 95%",
-                        "Completude de dados ≥ 95%",
-                        "Redução do ciclo de vendas em 15-30%",
-                        "Governança total de dados",
-                      ],
-                      timeline: "45 dias para implementação completa",
                     },
                     "BI (Implementação & Manutenção)": {
-                      scope: "Implementação de Business Intelligence integrado com todas as fontes de dados da empresa",
+                      scope:
+                        "Implementação de Business Intelligence integrado e personalizado com todas as fontes de dados relevantes da empresa",
                       deliverables: [
-                        "Dashboard executivo unificado",
-                        "Relatórios automatizados",
-                        "Integração de dados em tempo real",
-                        "Análises preditivas",
-                        "Alertas e notificações automáticas",
+                        "Dashboard executivo personalizado para métricas específicas",
+                        "Relatórios automatizados baseados nas necessidades do negócio",
+                        "Integração de dados em tempo real das fontes existentes",
+                        "Análises preditivas calibradas com histórico da empresa",
+                        "Alertas e notificações customizados para KPIs críticos",
                       ],
-                      kpis: [
-                        "Latência de dados ≤ 1 hora",
-                        "Reconciliação de dados 99.9%",
-                        "ROI visível em tempo real",
-                        "Velocidade de decisão 10x mais rápida",
-                      ],
-                      timeline: "60 dias para implementação completa",
                     },
                   }
 
@@ -464,7 +523,10 @@ export default function PropostaView({ proposal, isPreview }: Props) {
                   }
 
                   return (
-                    <div key={index} className="border rounded-lg p-6 bg-gradient-to-r from-blue-50/50 to-green-50/50">
+                    <div
+                      key={index}
+                      className="border rounded-lg p-6 bg-gradient-to-r from-blue-50/50 to-green-50/50 page-break-inside-avoid"
+                    >
                       <div className="flex justify-between items-start mb-4">
                         <div>
                           <h3 className="font-semibold text-[#413328] text-lg">{product.name}</h3>
@@ -504,22 +566,6 @@ export default function PropostaView({ proposal, isPreview }: Props) {
                             <li key={idx} className="flex items-start gap-2 text-sm text-[#413328]">
                               <Check className="w-3 h-3 text-green-600 mt-0.5 flex-shrink-0" />
                               {deliverable}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* KPIs */}
-                      <div className="mb-4">
-                        <h4 className="font-semibold text-[#995925] mb-2 flex items-center gap-2">
-                          <BarChart3 className="w-4 h-4" />
-                          KPIs e Resultados Esperados
-                        </h4>
-                        <ul className="space-y-1">
-                          {details.kpis.map((kpi, idx) => (
-                            <li key={idx} className="flex items-start gap-2 text-sm text-[#413328]">
-                              <Target className="w-3 h-3 text-[#EB6A00] mt-0.5 flex-shrink-0" />
-                              {kpi}
                             </li>
                           ))}
                         </ul>
@@ -565,9 +611,9 @@ export default function PropostaView({ proposal, isPreview }: Props) {
             </CardContent>
           </Card>
 
-          {/* Custom Notes */}
+          {/* Observações Específicas */}
           {proposal.custom_notes && (
-            <Card>
+            <Card className="page-break-before page-break-inside-avoid">
               <CardHeader>
                 <CardTitle>Observações Específicas</CardTitle>
               </CardHeader>
@@ -577,8 +623,8 @@ export default function PropostaView({ proposal, isPreview }: Props) {
             </Card>
           )}
 
-          {/* Pricing Summary */}
-          <Card>
+          {/* Resumo Financeiro */}
+          <Card className="page-break-before page-break-inside-avoid">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <DollarSign className="w-5 h-5" />
@@ -617,7 +663,7 @@ export default function PropostaView({ proposal, isPreview }: Props) {
           </Card>
 
           {/* Actions */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center no-print">
             <Button onClick={generatePDF} variant="outline" className="flex items-center gap-2 bg-transparent">
               <Download className="w-4 h-4" />
               Baixar PDF
@@ -635,8 +681,8 @@ export default function PropostaView({ proposal, isPreview }: Props) {
             )}
           </div>
 
-          {/* Founder Contact Information */}
-          <Card className="mt-8 bg-gradient-to-r from-[#EB6A00]/10 to-[#995925]/10 border-[#EB6A00]/20">
+          {/* Contato Direto */}
+          <Card className="mt-8 bg-gradient-to-r from-[#EB6A00]/10 to-[#995925]/10 border-[#EB6A00]/20 page-break-inside-avoid">
             <CardContent className="pt-6">
               <div className="text-center space-y-2">
                 <h3 className="font-semibold text-[#413328] text-lg">Contato Direto</h3>

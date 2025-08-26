@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Montserrat } from 'next/font/google'
+import { Montserrat } from "next/font/google"
 import "./globals.css"
 
 const montserrat = Montserrat({
@@ -24,15 +24,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${montserrat.variable} antialiased`}>
       <head>
-        <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript" />
         <link href="https://calendar.google.com/calendar/scheduling-button-script.css" rel="stylesheet" />
         <script src="https://calendar.google.com/calendar/scheduling-button-script.js" async />
       </head>
-      <body>
-        {children}
-        {/* <CHANGE> Added ElevenLabs ConvAI widget */}
-        <elevenlabs-convai agent-id="agent_1201k3e4rvf1eanr3eqqs3xmzka0"></elevenlabs-convai>
-      </body>
+      <body>{children}</body>
     </html>
   )
 }
