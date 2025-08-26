@@ -376,8 +376,6 @@ export default function AxendRevOpsLanding() {
       </header>
 
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-[#E6E4E3]/20 to-background pt-16">
-        <div className="absolute inset-0 bg-[url('/placeholder.svg?height=1080&width=1920')] opacity-5"></div>
-
         <div
           className="absolute top-20 left-2 sm:left-4 lg:left-10 w-12 sm:w-16 lg:w-20 h-12 sm:h-16 lg:h-20 bg-primary/10 rounded-full animate-float backdrop-blur-sm border border-primary/20 flex items-center justify-center"
           style={{ transform: `translateZ(${Math.sin(scrollY * 0.01) * 20}px)` }}
@@ -1320,7 +1318,7 @@ export default function AxendRevOpsLanding() {
             ].map((tier, index) => (
               <Card
                 key={index}
-                className={`relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105 border-2 bg-white text-white ${tier.borderColor} ${tier.bgColor} group`}
+                className={`relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105 border-2 ${tier.borderColor} ${tier.bgColor} group`}
               >
                 {tier.popular && (
                   <div className="absolute top-0 left-0 right-0 bg-primary text-white text-center py-2 text-xs sm:text-sm font-bold">
@@ -1328,7 +1326,7 @@ export default function AxendRevOpsLanding() {
                   </div>
                 )}
 
-                <CardContent className={`p-4 sm:p-6 lg:p-8 text-white bg-white ${tier.popular ? "pt-12 sm:pt-14" : ""}`}>
+                <CardContent className={`p-4 sm:p-6 lg:p-8 ${tier.popular ? "pt-12 sm:pt-14" : ""}`}>
                   <div className="text-center mb-4 sm:mb-6">
                     <h3 className={`text-xl sm:text-2xl font-bold mb-2 ${tier.textColor}`}>{tier.level}</h3>
                     <p className="text-sm sm:text-base text-[#6B4A2E] mb-3 sm:mb-4">{tier.subtitle}</p>

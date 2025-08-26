@@ -15,7 +15,6 @@ export default function SignUpPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
-  const [name, setName] = useState("")
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
@@ -39,9 +38,6 @@ export default function SignUpPage() {
         options: {
           emailRedirectTo:
             process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/area-cliente`,
-          data: {
-            name: name,
-          },
         },
       })
       if (error) throw error
@@ -62,17 +58,6 @@ export default function SignUpPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSignUp} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Nome</Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="Seu nome"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input

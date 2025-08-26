@@ -25,7 +25,6 @@ import {
   Shield,
   Rocket,
   Brain,
-  Eye,
   Activity,
 } from "lucide-react"
 import Link from "next/link"
@@ -202,7 +201,7 @@ export default function InfographicV3() {
         {[...Array(20)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-2 h-2 bg-[#EB6A00]/20 rounded-full animate-pulse"
+            className="absolute w-1 sm:w-2 h-1 sm:h-2 bg-[#EB6A00]/20 rounded-full animate-pulse"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -215,13 +214,13 @@ export default function InfographicV3() {
 
       {/* Header */}
       <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-[#EB6A00] to-[#995925] rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">A</span>
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-[#EB6A00] to-[#995925] rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-xs sm:text-sm">A</span>
               </div>
-              <span className="font-bold text-xl text-[#413328]">Grupo Axend</span>
+              <span className="font-bold text-lg sm:text-xl text-[#413328]">Grupo Axend</span>
             </div>
             <nav className="hidden md:flex items-center gap-6">
               <Link href="/" className="text-[#413328] hover:text-[#EB6A00] transition-colors">
@@ -234,94 +233,181 @@ export default function InfographicV3() {
                 <Link href="/#auditoria">Diagnóstico Gratuito</Link>
               </Button>
             </nav>
+            <Button size="sm" className="md:hidden bg-[#EB6A00] hover:bg-[#995925]" asChild>
+              <Link href="/#auditoria">Diagnóstico</Link>
+            </Button>
           </div>
         </div>
       </header>
 
-      <section className="py-20 text-center relative">
+      <section className="py-12 sm:py-16 lg:py-20 text-center relative">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <div className="mb-8">
-              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#EB6A00]/10 to-[#995925]/10 rounded-full px-6 py-2 mb-6">
-                <Zap className="w-4 h-4 text-[#EB6A00]" />
-                <span className="text-[#995925] font-medium">Diagnóstico Revolucionário</span>
+            <div className="mb-6 sm:mb-8">
+              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#EB6A00]/10 to-[#995925]/10 rounded-full px-4 sm:px-6 py-2 mb-4 sm:mb-6">
+                <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-[#EB6A00]" />
+                <span className="text-[#995925] font-medium text-sm sm:text-base">Diagnóstico Revolucionário</span>
               </div>
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-[#413328] leading-tight">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6 text-[#413328] leading-tight">
               Previsibilidade Não é Sorte.
               <span className="block text-[#EB6A00] bg-gradient-to-r from-[#EB6A00] to-[#995925] bg-clip-text text-transparent">
                 É Sistema.
               </span>
             </h1>
-            <p className="text-xl text-[#6B4A2E] mb-8 max-w-2xl mx-auto">
+            <p className="text-base sm:text-xl text-[#6B4A2E] mb-6 sm:mb-8 max-w-2xl mx-auto px-4">
               Diagnóstico completo para identificar ineficiências que sabotam seu crescimento e custam milhões
             </p>
-            <div className="flex items-center justify-center gap-6 text-sm text-[#995925] mb-8">
-              <span className="flex items-center gap-2 bg-white/50 rounded-full px-4 py-2">
-                <Clock className="w-4 h-4" />5 minutos
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-sm text-[#995925] mb-6 sm:mb-8">
+              <span className="flex items-center gap-2 bg-white/50 rounded-full px-3 sm:px-4 py-2">
+                <Clock className="w-3 h-3 sm:w-4 sm:h-4" />5 minutos
               </span>
-              <span className="flex items-center gap-2 bg-white/50 rounded-full px-4 py-2">
-                <Target className="w-4 h-4" />
+              <span className="flex items-center gap-2 bg-white/50 rounded-full px-3 sm:px-4 py-2">
+                <Target className="w-3 h-3 sm:w-4 sm:h-4" />
                 100% Gratuito
               </span>
-              <span className="flex items-center gap-2 bg-white/50 rounded-full px-4 py-2">
-                <CheckCircle className="w-4 h-4" />
+              <span className="flex items-center gap-2 bg-white/50 rounded-full px-3 sm:px-4 py-2">
+                <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                 Resultados Imediatos
               </span>
             </div>
-            <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-md mx-auto">
               <div className="text-center">
-                <div className="text-2xl font-bold text-[#EB6A00]">73%</div>
-                <div className="text-sm text-[#995925]">Empresas B2B sem RevOps</div>
+                <div className="text-xl sm:text-2xl font-bold text-[#EB6A00]">73%</div>
+                <div className="text-xs sm:text-sm text-[#995925]">Empresas B2B sem RevOps</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-[#EB6A00]">40%</div>
-                <div className="text-sm text-[#995925]">Perda por Desalinhamento</div>
+                <div className="text-xl sm:text-2xl font-bold text-[#EB6A00]">40%</div>
+                <div className="text-xs sm:text-sm text-[#995925]">Perda por Desalinhamento</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-[#EB6A00]">85%</div>
-                <div className="text-sm text-[#995925]">Falham no Forecast</div>
+                <div className="text-xl sm:text-2xl font-bold text-[#EB6A00]">85%</div>
+                <div className="text-xs sm:text-sm text-[#995925]">Falham no Forecast</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Seção 1: Diagnóstico - ALWAYS VISIBLE */}
-      
+      <section className="py-12 sm:py-16 bg-gradient-to-br from-[#E6E4E3]/30 to-background relative">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-8 sm:mb-12">
+              <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-[#EB6A00] to-[#995925] rounded-full mb-4 sm:mb-6 shadow-lg">
+                <AlertTriangle className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+              </div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 text-[#413328]">
+                Sua Empresa Reconhece Estes Sinais?
+              </h2>
+              <p className="text-base sm:text-xl text-[#995925] max-w-3xl mx-auto">
+                Marque os problemas que sua empresa enfrenta e descubra o custo real da ineficiência (considerando um faturamento de R$1Mi/mês)     
+              </p>
+            </div>
+
+            <div className="grid gap-4 sm:gap-6 mb-8 sm:mb-12">
+              {problems.map((problem) => (
+                <Card
+                  key={problem.id}
+                  className={`cursor-pointer transition-all duration-300 hover:shadow-lg ${
+                    checkedProblems.includes(problem.id)
+                      ? "ring-2 ring-[#EB6A00] bg-[#EB6A00]/5"
+                      : "hover:bg-[#E6E4E3]/30"
+                  }`}
+                  onClick={() => handleProblemCheck(problem.id)}
+                >
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <div className="flex-shrink-0 mt-1">
+                        {checkedProblems.includes(problem.id) ? (
+                          <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-[#EB6A00]" />
+                        ) : (
+                          <div className="w-5 h-5 sm:w-6 sm:h-6 border-2 border-gray-300 rounded-full" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm sm:text-base text-[#413328] font-medium mb-2">{problem.text}</p>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                          <Badge
+                            variant={problem.impact === "Crítico" ? "destructive" : "secondary"}
+                            className="text-xs w-fit"
+                          >
+                            {problem.impact}
+                          </Badge>
+                          <span className="text-xs sm:text-sm text-[#995925] font-semibold">{problem.cost}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {checkedProblems.length > 0 && (
+              <div className="bg-gradient-to-r from-red-50 to-orange-50 rounded-xl p-4 sm:p-8 border border-red-200">
+                <div className="text-center mb-4 sm:mb-6">
+                  <h3 className="text-lg sm:text-2xl font-bold text-red-700 mb-2">Diagnóstico Inicial</h3>
+                  <p className="text-sm sm:text-base text-red-600">
+                    Você marcou {checkedProblems.length} de {problems.length} problemas críticos
+                  </p>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+                  <div className="text-center">
+                    <div className="text-2xl sm:text-3xl font-bold text-red-700 mb-2">
+                      {Math.round(problemPercentage)}%
+                    </div>
+                    <div className="text-sm sm:text-base text-red-600">Nível de Ineficiência</div>
+                    <Progress value={problemPercentage} className="mt-2" />
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl sm:text-3xl font-bold text-red-700 mb-2">
+                      R$ {totalMonthlyCost.toLocaleString()}
+                    </div>
+                    <div className="text-sm sm:text-base text-red-600">Custo Mensal Estimado</div>
+                    <div className="text-xs sm:text-sm text-red-500 mt-1">
+                      R$ {(totalMonthlyCost * 12).toLocaleString()} por ano
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
 
       {/* Seção 2: Identificação do Inimigo - ALWAYS VISIBLE */}
-      <section className="py-16 bg-gradient-to-r from-gray-900 to-gray-800 text-white relative overflow-hidden">
+      <section className="py-12 sm:py-16 bg-gradient-to-r from-gray-900 to-gray-800 text-white relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-32 h-32 border border-white/20 rounded-full animate-pulse" />
+          <div className="absolute top-10 left-10 w-16 sm:w-32 h-16 sm:h-32 border border-white/20 rounded-full animate-pulse" />
           <div
-            className="absolute bottom-10 right-10 w-24 h-24 border border-white/20 rounded-full animate-pulse"
+            className="absolute bottom-10 right-10 w-12 sm:w-24 h-12 sm:h-24 border border-white/20 rounded-full animate-pulse"
             style={{ animationDelay: "1s" }}
           />
           <div
-            className="absolute top-1/2 left-1/2 w-40 h-40 border border-white/20 rounded-full animate-pulse"
+            className="absolute top-1/2 left-1/2 w-20 sm:w-40 h-20 sm:h-40 border border-white/20 rounded-full animate-pulse"
             style={{ animationDelay: "2s" }}
           />
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-red-500 to-red-600 rounded-full mb-6 shadow-lg">
-                <XCircle className="w-10 h-10 text-white" />
+            <div className="text-center mb-8 sm:mb-12">
+              <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-red-500 to-red-600 rounded-full mb-4 sm:mb-6 shadow-lg">
+                <XCircle className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">A Ineficiência é Seu Inimigo Oculto</h2>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">
+                A Ineficiência é Seu Inimigo Oculto
+              </h2>
+              <p className="text-base sm:text-xl text-gray-300 max-w-3xl mx-auto">
                 Estes sinais apontam para um inimigo silencioso que sabota seu crescimento e devora sua receita
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
               <Card className="bg-gray-800/50 border-gray-700 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <AlertTriangle className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-3 text-white">Identificação</h3>
-                  <p className="text-gray-300 text-sm">
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <AlertTriangle className="w-8 h-8 sm:w-12 sm:h-12 text-yellow-400 mx-auto mb-3 sm:mb-4" />
+                  <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-white">Identificação</h3>
+                  <p className="text-gray-300 text-xs sm:text-sm">
                     Estes sinais apontam para a <strong className="text-yellow-400">Ineficiência Operacional</strong>,
                     um inimigo silencioso que sabota o crescimento.
                   </p>
@@ -329,10 +415,10 @@ export default function InfographicV3() {
               </Card>
 
               <Card className="bg-gray-800/50 border-gray-700 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <TrendingDown className="w-12 h-12 text-red-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-3 text-white">Consequência</h3>
-                  <p className="text-gray-300 text-sm">
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <TrendingDown className="w-8 h-8 sm:w-12 sm:h-12 text-red-400 mx-auto mb-3 sm:mb-4" />
+                  <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-white">Consequência</h3>
+                  <p className="text-gray-300 text-xs sm:text-sm">
                     Ferramentas sem integração levam à perda de tempo e dinheiro, fazendo com que a equipe trabalhe
                     <strong className="text-red-400"> para a ferramenta</strong>, não o contrário.
                   </p>
@@ -340,22 +426,22 @@ export default function InfographicV3() {
               </Card>
 
               <Card className="bg-gray-800/50 border-gray-700 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <Target className="w-12 h-12 text-orange-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-3 text-white">Risco</h3>
-                  <p className="text-gray-300 text-sm">
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <Target className="w-8 h-8 sm:w-12 sm:h-12 text-orange-400 mx-auto mb-3 sm:mb-4" />
+                  <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-white">Risco</h3>
+                  <p className="text-gray-300 text-xs sm:text-sm">
                     Confiança baixa nos dados gera dependência do Excel, com{" "}
-                    <strong className="text-orange-400">alto risco</strong>
+                    <strong className="text-orange-400">alto risco </strong>
                     de erros e decisões falhas que custam milhões.
                   </p>
                 </CardContent>
               </Card>
 
               <Card className="bg-gray-800/50 border-gray-700 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300">
-                <CardContent className="p-6 text-center">
-                  <Workflow className="w-12 h-12 text-blue-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-3 text-white">Gargalo</h3>
-                  <p className="text-gray-300 text-sm">
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <Workflow className="w-8 h-8 sm:w-12 sm:h-12 text-blue-400 mx-auto mb-3 sm:mb-4" />
+                  <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 text-white">Gargalo</h3>
+                  <p className="text-gray-300 text-xs sm:text-sm">
                     A desconexão entre processos, dados e equipes resulta em{" "}
                     <strong className="text-blue-400">atrito, retrabalho e prejuízo</strong> exponencial.
                   </p>
@@ -363,29 +449,29 @@ export default function InfographicV3() {
               </Card>
             </div>
 
-            <div className="bg-gradient-to-r from-red-900/30 to-red-800/30 rounded-xl p-8 backdrop-blur-sm border border-red-500/20">
-              <h3 className="text-2xl font-bold text-center mb-8 text-red-200">
+            <div className="bg-gradient-to-r from-red-900/30 to-red-800/30 rounded-xl p-4 sm:p-8 backdrop-blur-sm border border-red-500/20">
+              <h3 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8 text-red-200">
                 Como a Ineficiência Ataca Sua Empresa
               </h3>
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid sm:grid-cols-3 gap-4 sm:gap-6">
                 <div className="text-center">
-                  <Shield className="w-8 h-8 text-red-300 mx-auto mb-3" />
-                  <h4 className="font-semibold text-red-200 mb-2">Ataque Silencioso</h4>
-                  <p className="text-red-300 text-sm">
+                  <Shield className="w-6 h-6 sm:w-8 sm:h-8 text-red-300 mx-auto mb-2 sm:mb-3" />
+                  <h4 className="font-semibold text-red-200 mb-2 text-sm sm:text-base">Ataque Silencioso</h4>
+                  <p className="text-red-300 text-xs sm:text-sm">
                     A ineficiência não grita, ela sussurra. Pequenos vazamentos se tornam hemorragias financeiras.
                   </p>
                 </div>
                 <div className="text-center">
-                  <Activity className="w-8 h-8 text-red-300 mx-auto mb-3" />
-                  <h4 className="font-semibold text-red-200 mb-2">Efeito Cascata</h4>
-                  <p className="text-red-300 text-sm">
+                  <Activity className="w-6 h-6 sm:w-8 sm:h-8 text-red-300 mx-auto mb-2 sm:mb-3" />
+                  <h4 className="font-semibold text-red-200 mb-2 text-sm sm:text-base">Efeito Cascata</h4>
+                  <p className="text-red-300 text-xs sm:text-sm">
                     Um processo ineficiente contamina toda a operação, multiplicando erros e custos exponencialmente.
                   </p>
                 </div>
                 <div className="text-center">
-                  <Brain className="w-8 h-8 text-red-300 mx-auto mb-3" />
-                  <h4 className="font-semibold text-red-200 mb-2">Paralisia Decisória</h4>
-                  <p className="text-red-300 text-sm">
+                  <Brain className="w-6 h-6 sm:w-8 sm:h-8 text-red-300 mx-auto mb-2 sm:mb-3" />
+                  <h4 className="font-semibold text-red-200 mb-2 text-sm sm:text-base">Paralisia Decisória</h4>
+                  <p className="text-red-300 text-xs sm:text-sm">
                     Dados conflitantes geram paralisia. Enquanto você hesita, a concorrência avança.
                   </p>
                 </div>
@@ -396,7 +482,7 @@ export default function InfographicV3() {
       </section>
 
       {/* Seção 3: Implicações Diretas - ALWAYS VISIBLE */}
-      <section className="py-16 bg-gradient-to-r from-red-600 to-red-700 text-white relative overflow-hidden">
+      <section className="py-12 sm:py-16 bg-gradient-to-r from-red-600 to-red-700 text-white relative overflow-hidden">
         <div className="absolute inset-0">
           {[...Array(10)].map((_, i) => (
             <div
@@ -414,81 +500,89 @@ export default function InfographicV3() {
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-red-800 to-red-900 rounded-full mb-6 shadow-lg">
-                <DollarSign className="w-10 h-10 text-red-200" />
+            <div className="text-center mb-8 sm:mb-12">
+              <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-red-800 to-red-900 rounded-full mb-4 sm:mb-6 shadow-lg">
+                <DollarSign className="w-8 h-8 sm:w-10 sm:h-10 text-red-200" />
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Implicações Diretas no Seu Negócio</h2>
-              <p className="text-xl text-red-100">O custo real da ineficiência operacional em números brutais</p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
+                Implicações Diretas no Seu Negócio
+              </h2>
+              <p className="text-base sm:text-xl text-red-100">
+                O custo real da ineficiência operacional em números brutais
+              </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
               {implications.map((implication, index) => (
                 <Card
                   key={index}
                   className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 group"
                 >
-                  <CardContent className="p-6 text-center">
+                  <CardContent className="p-4 sm:p-6 text-center">
                     <div className="relative">
-                      <implication.icon className="w-12 h-12 text-red-200 mx-auto mb-4 group-hover:scale-110 transition-transform" />
-                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+                      <implication.icon className="w-8 h-8 sm:w-12 sm:h-12 text-red-200 mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform" />
+                      <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-5 h-5 sm:w-6 sm:h-6 bg-red-500 rounded-full flex items-center justify-center">
                         <span className="text-xs font-bold text-white">{index + 1}</span>
                       </div>
                     </div>
-                    <div className="text-4xl font-bold text-white mb-2">{implication.value}</div>
-                    <h3 className="text-lg font-semibold text-red-100 mb-2">{implication.title}</h3>
-                    <p className="text-red-200 text-sm mb-3">{implication.description}</p>
-                    <div className="text-xs text-red-300 bg-red-800/30 rounded-lg p-2">{implication.detail}</div>
+                    <div className="text-2xl sm:text-4xl font-bold text-white mb-2">{implication.value}</div>
+                    <h3 className="text-base sm:text-lg font-semibold text-red-100 mb-2">{implication.title}</h3>
+                    <p className="text-red-200 text-xs sm:text-sm mb-3">{implication.description}</p>
+                    <div className="text-xs rounded-lg p-2 text-white bg-muted-foreground">{implication.detail}</div>
                   </CardContent>
                 </Card>
               ))}
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-white/20">
-                <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                  <TrendingDown className="w-8 h-8 text-red-200" />
+            <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 sm:p-8 border border-white/20">
+                <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center gap-3">
+                  <TrendingDown className="w-6 h-6 sm:w-8 sm:h-8 text-red-200" />
                   Impactos Operacionais
                 </h3>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <Users className="w-5 h-5 text-red-200" />
-                    <span className="text-red-100">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="flex items-start gap-3">
+                    <Users className="w-4 h-4 sm:w-5 sm:h-5 text-red-200 mt-0.5 flex-shrink-0" />
+                    <span className="text-red-100 text-sm sm:text-base">
                       Dependência de "heróis" impede escala e torna negócio imprevisível
                     </span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Clock className="w-5 h-5 text-red-200" />
-                    <span className="text-red-100">Tempo perdido em retrabalho e correção de erros evitáveis</span>
+                  <div className="flex items-start gap-3">
+                    <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-red-200 mt-0.5 flex-shrink-0" />
+                    <span className="text-red-100 text-sm sm:text-base">
+                      Tempo perdido em retrabalho e correção de erros evitáveis
+                    </span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <AlertTriangle className="w-5 h-5 text-red-200" />
-                    <span className="text-red-100">Decisões baseadas em dados incorretos ou desatualizados</span>
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-red-200 mt-0.5 flex-shrink-0" />
+                    <span className="text-red-100 text-sm sm:text-base">
+                      Decisões baseadas em dados incorretos ou desatualizados
+                    </span>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-white/20">
-                <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                  <Target className="w-8 h-8 text-red-200" />
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 sm:p-8 border border-white/20">
+                <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center gap-3">
+                  <Target className="w-6 h-6 sm:w-8 sm:h-8 text-red-200" />
                   Riscos Estratégicos
                 </h3>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <Rocket className="w-5 h-5 text-red-200" />
-                    <span className="text-red-100">
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="flex items-start gap-3">
+                    <Rocket className="w-4 h-4 sm:w-5 sm:h-5 text-red-200 mt-0.5 flex-shrink-0" />
+                    <span className="text-red-100 text-sm sm:text-base">
                       Perder relevância para concorrentes que já adotam automação e IA
                     </span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <BarChart3 className="w-5 h-5 text-red-200" />
-                    <span className="text-red-100">
+                  <div className="flex items-start gap-3">
+                    <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 text-red-200 mt-0.5 flex-shrink-0" />
+                    <span className="text-red-100 text-sm sm:text-base">
                       Crescimento limitado por gargalos operacionais não identificados
                     </span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Workflow className="w-5 h-5 text-red-200" />
-                    <span className="text-red-100">
+                  <div className="flex items-start gap-3">
+                    <Workflow className="w-4 h-4 sm:w-5 sm:h-5 text-red-200 mt-0.5 flex-shrink-0" />
+                    <span className="text-red-100 text-sm sm:text-base">
                       Negócio vira "orquestra sem maestro" - sem sintonia nem direção
                     </span>
                   </div>
@@ -500,37 +594,39 @@ export default function InfographicV3() {
       </section>
 
       {/* Seção 4: Urgência da Transformação - ALWAYS VISIBLE */}
-      <section className="py-16 bg-gradient-to-r from-orange-500 to-red-500 text-white relative overflow-hidden">
+      <section className="py-12 sm:py-16 bg-gradient-to-r from-orange-500 to-red-500 text-white relative overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full mb-6 shadow-lg animate-pulse">
-                <Zap className="w-10 h-10 text-white" />
+            <div className="text-center mb-8 sm:mb-12">
+              <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-full mb-4 sm:mb-6 shadow-lg animate-pulse">
+                <Zap className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">A Urgência da Transformação: Por Que Agir Agora?</h2>
-              <p className="text-xl text-orange-100 max-w-3xl mx-auto">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">
+                A Urgência da Transformação: Por Que Agir Agora?
+              </h2>
+              <p className="text-base sm:text-xl text-orange-100 max-w-3xl mx-auto">
                 O mercado não espera. Cada dia de atraso é receita perdida e vantagem competitiva desperdiçada.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8 mb-12">
+            <div className="grid md:grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-12">
               {urgencyFactors.map((factor, index) => (
                 <Card
                   key={index}
                   className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 group"
                 >
-                  <CardContent className="p-8">
-                    <div className="flex items-start gap-4">
-                      <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                        <factor.icon className="w-8 h-8 text-white" />
+                  <CardContent className="p-4 sm:p-8">
+                    <div className="flex items-start gap-3 sm:gap-4">
+                      <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <factor.icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                       </div>
-                      <div className="flex-1">
-                        <h3 className="text-xl font-semibold mb-3 text-white">{factor.title}</h3>
-                        <p className="text-orange-100 mb-4">{factor.description}</p>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3 text-white">{factor.title}</h3>
+                        <p className="text-orange-100 mb-3 sm:mb-4 text-sm sm:text-base">{factor.description}</p>
                         <div className="bg-orange-800/30 rounded-lg p-3">
                           <div className="flex items-center justify-between">
-                            <span className="text-orange-200 text-sm">{factor.impact}</span>
-                            <span className="text-2xl font-bold text-yellow-300">{factor.stat}</span>
+                            <span className="text-orange-200 text-xs sm:text-sm">{factor.impact}</span>
+                            <span className="text-xl sm:text-2xl font-bold text-yellow-300">{factor.stat}</span>
                           </div>
                         </div>
                       </div>
@@ -540,21 +636,23 @@ export default function InfographicV3() {
               ))}
             </div>
 
-            <div className="bg-gradient-to-r from-red-800/30 to-orange-800/30 rounded-xl p-8 backdrop-blur-sm border border-orange-500/20">
-              <h3 className="text-2xl font-bold text-center mb-8 text-orange-100">A Realidade do Mercado</h3>
-              <div className="grid md:grid-cols-3 gap-6 text-center">
+            <div className="bg-gradient-to-r from-red-800/30 to-orange-800/30 rounded-xl p-4 sm:p-8 backdrop-blur-sm border border-orange-500/20">
+              <h3 className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8 text-orange-100">
+                A Realidade do Mercado
+              </h3>
+              <div className="grid sm:grid-cols-3 gap-4 sm:gap-6 text-center">
                 <div>
-                  <div className="text-3xl font-bold text-yellow-300 mb-2">2025</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-yellow-300 mb-2">2025</div>
                   <div className="text-orange-200 text-sm">Ano da IA Aplicada</div>
                   <div className="text-xs text-orange-300 mt-2">Quem não adotar agora, fica para trás</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-yellow-300 mb-2">70%</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-yellow-300 mb-2">70%</div>
                   <div className="text-orange-200 text-sm">Das empresas já investem em automação</div>
                   <div className="text-xs text-orange-300 mt-2">Você está na maioria ou na minoria?</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold text-yellow-300 mb-2">6 meses</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-yellow-300 mb-2">6 meses</div>
                   <div className="text-orange-200 text-sm">Tempo médio para implementar RevOps</div>
                   <div className="text-xs text-orange-300 mt-2">Cada mês de atraso custa caro</div>
                 </div>
@@ -565,51 +663,46 @@ export default function InfographicV3() {
       </section>
 
       {/* Seção 5: Solução Axend - ALWAYS VISIBLE */}
-      <section className="py-20 bg-gradient-to-br from-[#E6E4E3]/30 to-background relative">
+      <section className="py-12 sm:py-20 bg-gradient-to-br from-[#E6E4E3]/30 to-background relative">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-[#EB6A00] to-[#995925] rounded-full mb-6 shadow-lg">
-                <CheckCircle className="w-10 h-10 text-white" />
+            <div className="text-center mb-12 sm:mb-16">
+              <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-[#EB6A00] to-[#995925] rounded-full mb-4 sm:mb-6 shadow-lg">
+                <CheckCircle className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
               </div>
-              <h2 className="text-3xl md:text-5xl font-bold mb-6 text-[#413328]">
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-4 sm:mb-6 text-[#413328]">
                 A Solução Axend: Previsibilidade Não é Sorte. É Sistema.
               </h2>
-              <p className="text-lg text-[#995925] max-w-3xl mx-auto">
+              <p className="text-base sm:text-lg text-[#995925] max-w-3xl mx-auto">
                 Transforme sua operação com os 4 pilares do RevOps powered by AI. Resultados mensuráveis em 90 dias ou
                 menos.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8 mb-16">
+            <div className="grid md:grid-cols-2 gap-6 sm:gap-8 mb-12 sm:mb-16">
               {solutions.map((solution, index) => (
                 <Card
                   key={index}
                   className="group hover:shadow-2xl transition-all duration-500 overflow-hidden border-0 bg-white/80 backdrop-blur-sm"
                 >
-                  <div className={`h-3 bg-gradient-to-r ${solution.color}`} />
-                  <CardContent className="p-8">
-                    <div className="flex items-start gap-4 mb-6">
+                  <div className={`h-2 sm:h-3 bg-gradient-to-r ${solution.color}`} />
+                  <CardContent className="p-4 sm:p-8">
+                    <div className="flex items-start gap-3 sm:gap-4 mb-4 sm:mb-6">
                       <div
-                        className={`w-16 h-16 rounded-xl bg-gradient-to-br ${solution.color} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform shadow-lg`}
+                        className={`w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-gradient-to-br ${solution.color} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform shadow-lg`}
                       >
-                        <solution.icon className="w-8 h-8 text-white" />
+                        <solution.icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                       </div>
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold text-[#413328] mb-2">{solution.title}</h3>
-                        <p className="text-[#6B4A2E] mb-3">{solution.description}</p>
-                        <p className="text-[#995925] text-sm">{solution.details}</p>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg sm:text-xl font-bold text-[#413328] mb-2">{solution.title}</h3>
+                        <p className="text-[#6B4A2E] mb-2 sm:mb-3 text-sm sm:text-base">{solution.description}</p>
+                        <p className="text-[#995925] text-xs sm:text-sm">{solution.details}</p>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 mb-6">
-                      
-                      
-                    </div>
-
-                    <div className="border-t pt-4">
-                      <h5 className="text-sm font-semibold text-[#995925] mb-2">Principais Recursos:</h5>
-                      <div className="flex flex-wrap gap-2">
+                    <div className="border-t pt-3 sm:pt-4">
+                      <h5 className="text-xs sm:text-sm font-semibold text-[#995925] mb-2">Principais Recursos:</h5>
+                      <div className="flex flex-wrap gap-1 sm:gap-2">
                         {solution.features.map((feature, idx) => (
                           <Badge key={idx} variant="secondary" className="text-xs bg-[#E6E4E3] text-[#6B4A2E]">
                             {feature}
@@ -622,36 +715,36 @@ export default function InfographicV3() {
               ))}
             </div>
 
-            <div className="bg-gradient-to-r from-[#EB6A00] to-[#995925] rounded-2xl p-8 text-white relative overflow-hidden">
+            <div className="bg-gradient-to-r from-[#EB6A00] to-[#995925] rounded-2xl p-4 sm:p-8 text-white relative overflow-hidden">
               <div className="absolute inset-0 bg-black/10" />
               <div className="relative z-10">
-                <div className="text-center mb-8">
-                  <h3 className="text-3xl font-bold mb-4">Pronto para Transformar sua Operação?</h3>
-                  <p className="text-lg mb-2 text-orange-100">
+                <div className="text-center mb-6 sm:mb-8">
+                  <h3 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Pronto para Transformar sua Operação?</h3>
+                  <p className="text-base sm:text-lg mb-2 text-orange-100">
                     Comece com um diagnóstico gratuito e descubra exatamente onde sua empresa está perdendo receita
                   </p>
-                  <div className="text-sm text-orange-200 mb-6">
+                  <div className="text-sm text-orange-200 mb-4 sm:mb-6">
                     ⏰ Diagnóstico personalizado baseado na sua realidade operacional
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-6 mb-8">
+                <div className="grid sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
                   <div className="text-center">
-                    <BarChart3 className="w-8 h-8 text-blue-300 mx-auto mb-2" />
-                    <div className="text-2xl font-bold">67%</div>
-                    <div className="text-orange-200 text-sm">Empresas Investem em RevOps</div>
+                    <BarChart3 className="w-6 h-6 sm:w-8 sm:h-8 text-blue-300 mx-auto mb-2" />
+                    <div className="text-xl sm:text-2xl font-bold">67%</div>
+                    <div className="text-orange-200 text-xs sm:text-sm">Empresas Investem em RevOps</div>
                     <div className="text-xs text-orange-300">Fonte: Salesforce State of Sales</div>
                   </div>
                   <div className="text-center">
-                    <TrendingUp className="w-8 h-8 text-green-300 mx-auto mb-2" />
-                    <div className="text-2xl font-bold">3.2x</div>
-                    <div className="text-orange-200 text-sm">Crescimento com RevOps</div>
+                    <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-green-300 mx-auto mb-2" />
+                    <div className="text-xl sm:text-2xl font-bold">3.2x</div>
+                    <div className="text-orange-200 text-xs sm:text-sm">Crescimento com RevOps</div>
                     <div className="text-xs text-orange-300">Fonte: Boston Consulting Group</div>
                   </div>
                   <div className="text-center">
-                    <Target className="w-8 h-8 text-yellow-300 mx-auto mb-2" />
-                    <div className="text-2xl font-bold">19%</div>
-                    <div className="text-orange-200 text-sm">Crescimento Médio Anual</div>
+                    <Target className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-300 mx-auto mb-2" />
+                    <div className="text-xl sm:text-2xl font-bold">19%</div>
+                    <div className="text-orange-200 text-xs sm:text-sm">Crescimento Médio Anual</div>
                     <div className="text-xs text-orange-300">Fonte: HubSpot RevOps Report</div>
                   </div>
                 </div>
@@ -659,21 +752,21 @@ export default function InfographicV3() {
                 <div className="text-center">
                   <Button
                     size="lg"
-                    className="bg-white text-[#EB6A00] hover:bg-gray-100 font-semibold px-8 py-4 text-lg mb-4"
+                    className="bg-white text-[#EB6A00] hover:bg-gray-100 font-semibold px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg mb-3 sm:mb-4 w-full sm:w-auto"
                     asChild
                   >
                     <Link href="/#auditoria">
                       Solicitar Diagnóstico Gratuito Agora
-                      <ArrowRight className="w-5 h-5 ml-2" />
+                      <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
                     </Link>
                   </Button>
-                  <div className="flex items-center justify-center gap-6 text-sm text-orange-200">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-sm text-orange-200">
                     <span className="flex items-center gap-1">
-                      <CheckCircle className="w-4 h-4" />
+                      <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                       Sem Compromisso
                     </span>
                     <span className="flex items-center gap-1">
-                      <CheckCircle className="w-4 h-4" />
+                      <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                       Resultados em 48h
                     </span>
                   </div>
@@ -685,15 +778,15 @@ export default function InfographicV3() {
       </section>
 
       {/* Footer */}
-      <footer className="py-16 text-[#413328] bg-sidebar-accent-foreground">
+      <footer className="py-12 sm:py-16 text-[#413328] bg-sidebar-accent-foreground">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#EB6A00] to-[#995925] rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">A</span>
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-[#EB6A00] to-[#995925] rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-xs sm:text-sm">A</span>
                 </div>
-                <span className="font-bold text-xl text-white">Grupo Axend</span>
+                <span className="font-bold text-lg sm:text-xl text-white">Grupo Axend</span>
               </div>
               <p className="text-gray-300 text-sm">Transformando operações de receita com IA e RevOps</p>
             </div>
@@ -751,7 +844,7 @@ export default function InfographicV3() {
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-600 mt-8 pt-8 text-center text-sm text-gray-400">
+          <div className="border-t border-gray-600 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center text-sm text-gray-400">
             <p>© 2025 Grupo Axend. Todos os direitos reservados.</p>
           </div>
         </div>

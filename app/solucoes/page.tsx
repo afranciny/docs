@@ -30,7 +30,7 @@ const serviceLevels = {
     timeline: "2-4 semanas",
     services: {
       processos: {
-        price: 1800,
+        price: 4000,
         objective: "Colocar disciplina mínima em 30 dias e parar as perdas óbvias",
         scope: [
           "Mapear o funil ponta-a-ponta (entrada, qualificação, oportunidade, fechamento, onboarding)",
@@ -57,7 +57,8 @@ const serviceLevels = {
         ],
       },
       crm: {
-        price: 1500,
+        price: 4000,
+        monthlyMaintenance: 1000,
         objective: "Tirar o 'CRM de fachada' e colocar uso disciplinado em poucas semanas",
         scope: [
           "Processo e objetos padrão: Contas, Contatos, Leads e Oportunidades",
@@ -83,7 +84,8 @@ const serviceLevels = {
         ],
       },
       bi: {
-        price: 2000,
+        price: 4000,
+        monthlyMaintenance: 1000,
         objective: "Entregar visibilidade rápida para decisões imediatas",
         scope: [
           "Conectar 4-8 fontes (Salesforce/HubSpot, RD/GA4, Google Ads/Meta, ERP)",
@@ -107,7 +109,8 @@ const serviceLevels = {
         ],
       },
       ia: {
-        price: 2200,
+        price: 4000,
+        monthlyMaintenance: 1000,
         objective: "Lançar 1 caso de uso com ROI direto e risco controlado",
         scope: [
           "1 agente ativo (SDR inbound, CS suporte ou Meeting Prep)",
@@ -132,8 +135,8 @@ const serviceLevels = {
         ],
       },
     },
-    originalPrice: 7500,
-    packagePrice: 6000,
+    originalPrice: 16000,
+    packagePrice: 12000,
   },
   profissional: {
     name: "Profissional",
@@ -142,7 +145,7 @@ const serviceLevels = {
     timeline: "6-12 semanas",
     services: {
       processos: {
-        price: 3500,
+        price: 12000,
         objective: "Transformar o funil em máquina previsível e auditável",
         scope: [
           "Processos E2E Mkt-Vendas-CS com SLAs por etapa",
@@ -163,7 +166,8 @@ const serviceLevels = {
         kpis: ["MAPE <20%", "Ciclo -15%", "Win rate ↑", "Adoção CRM >80-85%", "% SLAs cumpridos >90%"],
       },
       crm: {
-        price: 3000,
+        price: 12000,
+        monthlyMaintenance: 2500,
         objective: "Transformar o CRM em plataforma integrada e auditável",
         scope: [
           "Modelagem avançada: Objetos custom, múltiplos pipelines",
@@ -190,7 +194,8 @@ const serviceLevels = {
         ],
       },
       bi: {
-        price: 4000,
+        price: 12000,
+        monthlyMaintenance: 2500,
         objective: "Modelos por domínio com reconciliação e forecast confiável",
         scope: [
           "Domínios: Vendas, Marketing, Receita e Financeiro",
@@ -217,7 +222,8 @@ const serviceLevels = {
         ],
       },
       ia: {
-        price: 4500,
+        price: 12000,
+        monthlyMaintenance: 2500,
         objective: "Operar inbound e outbound com personalização por ICP",
         scope: [
           "2-3 agentes (SDR, BDR, CS)",
@@ -245,8 +251,8 @@ const serviceLevels = {
         ],
       },
     },
-    originalPrice: 15000,
-    packagePrice: 12000,
+    originalPrice: 48000,
+    packagePrice: 36000,
   },
   avancado: {
     name: "Avançado",
@@ -255,7 +261,7 @@ const serviceLevels = {
     timeline: "3-12 meses",
     services: {
       processos: {
-        price: 6000,
+        price: 20000,
         objective: "Orquestração multi-equipes com compliance e confiabilidade operacional",
         scope: [
           "Change management com comunicação e adoção medidos",
@@ -282,7 +288,8 @@ const serviceLevels = {
         ],
       },
       crm: {
-        price: 5000,
+        price: 20000,
+        monthlyMaintenance: 5000,
         objective: "Garantir evolução contínua e alta confiabilidade",
         scope: [
           "Admin & Enhancements: Roadmap mensal",
@@ -309,7 +316,8 @@ const serviceLevels = {
         ],
       },
       bi: {
-        price: 7000,
+        price: 20000,
+        monthlyMaintenance: 5000,
         objective: "BI como produto interno com SLA e operação 24×5",
         scope: [
           "BIaaS: operação, manutenção e evolução contínua",
@@ -336,7 +344,8 @@ const serviceLevels = {
         ],
       },
       ia: {
-        price: 7000,
+        price: 20000,
+        monthlyMaintenance: 5000,
         objective: "Orquestração multi-agente com metas por etapa",
         scope: [
           "SDR/BDR/CS/Prep coordenados",
@@ -357,8 +366,8 @@ const serviceLevels = {
         kpis: ["SQL/mês", "Show rate", "NRR", "NPS/CSAT", "Alucinação ≤0,5%", "Conversas com erro grave ≤1%"],
       },
     },
-    originalPrice: 25000,
-    packagePrice: 20000,
+    originalPrice: 80000,
+    packagePrice: 60000,
   },
 }
 
@@ -519,7 +528,6 @@ export default function SolucoesPage() {
 
       {/* Hero Section */}
       <section className="py-16 lg:py-24 bg-gradient-to-br from-[#413328] to-[#6B4A2E] text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/placeholder.svg?height=800&width=1200')] opacity-10"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <Badge className="mb-6 bg-[#EB6A00]/20 text-[#EB6A00] border-[#EB6A00]/30">Soluções RevOps Premium</Badge>
@@ -536,7 +544,6 @@ export default function SolucoesPage() {
                   Auditoria Gratuita <ArrowRight className="h-5 w-5" />
                 </Link>
               </Button>
-              
             </div>
           </div>
         </div>
@@ -574,11 +581,7 @@ export default function SolucoesPage() {
                         {level.timeline}
                       </div>
                     </div>
-                    <div className="text-center">
-                      
-                      
-                      
-                    </div>
+                    <div className="text-center"></div>
                   </CardContent>
                 </Card>
               ))}
@@ -617,6 +620,12 @@ export default function SolucoesPage() {
                         </div>
                         <div className="text-right">
                           <div className="text-2xl font-bold text-[#EB6A00]">R$ {service.price.toLocaleString()}</div>
+                          {(pillar.id === "crm" || pillar.id === "bi" || pillar.id === "ia") &&
+                            service.monthlyMaintenance && (
+                              <div className="text-sm text-[#6B4A2E]/80 mt-1">
+                                + R$ {service.monthlyMaintenance.toLocaleString()}/mês
+                              </div>
+                            )}
                           <div className="flex items-center gap-1 text-sm text-[#6B4A2E]/60">
                             <Clock className="h-4 w-4" />
                             {pillar.timeline}

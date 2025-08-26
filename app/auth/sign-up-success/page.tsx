@@ -12,8 +12,14 @@ export default function SignUpSuccessPage() {
         </CardHeader>
         <CardContent className="text-center space-y-4">
           <p className="text-sm text-muted-foreground">
-            Enviamos um link de confirmação para seu email. Clique no link para ativar sua conta e acessar o Axend.AI.
+            Enviamos um link de confirmação para seu email. Clique no link para ativar sua conta e você será
+            redirecionado automaticamente para a área do cliente do Axend.AI.
           </p>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+            <p className="text-xs text-blue-700">
+              💡 <strong>Dica:</strong> Verifique também sua caixa de spam caso não encontre o email.
+            </p>
+          </div>
           <Button asChild className="bg-[#EB6A00] hover:bg-[#995925]">
             <Link href="/auth/login">Voltar ao Login</Link>
           </Button>
